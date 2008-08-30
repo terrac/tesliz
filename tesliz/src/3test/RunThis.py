@@ -333,7 +333,11 @@ class OgreNewtonFrameListener(GuiFrameListener):
             ##OgreNewt.Debugger.getSingleton().deInit()
             return False
         return True        
-           
+    def clickEntity(self,name,position):
+        if self.iexecute:            
+            self.iexecute.endPos = position
+            self.runningexecutes.append(self.iexecute)
+            self.iexecute = None       
     runningexecutes = []
     iexecute=None
             

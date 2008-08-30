@@ -1,5 +1,7 @@
 from tactics.Singleton import *
-
+from tactics.Move import *
+import ogre.gui.CEGUI as CEGUI
+from utilities.CEGUI_framework import *
 class HumanPlayer(object):
         
     s = Singleton()
@@ -10,7 +12,7 @@ class HumanPlayer(object):
     def startTurn(self,unit):
        cunit = unit 
        self.s.framelistener.cunit = cunit
-       self.s.framelistener.displayActions()
+       self.displayActions()
     
     caction = None
     def action(self,name):    
@@ -53,20 +55,17 @@ class HumanPlayer(object):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
         if text == "move":
-            self.iexecute = Move(self.cunit.node,self.cunit.body,None)
+            self.iexecute = Move(self.cunit.body,None)
         if text == "attack":
-            self.iexecute = Move(self.cunit.node,self.cunit.body,None)
+            self.iexecute = Move(self.cunit.body,None)
         if not isinstance(e.window,CEGUI.ListboxTextItem):    
             e.window.removeItem(e.window.getFirstSelectedItem())   
         if text == "endturn" or e.window.getItemCount() == 1:
             self.listmap = dict()
-            CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")    
+            CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+            s.turn.nextUnitTurn()    
         return True
-    def clickEntity(self,name,position):
-        if self.iexecute:            
-            self.iexecute.endPos = position
-            self.runningexecutes.append(self.iexecute)
-            iexecute = None    
+        
      
   #  def endTurn(self):  
   #      s.turn.endTurn()
@@ -91,11 +90,12 @@ class ComputerPlayer(object):
     s = Singleton()
     hookid = "Computer1"
     def startTurn(self,unit):
-        for eunit in s.unitmap.values():
+        for eunit in self.s.unitmap.values():
             if not eunit.player ==self:
-                s.framelistener.runningexecutes.append(Move(unit.node,eunit.node))
+                self.s.framelistener.runningexecutes.append(Move(unit.body,eunit.node.getPosition()))
+                self.s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack
-        a = 5       
+       # a = 5       
        
             

@@ -18,14 +18,14 @@ class Turn(object):
                self.turnlist.append(unit) 
                self.pause=True
         if self.pause:
-            nextUnitTurn()
+            self.nextUnitTurn()
         
     def nextUnitTurn(self):
-        if len(turnlist) == 0:
+        if len(self.turnlist) == 0:
             self.pause = False
             return
         
-        unit =turnlist.pop()
+        unit =self.turnlist.pop()
         unit.startTurn()           
     turnlist = []          
 #    def startTurn(self):

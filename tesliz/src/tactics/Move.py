@@ -1,11 +1,11 @@
 from tactics.util import *
 
 class Move(object):
-    def __init__ ( self,pnode,pbody,pendPos):
-         self.node = pnode
+    def __init__ ( self,pbody,pendPos):
+
          self.body = pbody
          self.endPos = pendPos
-    node = None
+
     endPos = None
     b = 0;
     def execute(self):
@@ -13,10 +13,11 @@ class Move(object):
         self.b += 1
         print str(self.b)
         #direction =self.node.Orientation * self.node.Position.UNIT_X
-        direction = self.endPos-self.node.getPosition()
+        position = self.body.getOgreNode().getPosition()
+        direction = self.endPos-position
         direction.normalise()
         self.body.setVelocity(direction*50)
-        boo =distance(self.node.getPosition(), self.endPos) > 2
+        boo =distance(position, self.endPos) > 2
         
         if not boo:
             self.body.setVelocity(direction*0)
