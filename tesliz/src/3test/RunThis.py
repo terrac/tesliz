@@ -151,6 +151,8 @@ class OgreNewtonApplication (sf.Application):
         light = self.sceneManager.createLight( "Light1" )
         light.setType( Ogre.Light.LT_POINT )
         light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
+       # self.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+
 
     def _createFrameListener(self):
         
@@ -331,48 +333,10 @@ class OgreNewtonFrameListener(GuiFrameListener):
             ##OgreNewt.Debugger.getSingleton().deInit()
             return False
         return True        
-    def displayActions(self):
-        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
-        winMgr = CEGUI.WindowManager.getSingleton()
-        list = winMgr.createWindow("TaharezLook/Listbox", "actionlist")
-        sheet.addChildWindow(list)
-        list.setText("actionlist")
-        list.setPosition(CEGUI.UVector2(cegui_reldim(0.535), cegui_reldim( 0.0)))
-        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.5)))
-        
-        
-        list.setAlwaysOnTop(True)
-        
-        item =CEGUI.ListboxTextItem ("move")
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.ListItems.append(item) # we need to keep the listitems around for the list box to work
-        list.addItem(item)
-        item =CEGUI.ListboxTextItem ("attack")
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.ListItems.append(item) # we need to keep the listitems around for the list box to work
-        list.addItem(item)
-        dir(CEGUI.Listbox)
-        list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
-    ListItems = []
-    
-    #move to player
-    def handleAction(self, e):
-        #aoeu dir(e.window.getFirstSelectedItem().getText())
-        text = e.window.getFirstSelectedItem().getText()
-        if text == "move":
-            self.iexecute = Move(self.cunit.node,self.cunit.body,None)
-        else:
-            self.iexecute = Move(self.cunit.node,self.cunit.body,None)
-        return True
-    def clickEntity(self,name,position):
-        if self.iexecute:            
-            self.iexecute.endPos = position
-            self.runningexecutes.append(self.iexecute)
-            iexecute = None    
-            
+           
     runningexecutes = []
     iexecute=None
-    cunit = None        
+            
 if __name__ == '__main__':
     try:
         application = OgreNewtonApplication()

@@ -15,8 +15,19 @@ class Turn(object):
             return
         for unit in self.s.unitmap.values():
             if unit.increment():
-               unit.startTurn() 
+               self.turnlist.append(unit) 
                self.pause=True
+        if self.pause:
+            nextUnitTurn()
+        
+    def nextUnitTurn(self):
+        if len(turnlist) == 0:
+            self.pause = False
+            return
+        
+        unit =turnlist.pop()
+        unit.startTurn()           
+    turnlist = []          
 #    def startTurn(self):
 #        self.s.playerlist.index(pnum).startTurn()
     
