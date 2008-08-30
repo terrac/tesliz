@@ -1,0 +1,3 @@
+http://python-ogre.org/
+
+Download python ogre and put it in this folder
