@@ -23,8 +23,8 @@
       <player name="Computer1" />
       <position x="0.000000" y="-5.000000" z="0.000000"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".05" y=".05" z=".05"/>
-      <entity name="axis" meshFile="ninja.mesh"/>
+      <scale x="1" y="1" z="1"/>
+      <entity name="axis" meshFile="cylinder.mesh"/>
     </node>
     <node name="axis2">
       

@@ -10,8 +10,8 @@ class HumanPlayer(object):
     lastClick = None
     cunit = None
     def startTurn(self,unit):
-       cunit = unit 
-       self.s.framelistener.cunit = cunit
+       self.cunit = unit 
+       #self.s.framelistener.cunit = cunit
        self.displayActions()
     
     caction = None
@@ -64,6 +64,8 @@ class HumanPlayer(object):
             self.listmap = dict()
             CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
             s.turn.nextUnitTurn()    
+            #import time
+            #time.sleep(1)
         return True
         
      

@@ -253,9 +253,9 @@ class OgreNewtonFrameListener(GuiFrameListener):
             if (info.mBody):
                 CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
                 self.clickEntity(info.mBody.OgreNode.Name,position)
-                
-        self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
-        self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
+        if (self.Keyboard.isKeyDown(OIS.KC_LSHIFT)):        
+            self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
+            self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
 
         ##and Keyboard
         if (self.Keyboard.isKeyDown(OIS.KC_UP)):
