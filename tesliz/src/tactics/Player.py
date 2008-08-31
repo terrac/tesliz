@@ -95,6 +95,7 @@ class ComputerPlayer(object):
         for eunit in self.s.unitmap.values():
             if not eunit.player ==self:
                 self.s.framelistener.runningexecutes.append(Move(unit.body,eunit.node.getPosition()))
+                eunit.body.setVelocity(unit.node.getPosition() - eunit.node.getPosition())
                 self.s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack

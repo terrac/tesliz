@@ -2,11 +2,14 @@ from tactics.Singleton import *
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.renderer.OGRE as Ogre
 from math import sqrt
+from data.unittypes import *
 s = Singleton()
 
 def buildUnit(unit,unittype,playername):
     s.unitmap[unit.getName()]=unit
-   
+    
+    getattr(Unittypes(), unittype)(unit)
+    
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
         player.unitlist.append(unit)

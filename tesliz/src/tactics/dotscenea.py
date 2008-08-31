@@ -17,6 +17,7 @@ from tactics.Singleton import *
 from tactics.Unit import *
 from data.unitdata import *
 
+
 '''
 Adapted from:
 python / /www.ogre3d.org/phpBB2addons/viewtopic.php?t=1583
