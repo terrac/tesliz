@@ -1,11 +1,15 @@
 class Unit(object):
    
+    def __str__( self ):
+        return "Unit"
+
+   
     body = None
     hitpoints = None
     speed = None
     curMovement = 0
     player = None
-    node = None
+    #node = None
     moves = 5
     damage = 5
     def getName(self):
