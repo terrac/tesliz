@@ -1,5 +1,6 @@
 from tactics.Singleton import *
 from tactics.Move import *
+from tactics.Attack import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 class HumanPlayer(object):
@@ -95,7 +96,7 @@ class ComputerPlayer(object):
         for eunit in self.s.unitmap.values():
             if not eunit.player ==self:
                 self.s.framelistener.runningexecutes.append(Move(unit.body,eunit.node.getPosition()))
-                eunit.body.setVelocity((eunit.node.getPosition()-unit.node.getPosition())*5 )
+                self.s.framelistener.runningexecutes.append(Attack(eunit.body,(eunit.node.getPosition()-unit.node.getPosition())*5 ))
                 self.s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack

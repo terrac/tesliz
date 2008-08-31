@@ -217,7 +217,7 @@ class OgreNewtonFrameListener(GuiFrameListener):
             boo = iexecute.execute()
             if not boo:
                 self.runningexecutes.remove(iexecute)
-        
+            break
         self.debugText = "aoeu"
         quat = self.msnCam.getOrientation()
     
