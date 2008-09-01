@@ -3,18 +3,18 @@ from tactics.util import *
 from math import *
 
 class Move(object):
-    def __init__ ( self,pbody,pendPos):
+    def __init__ ( self,unit1,pendPos = None):
 
-         self.body = pbody
+         self.body = unit1.body
          self.endPos = pendPos
 
+    body = None
     endPos = None
-    b = 0;
+    
+    def setUnitAndPosition(self,unit2,position):
+        self.endPos = position
+    
     def execute(self):
-        #this should really orient towards the end pos
-        self.b += 1
-        print str(self.b)
-        #direction =self.node.Orientation * self.node.Position.UNIT_X
         position = self.body.getOgreNode().getPosition()
         direction = self.endPos-position
         direction.normalise()

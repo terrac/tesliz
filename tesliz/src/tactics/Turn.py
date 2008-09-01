@@ -26,6 +26,7 @@ class Turn(object):
             return
         
         unit =self.turnlist.pop()
+        self.s.framelistener.cplayer = unit.player
         unit.startTurn()           
     turnlist = []          
 #    def startTurn(self):

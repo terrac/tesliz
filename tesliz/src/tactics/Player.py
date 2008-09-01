@@ -1,3 +1,4 @@
+import sys
 from tactics.Singleton import *
 from tactics.Move import *
 from tactics.Attack import *
@@ -6,10 +7,14 @@ from utilities.CEGUI_framework import *
 class HumanPlayer(object):
         
     s = Singleton()
+    
+    #Tells you what the id of the last cegui hooks for the framelistener was    
     hookid = "Player1"
+    
     unitlist = []
     lastClick = None
     cunit = None
+    iexecute = None
     def startTurn(self,unit):
        self.cunit = unit 
        #self.s.framelistener.cunit = cunit
@@ -34,42 +39,51 @@ class HumanPlayer(object):
         self.listmap = dict()
 
         
-        item =CEGUI.ListboxTextItem ("move")
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.listmap["move"]=item # we need to keep the listitems around for the list box to work
-        list.addItem(item)
-        item =CEGUI.ListboxTextItem ("attack")
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.listmap["attack"]=item # we need to keep the listitems around for the list box to work
-        list.addItem(item)
-        
-        item =CEGUI.ListboxTextItem ("endturn")
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.listmap["endturn"]=item # we need to keep the listitems around for the list box to work
-        list.addItem(item)
+        self.additem(list,"Move")
+        self.additem(list,"Attack")
+        self.additem(list,"EndTurn")
         
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
-    listmap = dict()
+    listholder = []
+    
     
     #move to player
     def handleAction(self, e):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
-        if text == "move":
-            self.iexecute = Move(self.cunit.body,None)
-        if text == "attack":
-            self.iexecute = Move(self.cunit.body,None)
+        try:
+            eval(" Move(self.cunit)")
+            ez = str(text+"(self.cunit)")
+            self.iexecute = eval(ez)
+        except Exception, ex:
+             print repr(ex)
         if not isinstance(e.window,CEGUI.ListboxTextItem):    
             e.window.removeItem(e.window.getFirstSelectedItem())   
-        if text == "endturn" or e.window.getItemCount() == 1:
+        if text == "EndTurn" or e.window.getItemCount() == 0:
             self.listmap = dict()
             CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
             s.turn.nextUnitTurn()    
             #import time
             #time.sleep(1)
         return True
-        
-     
+    
+    hack = False
+    def clickEntity(self,name,position):
+        self.hack = not self.hack
+        if self.hack:
+            return
+        if self.iexecute:
+            unit = None
+            if s.unitmap.has_key(name):
+                unit = s.unitmap[name]           
+            self.iexecute.setUnitAndPosition(unit,position)
+            self.s.framelistener.runningexecutes.append(self.iexecute)
+            self.iexecute = None    
+    def additem(self,list,name):        
+        item =CEGUI.ListboxTextItem (name)
+        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
+        self.listholder.append(item)
+        list.addItem(item)
   #  def endTurn(self):  
   #      s.turn.endTurn()
                 
@@ -95,8 +109,8 @@ class ComputerPlayer(object):
     def startTurn(self,unit):
         for eunit in self.s.unitmap.values():
             if not eunit.player ==self:
-                self.s.framelistener.runningexecutes.append(Move(unit.body,eunit.node.getPosition()))
-                self.s.framelistener.runningexecutes.append(Attack(eunit.body,(eunit.node.getPosition()-unit.node.getPosition())*5 ))
+                self.s.framelistener.runningexecutes.append(Move(unit,eunit.node.getPosition()))
+                self.s.framelistener.runningexecutes.append(Attack(unit,eunit))
                 self.s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack

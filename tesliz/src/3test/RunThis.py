@@ -14,6 +14,7 @@ from tactics.Player import *
 from tactics.Move import *
 from data.playermap import *
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
+from utilities.CEGUIFrameListener import *
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
@@ -185,16 +186,16 @@ class OgreNewtonApplication (sf.Application):
     
 
        
-class OgreNewtonFrameListener(GuiFrameListener):
+class OgreNewtonFrameListener(CEGUIFrameListener):
     def __init__(self, renderWindow, camera, Mgr, World, msnCam, NewtonListener):
 
-        sf.FrameListener.__init__(self, renderWindow, camera)
-        self.mouselistener = MouseListener ()
-        self.Mouse.setEventCallback(self.mouselistener)
+        CEGUIFrameListener.__init__(self, renderWindow, camera)
+        #self.mouselistener = MouseListener ()
+        #self.Mouse.setEventCallback(self.mouselistener)
         
         #TODO see if cegui keyboard actually works
-        OIS.KeyListener.__init__(self)
-        self.Keyboard.setEventCallback(self)
+        #OIS.KeyListener.__init__(self)
+        #self.Keyboard.setEventCallback(self)
         
         self.World = World
         self.msnCam = msnCam
@@ -234,25 +235,7 @@ class OgreNewtonFrameListener(GuiFrameListener):
         s.turn.doTurn()
         ## now lets handle mouse input
         ms = self.Mouse.getMouseState()
-        if (ms.buttonDown(OIS.MouseButtonID.MB_Left)):
-            mouse = CEGUI.MouseCursor.getSingleton().getPosition()
-            rend = CEGUI.System.getSingleton().getRenderer()
-            mx = mouse.d_x / rend.getWidth()
-            my = mouse.d_y / rend.getHeight()
-            camray = self.camera.getCameraToViewportRay(mx,my)
-
-            start = camray.getOrigin()
-            end = camray.getPoint( 100.0 )
-
-            self.ray = OgreNewt.BasicRaycast( self.World, start, end )  ## should I keep hold of this?
-            info = self.ray.getFirstHit()
-        
-            #dir(info.mBody).OgreNode.Name)
-           # print dir(info.mBody)
-            position =info.mDistance * info.mNormal + start
-            if (info.mBody):
-                CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
-                self.clickEntity(info.mBody.OgreNode.Name,position)
+   
         if (self.Keyboard.isKeyDown(OIS.KC_LSHIFT)):        
             self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
             self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
@@ -334,13 +317,37 @@ class OgreNewtonFrameListener(GuiFrameListener):
             return False
         return True        
     def clickEntity(self,name,position):
-        if self.iexecute:            
-            self.iexecute.endPos = position
-            self.runningexecutes.append(self.iexecute)
-            self.iexecute = None       
+        if self.cplayer:
+            self.cplayer.clickEntity(name,position)            
+    oncegui = False       
     runningexecutes = []
-    iexecute=None
-            
+    cplayer = None
+    def mousePressed(self, evt, id):
+        if CEGUIFrameListener.mousePressed(self,evt,id):
+            return
+                                             
+        mouse = CEGUI.MouseCursor.getSingleton().getPosition()
+        rend = CEGUI.System.getSingleton().getRenderer()
+        mx = mouse.d_x / rend.getWidth()
+        my = mouse.d_y / rend.getHeight()
+        camray = self.camera.getCameraToViewportRay(mx,my)
+
+        start = camray.getOrigin()
+        end = camray.getPoint( 100.0 )
+
+        self.ray = OgreNewt.BasicRaycast( self.World, start, end )  ## should I keep hold of this?
+        info = self.ray.getFirstHit()
+    
+        #dir(info.mBody).OgreNode.Name)
+       # print dir(info.mBody)
+        #position =info.mDistance * info.mNormal + start
+        bodpos, bodorient = info.mBody.getPositionOrientation()
+        globalpt = camray.getPoint( 100.0 * info.mDistance )
+        position = bodorient.Inverse() * (globalpt - bodpos)
+    
+        if (info.mBody):
+            CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
+            self.clickEntity(info.mBody.OgreNode.Name,position)
 if __name__ == '__main__':
     try:
         application = OgreNewtonApplication()
