@@ -21,14 +21,14 @@ import ogre.gui.CEGUI as CEGUI
 import random
 
  
-
+s = Singleton()
 class OgreNewtonApplication (sf.Application):
     def __init__ ( self):
         sf.Application.__init__(self)
         self.World = OgreNewt.World()
         self.EntityCount = 0
         self.bodies=[]
-        sf.Application.debugText = "Press Space Bar to fire.  ESC to end"
+        sf.Application.debugText = "aeou"
 
     def __del__ (self):
         ## delete the world when we're done.
@@ -42,8 +42,9 @@ class OgreNewtonApplication (sf.Application):
 
     
     def _createScene ( self ):
+        
         Turn()
-        s = Singleton()
+        
         s.app = self
         s.playermap = Playermap().playermap
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
@@ -344,6 +345,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         
     
         if (info.mBody):
+            
             bodpos, bodorient = info.mBody.getPositionOrientation()
             globalpt = camray.getPoint( 100.0 * info.mDistance )
             position = bodorient.Inverse() * (globalpt - bodpos)

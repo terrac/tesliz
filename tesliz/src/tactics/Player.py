@@ -73,7 +73,10 @@ class HumanPlayer(object):
             unit = None
             if s.unitmap.has_key(name):
                 unit = s.unitmap[name]           
-            self.iexecute.setUnitAndPosition(unit,position)
+            if not self.iexecute.setUnitAndPosition(unit,position):
+                sf.Application.debugText = "Action failed"
+                return
+            sf.Application.debugText = "Action Succeeded"
             self.s.framelistener.runningexecutes.append(self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        

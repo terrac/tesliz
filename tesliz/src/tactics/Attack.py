@@ -1,5 +1,5 @@
 from tactics.util import *
-
+import utilities.SampleFramework as sf
 from math import *
 
 class Attack(object):
@@ -13,9 +13,14 @@ class Attack(object):
     
     def setUnitAndPosition(self,unit2,position):
         self.unit2 = unit2
+        if not self.unit2:            
+            return False
+        return True
     
     def execute(self):
-        direction = self.unit1.body.getOgreNode().getPosition() - self.unit2.body.getOgreNode().getPosition()
+        
+        
+        direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
         self.unit2.body.setVelocity(direction )
         
         return False

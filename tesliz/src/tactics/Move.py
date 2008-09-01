@@ -13,6 +13,7 @@ class Move(object):
     
     def setUnitAndPosition(self,unit2,position):
         self.endPos = position
+        return True
     
     def execute(self):
         position = self.body.getOgreNode().getPosition()
