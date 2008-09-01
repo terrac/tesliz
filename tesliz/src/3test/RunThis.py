@@ -64,7 +64,7 @@ class OgreNewtonApplication (sf.Application):
         ## sky box.
         self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         dotscene = Dotscene()
-        self.sceneManager = dotscene.setup_scene(self.sceneManager, minidom.parse('axis.scene'),self)
+        self.sceneManager = dotscene.setup_scene(self.sceneManager,'axis',self)
         
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
@@ -266,14 +266,19 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 name = "Body"+str( self.count )
                 self.count += 1
     
-                ent = self.sceneManager.createEntity( name, "cylinder.mesh" )
+                #ent = self.sceneManager.createEntity( name, "cylinder.mesh" )
                 node = self.sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
-                node.attachObject( ent )
+                #node.attachObject( ent )
                 
                 node.setPosition(0.0, 0.0, 0.0)
                 
-                ent.setMaterialName( "Examples/RustySteel" )
-                ent.setNormaliseNormals(True)
+                self.fountainNode = self.sceneManager.getRootSceneNode().createChildSceneNode()
+                psm = ogre.ParticleSystemManager.getSingleton()
+                particleSystem2 = self.sceneManager.createParticleSystem('fountain'+str(self.count), 'RedTorch')
+                node = self.fountainNode.createChildSceneNode()
+                node.attachObject(particleSystem2)
+                #ent.setMaterialName( "Examples/RustySteel" )
+                #ent.setNormaliseNormals(True)
     
                 ## again, make the collision shape.
                 ##col = OgreNewt.CollisionPrimitives.Cylinder(self.World, 1, 1)

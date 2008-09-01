@@ -28,7 +28,8 @@ class Move(object):
         return boo
              
         #self.node.translate(  direction* (1))
-        
+   
+#not finished        
 class GridMove(object):
     def __init__ ( self,pbody,pendPos):
          #for grids

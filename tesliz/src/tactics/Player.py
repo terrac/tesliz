@@ -42,7 +42,8 @@ class HumanPlayer(object):
         self.additem(list,"Move")
         self.additem(list,"Attack")
         self.additem(list,"EndTurn")
-        
+        for ability in self.cunit.abilities:
+            self.additem(list,ability)
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
     listholder = []
     
@@ -51,6 +52,9 @@ class HumanPlayer(object):
     def handleAction(self, e):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
+        
+        if self.cunit.abilities.has_key(text):
+            showAbilityList(text);
         try:
             #eval(" Move(self.cunit)")
             ez = str(text+"(self.cunit)")

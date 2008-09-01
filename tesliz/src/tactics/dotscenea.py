@@ -15,7 +15,7 @@ import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
 from tactics.Unit import *
-from data.unitdata import *
+
 
 
 '''
@@ -297,15 +297,21 @@ class Dotscene(object):
             attachMe.setNormaliseNormals(True)
             unit = Unit()
             unit.node = scene_node
-            getattr(Unitdata(), name)(unit)
+            module = __import__("data.maps."+self.filename)
+            module = getattr(module,'maps')
+            #eval(str("from data."+self.filename+" import *"))
+            getattr(getattr(module,self.filename).Unitdata(), name)(unit)
             
         except IndexError:
             return
         return attachMe
         
     
-        
+    filename = None    
     def parse_scene(self,sceneManager, xml):
+        self.filename = xml
+        
+        xml =  minidom.parse(xml+'.scene')
         '''Modify and return reference to sceneManager from elements specified in dotscene XML document. 
         >>> application = ogre_unit.setup_unittest_application()
         >>> xml = get_test_xml()
