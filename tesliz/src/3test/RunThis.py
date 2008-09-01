@@ -341,11 +341,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         #dir(info.mBody).OgreNode.Name)
        # print dir(info.mBody)
         #position =info.mDistance * info.mNormal + start
-        bodpos, bodorient = info.mBody.getPositionOrientation()
-        globalpt = camray.getPoint( 100.0 * info.mDistance )
-        position = bodorient.Inverse() * (globalpt - bodpos)
+        
     
         if (info.mBody):
+            bodpos, bodorient = info.mBody.getPositionOrientation()
+            globalpt = camray.getPoint( 100.0 * info.mDistance )
+            position = bodorient.Inverse() * (globalpt - bodpos)
             CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
             self.clickEntity(info.mBody.OgreNode.Name,position)
 if __name__ == '__main__':

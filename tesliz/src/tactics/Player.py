@@ -52,7 +52,7 @@ class HumanPlayer(object):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
         try:
-            eval(" Move(self.cunit)")
+            #eval(" Move(self.cunit)")
             ez = str(text+"(self.cunit)")
             self.iexecute = eval(ez)
         except Exception, ex:
@@ -67,11 +67,8 @@ class HumanPlayer(object):
             #time.sleep(1)
         return True
     
-    hack = False
+
     def clickEntity(self,name,position):
-        self.hack = not self.hack
-        if self.hack:
-            return
         if self.iexecute:
             unit = None
             if s.unitmap.has_key(name):
