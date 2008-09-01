@@ -24,7 +24,7 @@ class Turn(object):
         if len(self.turnlist) == 0:
             self.pause = False
             return
-        
+       
         unit =self.turnlist.pop()
         self.s.framelistener.cplayer = unit.player
         unit.startTurn()           

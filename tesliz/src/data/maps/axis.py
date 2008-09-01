@@ -8,3 +8,7 @@ class Unitdata(object):
     def axis(self,unit):
         buildUnit(unit,"SlowFighter","Computer1")
         buildPhysics(unit)
+    
+    def axis3(self,unit):
+        buildUnit(unit,"Mage","Player1")
+        buildPhysics(unit)    

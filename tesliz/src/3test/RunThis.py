@@ -1,3 +1,4 @@
+
 # 
 #   OgreNewt library - connecting Ogre and Newton!
 #   Demo01_TheBasics - basic demo that shows a simple OgreNewt world, and how
@@ -184,7 +185,11 @@ class OgreNewtonApplication (sf.Application):
     def handleQuit(self, e):
         self.frameListener.requestShutdown() 
         return True
-    
+    def getUniqueName(self):
+        self.count+= 1
+        
+        return "unique"+str(self.count)
+    count = 0;
 
        
 class OgreNewtonFrameListener(CEGUIFrameListener):

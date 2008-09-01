@@ -15,17 +15,19 @@ class Attributes(object):
 class Unit(object):
    
     def __str__( self ):
-        return "Unit"
+        return self.type
 
-   
+    def __init__(self):
+        self.attributes = Attributes()
+        self.traits = dict()
     body = None
-   
-    abilities = dict()
-    attributes = Attributes()
+    type = None
+    traits = None
+    attributes = None
     def getName(self):
         return self.node.getName()
     def increment(self):
-        self.attributes.increment()
+        return self.attributes.increment()
     
      
     def startTurn(self):

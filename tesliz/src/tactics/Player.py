@@ -1,4 +1,5 @@
 import sys
+import copy
 from tactics.Singleton import *
 from tactics.Move import *
 from tactics.Attack import *
@@ -17,6 +18,7 @@ class HumanPlayer(object):
     iexecute = None
     def startTurn(self,unit):
        self.cunit = unit 
+       sf.Application.debugText = self.cunit.type
        #self.s.framelistener.cunit = cunit
        self.displayActions()
     
@@ -42,8 +44,8 @@ class HumanPlayer(object):
         self.additem(list,"Move")
         self.additem(list,"Attack")
         self.additem(list,"EndTurn")
-        for ability in self.cunit.abilities:
-            self.additem(list,ability)
+        for trait in self.cunit.traits:
+            self.additem(list,trait)
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
     listholder = []
     
@@ -52,9 +54,9 @@ class HumanPlayer(object):
     def handleAction(self, e):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
-        
-        if self.cunit.abilities.has_key(text):
-            showAbilityList(text);
+        text = str(text)
+        if self.cunit.traits.has_key(text):
+            self.showTraitsList(text);
         try:
             #eval(" Move(self.cunit)")
             ez = str(text+"(self.cunit)")
@@ -88,6 +90,39 @@ class HumanPlayer(object):
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
         list.addItem(item)
+        
+    def showTraitsList(self,text):
+        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
+        winMgr = CEGUI.WindowManager.getSingleton()
+        list = winMgr.createWindow("TaharezLook/Listbox", "abilitylist")
+        sheet.addChildWindow(list)
+        list.setText("abilitylist")
+        list.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
+        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        list.setAlwaysOnTop(True)
+        
+        self.listmap = dict()
+
+        
+        for ability in self.cunit.traits[text]:
+            self.additem(list,ability)
+        list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAbility")
+    def handleAbility(self, e):
+        #aoeu dir(e.window.getFirstSelectedItem().getText())
+        text = e.window.getFirstSelectedItem().getText()
+        
+        try:
+            #eval(" Move(self.cunit)")
+            ez = str(text+"(self.cunit)")
+            self.iexecute = eval(ez)
+        except Exception, ex:
+             print repr(ex)
+        CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
+            
+            #import time
+            #time.sleep(1)
+        return True
+            
   #  def endTurn(self):  
   #      s.turn.endTurn()
                 
