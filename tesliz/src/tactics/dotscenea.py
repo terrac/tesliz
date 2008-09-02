@@ -293,7 +293,7 @@ class Dotscene(object):
             #print 'added entity: "%s" %s' % (name, mesh)
             scene_node.attachObject(attachMe)
             #TODO: for later 
-            attachMe.setMaterialName( "Examples/RustySteel" )
+          #  attachMe.setMaterialName( "Examples/RustySteel" )
             attachMe.setNormaliseNormals(True)
             unit = Unit()
             unit.node = scene_node

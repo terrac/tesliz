@@ -129,10 +129,13 @@ class OgreNewtonApplication (sf.Application):
         self.bodies.append(body)
         ## position camera
         
-        floor = self.sceneManager.createEntity("Floor1", "simple_terrain.mesh" )
+        floor = self.sceneManager.createEntity("Floor1", "Cube.mesh" )
+        
         floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode1" )
         floornode.attachObject( floor )
-        floor.setMaterialName( "Examples/DarkMaterial" )
+        floornode.setScale(Ogre.Vector3(10,10,10))
+        #floornode.setPosition(Ogre.Vector3(0,-10,0))
+        floor.setMaterialName( "LightBlue/SOLID" )
     
         floor.setCastShadows( False )
     
@@ -142,7 +145,7 @@ class OgreNewtonApplication (sf.Application):
         
         ##floornode.setScale( siz )
         bod.attachToNode( floornode )
-        bod.setPositionOrientation( Ogre.Vector3(0.0,-10.0,0.0), Ogre.Quaternion.IDENTITY )
+        bod.setPositionOrientation( Ogre.Vector3(0.0,-30.0,0.0), Ogre.Quaternion.IDENTITY )
         
         self.bodies.append ( bod )
         self.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()

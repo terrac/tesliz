@@ -6,9 +6,9 @@ class Unitdata(object):
         buildPhysics(unit)
                        
     def axis(self,unit):
-        buildUnit(unit,"SlowFighter","Computer1")
+        buildUnit(unit,"SlowFighter","Computer1","Red/SOLID")
         buildPhysics(unit)
     
     def axis3(self,unit):
-        buildUnit(unit,"Mage","Player1")
+        buildUnit(unit,"Mage","Player1","LightGreen/SOLID")
         buildPhysics(unit)    
