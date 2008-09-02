@@ -1,11 +1,12 @@
 class Attributes(object):
-    hitpoints = None
+    hitpoints = 5
     speed = None
     curMovement = 0
     player = None
     #node = None
     moves = 5
     damage = 5
+    node = None
     def increment(self):
         if self.curMovement < self.speed:
             self.curMovement += 1
@@ -33,4 +34,9 @@ class Unit(object):
     def startTurn(self):
         self.player.startTurn(self)
         
-                    
+    def subtractHitpoints(self,number):
+        self.attributes.hitpoints = self.attributes.hitpoints - number
+        
+        if self.attributes.hitpoints < 0:
+            s.app.bodies.remove(self.body)
+                          

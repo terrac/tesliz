@@ -20,7 +20,6 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
-
  
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
@@ -287,14 +286,20 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 node.attachObject(particleSystem2)
                 #ent.setMaterialName( "Examples/RustySteel" )
                 #ent.setNormaliseNormals(True)
+             #   self.MatDefault = self.World.getDefaultMaterialID()
+             #   self.MatConveyor = OgreNewt.MaterialID( self.World )
     
+             #   self.MatPairDefaultConveyor = OgreNewt.MaterialPair( self.World, self.MatDefault, self.MatConveyor )
+             #   self.ConveyorCallback = conveyorMatCallback( 1 )
+             #   self.MatPairDefaultConveyor.setContactCallback( self.ConveyorCallback )
+             #   self.MatPairDefaultConveyor.setDefaultFriction( 1.5, 1.4 )
                 ## again, make the collision shape.
                 ##col = OgreNewt.CollisionPrimitives.Cylinder(self.World, 1, 1)
                 col = OgreNewt.Cylinder(self.World, 1, 1)
                 
                 ## then make the rigid body.    ## need to keep it around see below.......
                 body = OgreNewt.Body( self.World, col)
-    
+              #  body.setMaterialGroupID( self.MatConveyor )
                 ##no longer need the collision shape object
                 del col
     

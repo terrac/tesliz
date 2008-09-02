@@ -59,6 +59,7 @@ def buildPhysics(unit,type= None):
     OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Y)
   #  OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Z)
     OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_X)
+    body.setUserData(unit)
 
 def distance(v1,v2):
     return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
