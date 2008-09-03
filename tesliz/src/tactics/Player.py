@@ -86,7 +86,7 @@ class HumanPlayer(object):
             self.s.framelistener.runningexecutes.append(self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        
-        item =CEGUI.ListboxTextItem (name)
+        item =CEGUI.ListboxTextItem (name)        
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
         list.addItem(item)
@@ -103,17 +103,19 @@ class HumanPlayer(object):
         
         self.listmap = dict()
 
-        
-        for ability in self.cunit.traits[text]:
+        self.currentTrait = text
+        for ability in self.cunit.traits[text].getAbilities():
             self.additem(list,ability)
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAbility")
+        
+    currentTrait = None    
     def handleAbility(self, e):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = e.window.getFirstSelectedItem().getText()
-        
+        toexecute = self.cunit.traits[self.currentTrait].useAbility(text)
         try:
             #eval(" Move(self.cunit)")
-            ez = str(text+"(self.cunit)")
+            ez = str(toexecute+"(self.cunit)")
             self.iexecute = eval(ez)
         except Exception, ex:
              print repr(ex)

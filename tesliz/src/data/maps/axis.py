@@ -11,4 +11,9 @@ class Unitdata(object):
     
     def axis3(self,unit):
         buildUnit(unit,"Mage","Player1","LightGreen/SOLID")
-        buildPhysics(unit)    
+        buildPhysics(unit)
+        
+    def floormap(self,unit):
+        unit.node.getAttachedObject(0).setMaterialName( "LightBlue/SOLID" )
+        
+        buildImmoblePhysics(unit)            

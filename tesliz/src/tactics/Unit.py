@@ -1,3 +1,7 @@
+from tactics.Singleton import *
+
+s = Singleton()
+
 class Attributes(object):
     hitpoints = 5
     speed = None
@@ -36,7 +40,8 @@ class Unit(object):
         
     def subtractHitpoints(self,number):
         self.attributes.hitpoints = self.attributes.hitpoints - number
-        
+        #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
-            s.app.bodies.remove(self.body)
+            s.app.sceneManager.getRootSceneNode().removeChild(self.node)
+            self.body = None
                           

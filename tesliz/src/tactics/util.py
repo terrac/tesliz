@@ -50,7 +50,7 @@ def buildPhysics(unit,type= None):
     #body.setVelocity( (direct * 50.0) )
     
     ## note that we have to keep the bodies around :)
-    s.app.bodies.append(body)
+    #s.app.bodies.append(body)
     body.setAutoFreeze(0)
     body.setLinearDamping(0)
     body.setAngularDamping(Ogre.Vector3(0,0,0))
@@ -59,7 +59,27 @@ def buildPhysics(unit,type= None):
     OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Y)
   #  OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Z)
     OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_X)
-    body.setUserData(unit)
+    #body.setUserData(unit)
+
+def buildImmoblePhysics(unit):
+    #floor = s.app.sceneManager.createEntity("Floor1", "Cube.mesh" )        
+    #floornode = s.app.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode1" )
+    #floornode.attachObject( floor )
+    #floornode.setScale(Ogre.Vector3(10,10,10))
+    #floornode.setPosition(Ogre.Vector3(0,-10,0))
+    #floor.setMaterialName( "LightBlue/SOLID" )
+
+    #floor.setCastShadows( False )
+    node = unit.node
+    ##Ogre.Vector3 siz(100.0, 10.0, 100.0)
+    col = OgreNewt.TreeCollision( s.app.World, node, True )
+    bod = OgreNewt.Body( s.app.World, col )
+    
+    ##floornode.setScale( siz )
+    bod.attachToNode( node )
+    bod.setPositionOrientation( Ogre.Vector3(0.0,-25.0,0.0), Ogre.Quaternion.IDENTITY )
+    
+    s.app.bodies.append ( bod )
 
 def distance(v1,v2):
     return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
