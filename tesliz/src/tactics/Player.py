@@ -5,9 +5,11 @@ from tactics.Move import *
 from tactics.Attack import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
+import utilities.SampleFramework as sf
+s = Singleton()
 class HumanPlayer(object):
         
-    s = Singleton()
+    
     
     #Tells you what the id of the last cegui hooks for the framelistener was    
     hookid = "Player1"
@@ -41,37 +43,17 @@ class HumanPlayer(object):
         self.listmap = dict()
 
         
-        self.additem(list,"Move")
-        self.additem(list,"Attack")
-        self.additem(list,"EndTurn")
+#        self.additem(list,"Move")
+#        self.additem(list,"Attack")
+
         for trait in self.cunit.traits:
             self.additem(list,trait)
+        self.additem(list,"EndTurn")            
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
     listholder = []
     
     
-    #move to player
-    def handleAction(self, e):
-        #aoeu dir(e.window.getFirstSelectedItem().getText())
-        text = e.window.getFirstSelectedItem().getText()
-        text = str(text)
-        if self.cunit.traits.has_key(text):
-            self.showTraitsList(text);
-        try:
-            #eval(" Move(self.cunit)")
-            ez = str(text+"(self.cunit)")
-            self.iexecute = eval(ez)
-        except Exception, ex:
-             print repr(ex)
-        if not isinstance(e.window,CEGUI.ListboxTextItem):    
-            e.window.removeItem(e.window.getFirstSelectedItem())   
-        if text == "EndTurn" or e.window.getItemCount() == 0:
-            self.listmap = dict()
-            CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
-            s.turn.nextUnitTurn()    
-            #import time
-            #time.sleep(1)
-        return True
+
     
 
     def clickEntity(self,name,position):
@@ -83,7 +65,7 @@ class HumanPlayer(object):
                 sf.Application.debugText = "Action failed"
                 return
             sf.Application.debugText = "Action Succeeded"
-            self.s.framelistener.runningexecutes.append(self.iexecute)
+            s.framelistener.runningexecutes.append(self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        
         item =CEGUI.ListboxTextItem (name)        
@@ -91,7 +73,21 @@ class HumanPlayer(object):
         self.listholder.append(item)
         list.addItem(item)
         
-    def showTraitsList(self,text):
+    def handleAction(self,e):
+        text = str(e.window.getFirstSelectedItem().getText())
+        
+        if not isinstance(e.window,CEGUI.ListboxTextItem):    
+            e.window.removeItem(e.window.getFirstSelectedItem())   
+        if text == "EndTurn" or e.window.getItemCount() == 0:
+            self.listmap = dict()
+            CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+            s.turn.nextUnitTurn()
+            return        
+        self.currentTrait = text
+        list = self.cunit.traits[text].getAbilities()
+        if len(list) ==1:
+            self.handleAbility(list[0])
+            return
         sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
         winMgr = CEGUI.WindowManager.getSingleton()
         list = winMgr.createWindow("TaharezLook/Listbox", "abilitylist")
@@ -103,23 +99,29 @@ class HumanPlayer(object):
         
         self.listmap = dict()
 
-        self.currentTrait = text
-        for ability in self.cunit.traits[text].getAbilities():
+        
+        for ability in list:
             self.additem(list,ability)
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAbility")
         
     currentTrait = None    
     def handleAbility(self, e):
         #aoeu dir(e.window.getFirstSelectedItem().getText())
-        text = e.window.getFirstSelectedItem().getText()
+        text = None
+        if isinstance(e,str):
+            text = e
+        else:    
+            text = e.window.getFirstSelectedItem().getText()
+        
         toexecute = self.cunit.traits[self.currentTrait].useAbility(text)
         try:
-            #eval(" Move(self.cunit)")
-            ez = str(toexecute+"(self.cunit)")
-            self.iexecute = eval(ez)
+            toexecute.set(self.cunit)
+            self.iexecute = copy.copy(toexecute)
         except Exception, ex:
              print repr(ex)
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
+            
+        
             
             #import time
             #time.sleep(1)
@@ -148,11 +150,11 @@ class ComputerPlayer(object):
     s = Singleton()
     hookid = "Computer1"
     def startTurn(self,unit):
-        for eunit in self.s.unitmap.values():
+        for eunit in s.unitmap.values():
             if not eunit.player ==self:
-                self.s.framelistener.runningexecutes.append(Move(unit,eunit.node.getPosition()))
-                self.s.framelistener.runningexecutes.append(Attack(unit,eunit))
-                self.s.turn.nextUnitTurn()
+                s.framelistener.runningexecutes.append(Move(unit,eunit.node.getPosition()))
+                s.framelistener.runningexecutes.append(Attack(unit,eunit))
+                s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       

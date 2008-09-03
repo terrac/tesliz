@@ -1,5 +1,5 @@
 from tactics.util import *
-from data.traits.BlackMagic import *
+from data.traits.GenericTraits import *
 from userinterface.NumberedTraits import *
 class Unittypes(object):
     def FastFighter(self,unit):
@@ -15,8 +15,10 @@ class Unittypes(object):
     def Mage(self,unit):
         unit.attributes.speed = 3
         
-        unit.traits["BlackMagic"] = NumberedTraits([Fireball()],[5])
-        #unit.traits["BlackMagic"] = {"Fireball":Fireball()}
+        unit.traits["Move"] = NumberedTraits([Move()],[5])
+        unit.traits["Attack"] = NumberedTraits([Attack()],[5])
+        unit.traits["BlackMagic"] = NumberedTraits([RangeAttack()],[5])
+        #unit.traits["GenericTraits"] = {"Fireball":Fireball()}
         
         
         unit.attributes.hitpoints = 50        

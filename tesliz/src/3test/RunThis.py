@@ -62,9 +62,9 @@ class OgreNewtonApplication (sf.Application):
         sheet = CEGUI.WindowManager.getSingleton().createWindow( "DefaultWindow", "root_wnd" )
         CEGUI.System.getSingleton().setGUISheet( sheet )
         ## sky box.
-        self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
+        #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         dotscene = Dotscene()
-        self.sceneManager = dotscene.setup_scene(self.sceneManager,'axis',self)
+        self.sceneManager = dotscene.setup_scene(self.sceneManager,'antimony',self)
         
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
@@ -95,58 +95,6 @@ class OgreNewtonApplication (sf.Application):
         ## first I load the visual mesh that represents it.  I have some simple primitive shaped .mesh files in
         ## the "primitives" directory to make this simple... all of them have a basic size of "1" so that they
         ## can easily be scaled to fit any size primitive.
-        floor = self.sceneManager.createEntity("Floor", "cylinder.mesh" )
-        floor.setNormaliseNormals(True)
-        floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode" )
-        floornode.attachObject( floor )
-        floor.setMaterialName( "Examples/DarkMaterial" )
-        floor.setCastShadows( False )
-        
-        ## okay, the basic mesh is loaded.  now let's decide the size of the object, and scale the node.
-        siz = Ogre.Vector3(50,2.5,2.5)
-        floornode.setScale( siz )
-
-             
-        ## here's where we make a collision shape for the physics.  note that we use the same size as
-        ## above.
-        col = OgreNewt.Cylinder(self.World, 2.5, 50)
-        #col = OgreNewt.CollisionPrimitives.Cylinder(self.World, 2.5, 5)
-    
-        ## now we make a new rigid body based on this collision shape.
-        body = OgreNewt.Body( self.World, col )
-    
-        ## we`re done with the collision shape, we can delete it now.
-        del col
-    
-        ## now we "attach" the rigid body to the scene node that holds the visual object, and set it's
-        ## original position and orientation.  all rigid bodies default to mass=0 (static, immobile), so
-        ## that's all we'll need to do for this object.  dynamic objects have a few more steps, so look
-        ## at the code in the FrameListener for more.
-        body.attachToNode( floornode )
-        body.setPositionOrientation( Ogre.Vector3(0.0,-15.0,0.0), Ogre.Quaternion.IDENTITY )
-        
-        self.bodies.append(body)
-        ## position camera
-        
-        floor = self.sceneManager.createEntity("Floor1", "Cube.mesh" )
-        
-        floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode1" )
-        floornode.attachObject( floor )
-        floornode.setScale(Ogre.Vector3(10,10,10))
-        #floornode.setPosition(Ogre.Vector3(0,-10,0))
-        floor.setMaterialName( "LightBlue/SOLID" )
-    
-        floor.setCastShadows( False )
-    
-        ##Ogre.Vector3 siz(100.0, 10.0, 100.0)
-        col = OgreNewt.TreeCollision( self.World, floornode, True )
-        bod = OgreNewt.Body( self.World, col )
-        
-        ##floornode.setScale( siz )
-        bod.attachToNode( floornode )
-        bod.setPositionOrientation( Ogre.Vector3(0.0,-30.0,0.0), Ogre.Quaternion.IDENTITY )
-        
-        self.bodies.append ( bod )
         self.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()
         self.msnCam.attachObject( self.camera )
         self.camera.setPosition(0.0, 0.0, 0.0)

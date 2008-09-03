@@ -1,4 +1,4 @@
-from data.traits.BlackMagic import *
+from data.traits.GenericTraits import *
 class NumberedTraits(object):
     
     cmap = dict()
@@ -17,7 +17,7 @@ class NumberedTraits(object):
             if self.listnumbers[i] == 0:
                 continue
             
-            string = self.listclasses[i].__class__.__name__ + str(self.listnumbers[i]) 
+            string = self.listclasses[i].getName() + str(self.listnumbers[i]) 
             self.cmap[string] = i
             retlist.append(string)
         return retlist
@@ -25,4 +25,4 @@ class NumberedTraits(object):
     def useAbility(self,text):
         i = self.cmap[str(text)]
         self.listnumbers[i] = self.listnumbers[i] -1
-        return self.listclasses[i].__class__.__name__
+        return self.listclasses[i]
