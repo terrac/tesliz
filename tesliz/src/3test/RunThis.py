@@ -245,18 +245,21 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         ms = self.Mouse.getMouseState()
    
         if (self.Keyboard.isKeyDown(OIS.KC_LSHIFT)):        
+            rend = CEGUI.System.getSingleton().getRenderer()
+            mouse = CEGUI.Point(rend.getWidth() / 2.0, rend.getHeight() / 2.0)
             self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
             self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
+            CEGUI.MouseCursor.getSingleton().setPosition(mouse)
 
         ##and Keyboard
-        if (self.Keyboard.isKeyDown(OIS.KC_UP)):
-            self.msnCam.translate(trans);
-        if (self.Keyboard.isKeyDown(OIS.KC_DOWN)):
-            self.msnCam.translate(trans * -1.0);
-        if (self.Keyboard.isKeyDown(OIS.KC_LEFT)):
-            self.msnCam.translate(strafe * -1.0);
-        if (self.Keyboard.isKeyDown(OIS.KC_RIGHT)):
-            self.msnCam.translate(strafe);
+        if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
+            self.msnCam.translate(trans * 0.1);
+        if (self.Keyboard.isKeyDown(OIS.KC_DOWN) or self.Keyboard.isKeyDown(OIS.KC_S)):
+            self.msnCam.translate(trans * -0.1);
+        if (self.Keyboard.isKeyDown(OIS.KC_LEFT) or self.Keyboard.isKeyDown(OIS.KC_A)):
+            self.msnCam.translate(strafe * -0.1);
+        if (self.Keyboard.isKeyDown(OIS.KC_RIGHT) or self.Keyboard.isKeyDown(OIS.KC_D)):
+            self.msnCam.translate(strafe * 0.1);
         ## now "shoot" an object!
         if (self.Keyboard.isKeyDown(OIS.KC_SPACE)):
             if (self.timer <= 0.0):
