@@ -38,10 +38,12 @@ class Unit(object):
     def startTurn(self):
         self.player.startTurn(self)
         
-    def subtractHitpoints(self,number):
+    def damageHitpoints(self,number):
         self.attributes.hitpoints = self.attributes.hitpoints - number
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
+            del s.unitmap[self.node.getName()]
             s.app.sceneManager.getRootSceneNode().removeChild(self.node)
             self.body = None
+            
                           

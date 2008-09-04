@@ -1,7 +1,7 @@
 import sys
 import copy
 from tactics.Singleton import *
-from data.traits.GenericTraits import *
+from data.traits.Generictraits import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
@@ -161,5 +161,14 @@ class ComputerPlayer(object):
                 break     
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       
-       
+    def clickEntity(self,name,position):
+        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
+        winMgr = CEGUI.WindowManager.getSingleton()
+        list = winMgr.getWindow("QuitButton")
+        sheet.addChildWindow(list)
+        list.setText("WINNER !!!!!")
+        list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim( 0.5)))
+        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        list.setAlwaysOnTop(True)
+           
             

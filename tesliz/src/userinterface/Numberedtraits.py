@@ -1,4 +1,4 @@
-from data.traits.GenericTraits import *
+#from data.traits.Generictraits import *
 class NumberedTraits(object):
     
     cmap = dict()

@@ -4,6 +4,7 @@ from math import *
 from tactics.Singleton import *
 import ogre.renderer.OGRE as ogre
 import ogre.physics.OgreNewt as OgreNewt
+s = Singleton()
 class Attack(object):
     def __init__ ( self,unit1=None,unit2= None):
         if not unit1:
@@ -29,8 +30,10 @@ class Attack(object):
     
     def execute(self):
         
-        
+        if not self.unit1.body or not self.unit2.body:
+            return
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
         self.unit2.body.setVelocity(direction )
+        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.unit1.attributes.damage)
         
         return False
