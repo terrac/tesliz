@@ -1,13 +1,17 @@
 import sys
 import copy
 from tactics.Singleton import *
-from tactics.Move import *
-from tactics.Attack import *
+from data.traits.GenericTraits import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 s = Singleton()
 class HumanPlayer(object):
+
+    def endTurn(self):
+        CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+        s.turn.nextUnitTurn()
+
         
     
     
@@ -80,8 +84,7 @@ class HumanPlayer(object):
             e.window.removeItem(e.window.getFirstSelectedItem())   
         if text == "EndTurn" or e.window.getItemCount() == 0:
             self.listmap = dict()
-            CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
-            s.turn.nextUnitTurn()
+            self.endTurn()
             return        
         self.currentTrait = text
         list = self.cunit.traits[text].getAbilities()
@@ -118,7 +121,7 @@ class HumanPlayer(object):
             toexecute.set(self.cunit)
             self.iexecute = copy.copy(toexecute)
         except Exception, ex:
-             print repr(ex)
+            print repr(ex)
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
             
         

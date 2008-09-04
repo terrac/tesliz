@@ -3,7 +3,7 @@ import utilities.SampleFramework as sf
 from math import *
 from tactics.Singleton import *
 import ogre.renderer.OGRE as ogre
-
+import ogre.physics.OgreNewt as OgreNewt
 s = Singleton()
 
 class ObjectCallback ( OgreNewt.ContactCallback ):
@@ -55,10 +55,10 @@ class RangeAttack(object):
     def set(self,unit1 = None,unit2= None):     
         self.unit1 = unit1
         self.unit2 = unit2
-    def getName(self)::
+    def getName(self):
         return "Fireball"
         
-    def overallValue(self)::
+    def overallValue(self):
         return 10             
     unit1 = None
     unit2 = None     
@@ -139,80 +139,19 @@ class RangeAttack(object):
         #set velocity
         #self.unit2.body.setVelocity(direction )
         
-        return False
-             
-        #self.node.translate(  direction* (1))
-from tactics.util import *
-
-from math import *
-
-from tactics.util import *
-import utilities.SampleFramework as sf
-from math import *
-
-class Attack(object):
-#    def __init__ ( self,unit1,unit2= None):
-#         self.unit1 = unit1
-#         self.unit2 = unit2
-    def set(self,unit1 = None,unit2= None):     
-        self.unit1 = unit1
-        self.unit2 = unit2
-    def getName(self):
-        return "Attack"
-    def overallValue(self)::
-        return 5
-    unit1 = None
-    unit2 = None     
-
-    
-    def setUnitAndPosition(self,unit2,position):
-        self.unit2 = unit2
-        if not self.unit2:            
-            return False
-        return True
-    
-    def execute(self):
-        
-        
-        direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
-        self.unit2.body.setVelocity(direction )
-        
+        self.unit1.player.endTurn()
         return False
              
         #self.node.translate(  direction* (1))
 
 
-class Move(object):
-    #def __init__ ( self,unit1,pendPos = None):
+             
+        #self.node.translate(  direction* (1))
 
-#         self.body = unit1.body
-#         self.endPos = pendPos
-    def set(self,unit1 = None,unit2= None):     
-        self.unit1 = unit1
-        self.unit2 = unit2
-        self.body = unit1.body
-        self.endPos = pendPos
-    def getName(self):
-        return "Move"
-    body = None
-    endPos = None
-    def overallValue(self)::
-        return -1
-    def setUnitAndPosition(self,unit2,position):
-        self.endPos = position
-        return True
-    
-    def execute(self):
-        position = self.body.getOgreNode().getPosition()
-        direction = self.endPos-position
-        direction.normalise()
-        self.body.setVelocity(direction*50)
-        boo =distance(position, self.endPos) > 2
-        
-        if not boo:
-            self.body.setVelocity(direction*0)
-        
-        return boo
+#for whatever reason util was not importin correctly
+#def distance(v1,v2):
+#    return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
+
              
         #self.node.translate(  direction* (1))
    
