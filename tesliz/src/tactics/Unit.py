@@ -20,7 +20,7 @@ class Attributes(object):
 class Unit(object):
    
     def __str__( self ):
-        return self.type
+        return self.type+" "+self.getName()
 
     def __init__(self):
         self.attributes = Attributes()
@@ -29,6 +29,7 @@ class Unit(object):
     type = None
     traits = None
     attributes = None
+    actionqueue = []
     def getName(self):
         return self.node.getName()
     def increment(self):
@@ -38,12 +39,11 @@ class Unit(object):
     def startTurn(self):
         self.player.startTurn(self)
         
-    def damageHitpoints(self,number):
+    def damageHitpoints(self,number,eunit=None):
         self.attributes.hitpoints = self.attributes.hitpoints - number
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
-            del s.unitmap[self.node.getName()]
-            s.app.sceneManager.getRootSceneNode().removeChild(self.node)
-            self.body = None
+            s.removeUnit(self)
             
-                          
+            #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+                                      

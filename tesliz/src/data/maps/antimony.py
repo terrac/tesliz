@@ -6,7 +6,7 @@ class Unitdata(object):
         buildPhysics(unit)
                        
     def horf1(self,unit):
-        buildUnit(unit,"SlowFighter","Computer1","Red/SOLID")
+        buildUnit(unit,"FastFighter","Computer1","Red/SOLID")
         buildPhysics(unit)
     
     def anti1(self,unit):

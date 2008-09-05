@@ -1,19 +1,24 @@
 from tactics.Singleton import *
-
+import logging
+log = logging.getLogger('')
+s = Singleton()
 class Turn(object):
     
-    s = Singleton()
+    
     
     pnum = 0
     
     def __init__(self):
-        self.s.turn = self
+        s.turn = self
         
     pause = False    
     def doTurn(self):
+        
+        if len(self.turnlist) > 0 and len(s.framelistener.unitqueues) == 0:
+            self.nextUnitTurn()
         if self.pause:
             return
-        for unit in self.s.unitmap.values():
+        for unit in s.unitmap.values():
             if unit.increment():
                self.turnlist.append(unit) 
                self.pause=True
@@ -24,18 +29,21 @@ class Turn(object):
         if len(self.turnlist) == 0:
             self.pause = False
             return
-       
+        if (s.framelistener.timer > 0.0) or s.ended:
+            return
+        s.framelistener.timer = 1
         unit =self.turnlist.pop()
-        self.s.framelistener.cplayer = unit.player
+        s.logger.info(unit)
+        s.framelistener.cplayer = unit.player
         unit.startTurn()           
     turnlist = []          
 #    def startTurn(self):
-#        self.s.playerlist.index(pnum).startTurn()
+#        s.playerlist.index(pnum).startTurn()
     
     
         
 #    def endTurn(self, e):                         
-#        pnum = self.pnum + 1 % len(self.s.playerlist)
+#        pnum = self.pnum + 1 % len(s.playerlist)
 #        if pnum == 0:   
 #          for u in s.unitmap.values():
 #             u.reset()              

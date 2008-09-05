@@ -1,13 +1,16 @@
 import sys
 import copy
 from tactics.Singleton import *
-from data.traits.Generictraits import *
+from tactics.Move import *
+#from data.traits.Generictraits import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 s = Singleton()
 class HumanPlayer(object):
 
+    #def __init__(self):
+        
     def endTurn(self):
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
         s.turn.nextUnitTurn()
@@ -26,7 +29,10 @@ class HumanPlayer(object):
        self.cunit = unit 
        sf.Application.debugText = self.cunit.type
        #self.s.framelistener.cunit = cunit
-       self.displayActions()
+       if s.turnbased:
+           self.displayActions()
+       
+           
     
     caction = None
     def action(self,name):    
@@ -61,6 +67,9 @@ class HumanPlayer(object):
     
 
     def clickEntity(self,name,position):
+        if not s.turnbased and s.unitmap.has_key(name):
+            if unitlist.has_key(s.unitmap[name]):
+                self.displayActions()
         if self.iexecute:
             unit = None
             if s.unitmap.has_key(name):
@@ -148,27 +157,65 @@ class HumanPlayer(object):
             
         #lastClick = name
         
-class ComputerPlayer(object):    
-    unitlist = []
+class ComputerPlayer(object):
+    
+    def __init__(self):    
+        self.unitlist = []
+
+    def getHookid(self):
+        return self.__hookid
+
+
+    def setHookid(self, value):
+        self.__hookid = value
+
+
+    def delHookid(self):
+        del self.__hookid
+
     s = Singleton()
     hookid = "Computer1"
-    def startTurn(self,unit):
+    def startTurn(self,unit):        
+        
         for eunit in s.unitmap.values():
             if not eunit.player ==self:
-                s.framelistener.runningexecutes.append(Move(unit,eunit.node.getPosition()))
-                s.framelistener.runningexecutes.append(Attack(unit,eunit))
+                sf.Application.debugText = str(unit) +"going after"+str(eunit)
+                #s.framelistener.addToQueue(unit,Move(unit,eunit.node.getPosition()))
+                map = dict()
+                try:            
+                    while not self.getHighest(map,unit,eunit).action:
+                        print map
+                except Exception,e:
+                    print e
                 s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       
     def clickEntity(self,name,position):
-        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
-        winMgr = CEGUI.WindowManager.getSingleton()
-        list = winMgr.getWindow("QuitButton")
-        sheet.addChildWindow(list)
-        list.setText("WINNER !!!!!")
-        list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim( 0.5)))
-        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-        list.setAlwaysOnTop(True)
-           
-            
+        if len(self.unitlist) > 0:
+            return
+        self.endGame()
+    def endTurn(self):
+        
+        #CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+        s.turn.nextUnitTurn()           
+
+    def getHighest(self,map,unit,eunit):
+        highest = 0
+        hiabil = None
+        for trait in unit.traits.keys():
+            for abil in unit.traits[trait].listclasses:
+                if highest <abil.overallValue() and not map.has_key(abil):
+                    highest = abil.overallValue()
+                    hiabil = abil
+        map[hiabil] = True            
+        hiabil = copy.copy(hiabil)            
+        hiabil.set(unit,eunit)
+        s.framelistener.addToQueue(unit,hiabil)
+        
+        s.logger.info(str(unit)+" "+str(hiabil))
+        return hiabil
+
+
+
+    

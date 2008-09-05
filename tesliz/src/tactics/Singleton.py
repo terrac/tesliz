@@ -1,13 +1,28 @@
 #from tactics.Turn import Turn
 
 import ogre.renderer.OGRE as Ogre
+import logging
+import os
+import ogre.gui.CEGUI as CEGUI
+from utilities.CEGUI_framework import *
+
 
 class Singleton:
     """ A python singleton """
 
     class __impl:
         """ Implementation of the singleton interface """
-       
+        def __init__(self):
+           self.logger = logging.getLogger('myapp')
+           os.remove('tesliz.log')
+           hdlr = logging.FileHandler('tesliz.log')
+#           formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+           formatter = logging.Formatter('%(message)s')
+           hdlr.setFormatter(formatter)
+           self.logger.addHandler(hdlr)
+           self.logger.setLevel(logging.INFO)
+           
+           
         #key = name : value = node
         unitmap = dict()
         
@@ -17,6 +32,32 @@ class Singleton:
         framelistener = None
         app = None
         vector = Ogre.Vector3(0,0,0)
+        turnbased = True
+        ended = False
+        def removeUnit(self,unit):
+            
+            self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
+            unit.body = None
+            del self.unitmap[unit.getName()]
+            unit.player.unitlist.remove(unit)
+            a = ""
+            for e in unit.player.unitlist:
+                a += str(e)
+            self.logger.info(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
+            if len(unit.player.unitlist) == 0:
+                self.logger.info("endgame")
+                self.endGame()
+                
+        def endGame(self):
+            #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
+            winMgr = CEGUI.WindowManager.getSingleton()
+            list = winMgr.getWindow("QuitButton")
+            #sheet.addChildWindow(list)
+            list.setText("WINNER !!!!!")
+            self.ended = True
+            list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim(0.5)))
+            list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim(0.3)))
+            list.setAlwaysOnTop(True)    
     # storage for the instance reference
     __instance = None
 

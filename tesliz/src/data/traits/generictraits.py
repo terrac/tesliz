@@ -74,6 +74,9 @@ class RangeAttack(object):
     
     
     def execute(self):
+    	if not self.unit2.body or not self.unit1.body:
+    		return
+    
         World = s.app.World
         sceneManager = s.app.sceneManager
 
@@ -92,14 +95,15 @@ class RangeAttack(object):
         node = fountainNode.createChildSceneNode()
         node.attachObject(particleSystem2)
 
-
-        s.app.MatDefault = World.getDefaultMaterialID()
-        s.app.MatObject = OgreNewt.MaterialID( World )
-
-        s.app.MatPairDefaultObject = OgreNewt.MaterialPair( World, s.app.MatDefault, s.app.MatObject )
-        s.app.ObjectCallback = ObjectCallback( 1 )
-        s.app.MatPairDefaultObject.setContactCallback( s.app.ObjectCallback )
-        s.app.MatPairDefaultObject.setDefaultFriction( 1.5, 1.4 )
+        try:
+            s.app.MatDefault
+        except:    
+            s.app.MatDefault = World.getDefaultMaterialID()
+            s.app.MatObject = OgreNewt.MaterialID( World )
+            s.app.MatPairDefaultObject = OgreNewt.MaterialPair( World, s.app.MatDefault, s.app.MatObject )
+            s.app.ObjectCallback = ObjectCallback( 1 )
+            s.app.MatPairDefaultObject.setContactCallback( s.app.ObjectCallback )
+            s.app.MatPairDefaultObject.setDefaultFriction( 1.5, 1.4 )
         ## again, make the collision shape.
         ##col = OgreNewt.CollisionPrimitives.Cylinder(World, 1, 1)
         col = OgreNewt.Cylinder(World, 1, 1)

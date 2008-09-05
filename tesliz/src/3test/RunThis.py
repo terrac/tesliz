@@ -8,12 +8,12 @@
 import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.io.OIS as OIS
-
+from utilities.physics import *
 from tactics.dotscenea import *
 from tactics.Turn import *
 from tactics.Player import *
 from tactics.Move import *
-from data.playermap import *
+from data.settings import *
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
 from utilities.CEGUIFrameListener import *
 from utilities.CEGUI_framework import *
@@ -23,6 +23,8 @@ import random
  
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
+    
+    currentmap=None
     def __init__ ( self):
         sf.Application.__init__(self)
         self.World = OgreNewt.World()
@@ -46,7 +48,7 @@ class OgreNewtonApplication (sf.Application):
         Turn()
         
         s.app = self
-        s.playermap = Playermap().playermap
+        s.playermap = Settings().playermap
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
                 Ogre.RENDER_QUEUE_OVERLAY, False, 3000, self.sceneManager )
         self.GUIsystem = CEGUI.System( self.GUIRenderer )
@@ -64,7 +66,7 @@ class OgreNewtonApplication (sf.Application):
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         dotscene = Dotscene()
-        self.sceneManager = dotscene.setup_scene(self.sceneManager,'antimony',self)
+        self.sceneManager = dotscene.setup_scene(self.sceneManager,self.currentmap,self)
         
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
@@ -104,7 +106,7 @@ class OgreNewtonApplication (sf.Application):
         light = self.sceneManager.createLight( "Light1" )
         light.setType( Ogre.Light.LT_POINT )
         light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
-       # self.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+       
 
 
     def _createFrameListener(self):
@@ -157,25 +159,50 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.msnCam = msnCam
         self.camera= camera
         self.sceneManager = Mgr
-        self.timer=0
+        self.timer=1
         self.count=0
         self.bodies=[]
         self.basicframelistener = NewtonListener
         self.Debug = False
         self.ShutdownRequested = False
 
+    #then you can have both
+    def addToQueue(self, unit,action):
+        try:
+            dist =distance(action.unit2.node.getPosition(),action.unit1.node.getPosition())
+#            mindis = None
+            try:
+                mindis = action.minimumDistance
+            except :
+                mindis = 0
+#            maxdis 
+            try:
+                maxdis = action.maximumDistance
+            except:
+                maxdis = 0            
+            
+            
+            if mindis > 0:
+                if mindis > dist:
+                    return False
+            if maxdis > 0:
+                if maxdis < dist:
+                    return False    
+        except Exception, e:
+            print e
+        unit.actionqueue.append(action)
+        self.unitqueues.append(unit)
+    unitqueues = []   
     #turn = Turn()
     def frameStarted(self, frameEvent):
         ## in this frame listener we control the camera movement, and allow the user to "shoot" cylinders
         ## by pressing the space bar.  first the camera movement...
         #turn.runturns()
         
-        for iexecute in self.runningexecutes:
-            boo = iexecute.execute()
-            if not boo:
-                self.runningexecutes.remove(iexecute)
-            break
-        self.debugText = "aoeu"
+                    
+#        if s.ended:
+#            return 
+        
         quat = self.msnCam.getOrientation()
     
         vec = Ogre.Vector3(0.0,0.0,-0.5)
@@ -188,7 +215,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         ## OIS specific !!!!
         self.Keyboard.capture()    
         self.Mouse.capture()
-        s.turn.doTurn()
+
         ## now lets handle mouse input
         ms = self.Mouse.getMouseState()
    
@@ -198,7 +225,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
             self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
             CEGUI.MouseCursor.getSingleton().setPosition(mouse)
-
+            sf.Application.debugText = str(self.msnCam.getPosition())
         ##and Keyboard
         if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
             self.msnCam.translate(trans * 0.1);
@@ -275,6 +302,21 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 
                 self.timer = 0.2
         self.timer -= frameEvent.timeSinceLastFrame
+        if (self.timer > 0.0):
+            return True
+
+        s.turn.doTurn()        
+        for unit in self.unitqueues:
+            if len(unit.actionqueue) == 0:
+                self.unitqueues.remove(unit)
+            for iexecute in unit.actionqueue:
+                boo = iexecute.execute()
+                if not boo:
+                    unit.actionqueue.remove(iexecute)
+                    
+                if s.turnbased :   
+                    break
+
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False
@@ -290,7 +332,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         if self.cplayer:
             self.cplayer.clickEntity(name,position)            
     oncegui = False       
-    runningexecutes = []
+    #runningexecutes = []
     cplayer = None
     def mousePressed(self, evt, id):
         if CEGUIFrameListener.mousePressed(self,evt,id):
@@ -326,5 +368,8 @@ if __name__ == '__main__':
         application.go()
     except Ogre.OgreException, e:
         print e
-    
+#    except:
+#        import sys
+#        sys.exc_info()
+
     
