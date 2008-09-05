@@ -13,6 +13,7 @@ class HumanPlayer(object):
         
     def endTurn(self):
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+        s.turn.pause = False
         s.turn.nextUnitTurn()
 
         
@@ -68,7 +69,7 @@ class HumanPlayer(object):
 
     def clickEntity(self,name,position):
         if not s.turnbased and s.unitmap.has_key(name):
-            if unitlist.has_key(s.unitmap[name]):
+            if s.unitmap[name] in self.unitlist:
                 self.displayActions()
         if self.iexecute:
             unit = None
@@ -78,7 +79,7 @@ class HumanPlayer(object):
                 sf.Application.debugText = "Action failed"
                 return
             sf.Application.debugText = "Action Succeeded"
-            s.framelistener.runningexecutes.append(self.iexecute)
+            s.framelistener.addToQueue(self.cunit,self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        
         item =CEGUI.ListboxTextItem (name)        
@@ -187,6 +188,8 @@ class ComputerPlayer(object):
                         print map
                 except Exception,e:
                     print e
+                s.turn.pause = False    
+                
                 s.turn.nextUnitTurn()
                 break     
         #go through playremap and find closest enemy.  Set to attack

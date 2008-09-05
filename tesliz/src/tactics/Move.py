@@ -34,7 +34,7 @@ class Move(object):
          
         direction = self.endPos-position
         direction.normalise()
-        self.body.setVelocity(direction*20)
+        self.body.setVelocity(direction*5)
         boo =distance(position, self.endPos) > 2
         
         if not boo:

@@ -44,11 +44,13 @@ class OgreNewtonApplication (sf.Application):
 
     
     def _createScene ( self ):
-        
-        Turn()
-        
         s.app = self
         s.playermap = Settings().playermap
+        if s.turnbased:
+            Turn()
+        else:
+            RealTimeTurn()
+        
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
                 Ogre.RENDER_QUEUE_OVERLAY, False, 3000, self.sceneManager )
         self.GUIsystem = CEGUI.System( self.GUIRenderer )
@@ -314,7 +316,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 if not boo:
                     unit.actionqueue.remove(iexecute)
                     
-                if s.turnbased :   
+                break
+            if s.turnbased :   
                     break
 
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
