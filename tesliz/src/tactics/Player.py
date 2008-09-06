@@ -216,7 +216,7 @@ class ComputerPlayer(object):
         hiabil.set(unit,eunit)
         s.framelistener.addToQueue(unit,hiabil)
         
-        s.logger.info(str(unit)+" "+str(hiabil))
+        s.log(str(unit)+" "+str(hiabil))
         return hiabil
 
 

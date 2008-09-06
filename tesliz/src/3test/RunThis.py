@@ -28,8 +28,10 @@ class OgreNewtonApplication (sf.Application):
     def __init__ ( self):
         sf.Application.__init__(self)
         self.World = OgreNewt.World()
+        
         self.EntityCount = 0
         self.bodies=[]
+        self.timedbodies = []
         sf.Application.debugText = "aeou"
 
     def __del__ (self):
@@ -105,9 +107,18 @@ class OgreNewtonApplication (sf.Application):
         self.msnCam.setPosition( 0.0, -10.0, 20.0)
     
         ##make a light
-        light = self.sceneManager.createLight( "Light1" )
-        light.setType( Ogre.Light.LT_POINT )
-        light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
+        #light = self.sceneManager.createLight( "Light1" )
+        #light.setType( Ogre.Light.LT_POINT )
+        #light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
+        
+        World = s.app.World
+        sceneManager = s.app.sceneManager
+        s.app.MatDefault = World.getDefaultMaterialID()
+        s.app.MatObject = OgreNewt.MaterialID( World )
+        s.app.MatPairDefaultObject = OgreNewt.MaterialPair( World, s.app.MatDefault, s.app.MatObject )
+        s.app.ObjectCallback = ObjectCallback( 1 )
+        s.app.MatPairDefaultObject.setContactCallback( s.app.ObjectCallback )
+        s.app.MatPairDefaultObject.setDefaultFriction( 1.5, 1.4 )
        
 
 
@@ -168,6 +179,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.Debug = False
         self.ShutdownRequested = False
 
+    def addTimedBody(self, body,seconds):
+        x = body,seconds
+        s.app.timedbodies.append(x)
+
     #then you can have both
     def addToQueue(self, unit,action):
         try:
@@ -205,6 +220,21 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #        if s.ended:
 #            return 
         
+        #todo somewhat inefficient
+        list = []
+        while len(s.app.timedbodies) > 0:
+            body, time = s.app.timedbodies.pop()
+            time -= frameEvent.timeSinceLastFrame
+            tuple = body,time
+            #print tuple
+            if time > 0:
+               list.append(tuple) 
+            else:
+                s.app.sceneManager.getRootSceneNode().removeChild(body.getOgreNode())
+                   
+        s.app.timedbodies = list
+                   
+                     
         quat = self.msnCam.getOrientation()
     
         vec = Ogre.Vector3(0.0,0.0,-0.5)
@@ -312,7 +342,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if len(unit.actionqueue) == 0:
                 self.unitqueues.remove(unit)
             for iexecute in unit.actionqueue:
-                boo = iexecute.execute()
+                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
                 if not boo:
                     unit.actionqueue.remove(iexecute)
                     

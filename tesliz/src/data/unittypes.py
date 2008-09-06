@@ -11,11 +11,12 @@ class Unittypes(object):
         unit.attributes.speed = 3
         unit.attributes.hitpoints = 50        
         unit.attributes.damage = 50
-        move = NumberedTraits([Move()],[5])
-        unit.traits["Move"] = move
-        attack = NumberedTraits([Attack()],[5])
-        unit.traits["Attack"] = attack
-                       
+        #move = NumberedTraits([Move()],[5])
+        #unit.traits["Move"] = move
+        #attack = NumberedTraits([Attack()],[5])
+        #unit.traits["Attack"] = attack
+        range = NumberedTraits([JumpAttack()],[5])
+        unit.traits["JumpAttack"] = range               
 #    def SlowFighter(self,unit):
 #        unit.attributes.speed = 5
 #        unit.attributes.hitpoints = 50        

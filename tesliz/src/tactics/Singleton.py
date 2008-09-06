@@ -5,7 +5,7 @@ import logging
 import os
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
-
+import utilities.SampleFramework as sf
 
 class Singleton:
     """ A python singleton """
@@ -43,9 +43,9 @@ class Singleton:
             a = ""
             for e in unit.player.unitlist:
                 a += str(e)
-            self.logger.info(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
+            self.log(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
             if len(unit.player.unitlist) == 0:
-                self.logger.info("endgame")
+                self.log("endgame")
                 self.endGame()
                 
         def endGame(self):
@@ -57,7 +57,14 @@ class Singleton:
             self.ended = True
             list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim(0.5)))
             list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim(0.3)))
-            list.setAlwaysOnTop(True)    
+            list.setAlwaysOnTop(True)
+            
+        def log(self,text):
+            sf.Application.debugText = text
+            self.logger.info(text)                
+            print text
+        def screenshot(self):    
+            self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")    
     # storage for the instance reference
     __instance = None
 

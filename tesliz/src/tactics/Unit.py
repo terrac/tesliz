@@ -45,5 +45,5 @@ class Unit(object):
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
             
-            #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+           # s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       

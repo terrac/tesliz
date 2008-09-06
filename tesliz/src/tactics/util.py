@@ -26,7 +26,7 @@ def buildPhysics(unit,type= None):
 
     if type:
     #TODO convex hulls -figure out and do
-        col = getattr(OgreNewt, type)(s.app.World, 3, 3)
+        col = getattr(OgreNewt, type)(s.app.World,Ogre.Vector3(1,1,1))
     else:    
         col = OgreNewt.Box(s.app.World, Ogre.Vector3(1,1,1))
     body = OgreNewt.Body( s.app.World, col)
@@ -50,7 +50,7 @@ def buildPhysics(unit,type= None):
     #body.setVelocity( (direct * 50.0) )
     
     ## note that we have to keep the bodies around :)
-    #s.app.bodies.append(body)
+  
     body.setAutoFreeze(0)
     body.setLinearDamping(0)
     body.setAngularDamping(Ogre.Vector3(0,0,0))

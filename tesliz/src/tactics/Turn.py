@@ -33,7 +33,7 @@ class Turn(object):
         self.pause = True
         s.framelistener.timer = 1
         unit =self.turnlist.pop()
-        s.logger.info(unit)
+        s.log(unit)
         s.framelistener.cplayer = unit.player
         unit.startTurn()           
     turnlist = []          

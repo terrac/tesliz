@@ -3,11 +3,11 @@ from tactics.util import *
 class Unitdata(object):
     def horf2(self,unit):
         buildUnit(unit,"FastFighter","Computer1","horf")
-        buildPhysics(unit)
+        buildPhysics(unit,"Ellipsoid")
                        
     def horf1(self,unit):
         buildUnit(unit,"FastFighter","Computer1","horf")
-        buildPhysics(unit)
+        buildPhysics(unit,"Ellipsoid")
     
     def anti1(self,unit):
         buildUnit(unit,"Mage","Player1","Materiala")

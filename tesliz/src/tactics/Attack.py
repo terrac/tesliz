@@ -28,7 +28,7 @@ class Attack(object):
             return False
         return True
     
-    def execute(self):
+    def execute(self,timer):
         
         if not self.unit1.body or not self.unit2.body:
             return

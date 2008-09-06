@@ -27,14 +27,14 @@ class Move(object):
         self.endPos = position
         return True
     
-    def execute(self):    	#dir(tactics.util)
+    def execute(self,timer):    	#dir(tactics.util)
     	if not self.body:
     		return
         position = self.body.getOgreNode().getPosition()
          
         direction = self.endPos-position
         direction.normalise()
-        self.body.setVelocity(direction*5)
+        self.body.setVelocity(direction*20)
         boo =distance(position, self.endPos) > 2
         
         if not boo:
