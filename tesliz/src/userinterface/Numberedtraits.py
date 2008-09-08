@@ -17,7 +17,7 @@ class NumberedTraits(object):
             if self.listnumbers[i] == 0:
                 continue
             
-            string = self.listclasses[i].getName() + str(self.listnumbers[i]) 
+            string = self.listclasses[i].name + str(self.listnumbers[i]) 
             self.cmap[string] = i
             retlist.append(string)
         return retlist

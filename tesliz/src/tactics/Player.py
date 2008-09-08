@@ -2,6 +2,7 @@ import sys
 import copy
 from tactics.Singleton import *
 from tactics.Move import *
+from tactics.datautil import *
 #from data.traits.Generictraits import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
@@ -75,7 +76,7 @@ class HumanPlayer(object):
             unit = None
             if s.unitmap.has_key(name):
                 unit = s.unitmap[name]           
-            if not self.iexecute.setUnitAndPosition(unit,position):
+            if not setStart(self.iexecute,None,unit,position):
                 sf.Application.debugText = "Action failed"
                 return
             sf.Application.debugText = "Action Succeeded"
@@ -128,7 +129,7 @@ class HumanPlayer(object):
         
         toexecute = self.cunit.traits[self.currentTrait].useAbility(text)
         try:
-            toexecute.set(self.cunit)
+            setStart(toexecute,self.cunit)
             self.iexecute = copy.copy(toexecute)
         except Exception, ex:
             print repr(ex)
@@ -208,12 +209,12 @@ class ComputerPlayer(object):
         hiabil = None
         for trait in unit.traits.keys():
             for abil in unit.traits[trait].listclasses:
-                if highest <abil.overallValue() and not map.has_key(abil):
-                    highest = abil.overallValue()
+                if highest <abil.value and not map.has_key(abil):
+                    highest = abil.value
                     hiabil = abil
         map[hiabil] = True            
         hiabil = copy.copy(hiabil)            
-        hiabil.set(unit,eunit)
+        setStart(hiabil,unit,eunit)
         s.framelistener.addToQueue(unit,hiabil)
         
         s.log(str(unit)+" "+str(hiabil))

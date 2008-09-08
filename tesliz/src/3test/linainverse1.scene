@@ -1,36 +1,24 @@
 
 <scene formatVersion="1.0.0">
   <nodes>
-    <node name="anti1">
+    <node name="lina">
       <position x="4.441185" y="-10.466457" z="-2.703125"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".3" y=".3" z=".3"/>
-      <entity name="anti1" meshFile="antimony.mesh"/>
+      <entity name="lina" meshFile="cylinder.mesh"/>
     </node>
 
-    <node name="anti2">
-      <position x="-4.968002" y="-10.185442" z="0.570840"/>
-      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".3" y=".3" z=".3"/>
-      <entity name="anti2" meshFile="antimony.mesh"/>
-    </node>
-    <node name="anti3">
-      <position x="3.720145" y="-10.466457" z="2.703125"/>
-      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".3" y=".3" z=".3"/>
-      <entity name="anti3" meshFile="antimony.mesh"/>
-    </node>
-        <node name="horf2">
+       <node name="bandit2">
       <position x="9.110566" y="-10.735053" z="4.570840"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".3" y=".3" z=".3"/>
-      <entity name="horf2" meshFile="horf.mesh"/>
+      <entity name="bandit2" meshFile="cylinder.mesh"/>
     </node>
-    <node name="horf1">
+    <node name="bandit1">
       <position x="11.294511" y="-10.900315" z="5.703125"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".3" y=".3" z=".3"/>
-      <entity name="horf1" meshFile="horf.mesh"/>
+      <entity name="bandit1" meshFile="cylinder.mesh"/>
     </node>
     <node name="Lamp">
       <position x="4.076245" y="1.005454" z="5.903862"/>

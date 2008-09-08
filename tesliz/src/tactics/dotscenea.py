@@ -302,6 +302,8 @@ class Dotscene(object):
             #eval(str("from data."+self.filename+" import *"))
             getattr(getattr(module,self.filename).Unitdata(), name)(unit)
             
+
+            
         except IndexError:
             return
         return attachMe

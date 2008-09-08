@@ -32,6 +32,7 @@ class OgreNewtonApplication (sf.Application):
         self.EntityCount = 0
         self.bodies=[]
         self.timedbodies = []
+        self.materialmap=dict()
         sf.Application.debugText = "aeou"
 
     def __del__ (self):
@@ -46,6 +47,15 @@ class OgreNewtonApplication (sf.Application):
 
     
     def _createScene ( self ):
+        
+        # Play Windows exit sound.
+        #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+        
+        # Probably play Windows default sound, if any is registered (because
+        # "*" probably isn't the registered name of any sound).
+    
+        
+
         s.app = self
         s.playermap = Settings().playermap
         if s.turnbased:
@@ -106,20 +116,11 @@ class OgreNewtonApplication (sf.Application):
         self.camera.setPosition(0.0, 0.0, 0.0)
         self.msnCam.setPosition( 0.0, -10.0, 20.0)
     
-        ##make a light
-        #light = self.sceneManager.createLight( "Light1" )
-        #light.setType( Ogre.Light.LT_POINT )
-        #light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
         
-        World = s.app.World
-        sceneManager = s.app.sceneManager
-        s.app.MatDefault = World.getDefaultMaterialID()
-        s.app.MatObject = OgreNewt.MaterialID( World )
-        s.app.MatPairDefaultObject = OgreNewt.MaterialPair( World, s.app.MatDefault, s.app.MatObject )
-        s.app.ObjectCallback = ObjectCallback( 1 )
-        s.app.MatPairDefaultObject.setContactCallback( s.app.ObjectCallback )
-        s.app.MatPairDefaultObject.setDefaultFriction( 1.5, 1.4 )
-       
+#        for unit in s.unitmap.values():
+#            self.camera.lookAt(unit.node.getPosition())
+        
+        
 
 
     def _createFrameListener(self):
@@ -185,28 +186,28 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
     #then you can have both
     def addToQueue(self, unit,action):
-        try:
-            dist =distance(action.unit2.node.getPosition(),action.unit1.node.getPosition())
-#            mindis = None
-            try:
-                mindis = action.minimumDistance
-            except :
-                mindis = 0
-#            maxdis 
-            try:
-                maxdis = action.maximumDistance
-            except:
-                maxdis = 0            
-            
-            
-            if mindis > 0:
-                if mindis > dist:
-                    return False
-            if maxdis > 0:
-                if maxdis < dist:
-                    return False    
-        except Exception, e:
-            print e
+#        try:
+#            dist =distance(action.unit2.node.getPosition(),action.unit1.node.getPosition())
+##            mindis = None
+#            try:
+#                mindis = action.minimumDistance
+#            except :
+#                mindis = 0
+##            maxdis 
+#            try:
+#                maxdis = action.maximumDistance
+#            except:
+#                maxdis = 0            
+#            
+#            
+#            if mindis > 0:
+#                if mindis > dist:
+#                    return False
+#            if maxdis > 0:
+#                if maxdis < dist:
+#                    return False    
+#        except Exception, e:
+#            print e
         unit.actionqueue.append(action)
         self.unitqueues.append(unit)
     unitqueues = []   
@@ -219,7 +220,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                     
 #        if s.ended:
 #            return 
-        
+        for eunit in s.playermap["Computer1"].unitlist:
+            eunit.node.setVisible(False)
+            for unit in s.playermap["Player1"].unitlist:
+                if distance(eunit.node.getPosition(),unit.node.getPosition()) < unit.attributes.sight:
+                    eunit.node.setVisible(True)
+                    break    
         #todo somewhat inefficient
         list = []
         while len(s.app.timedbodies) > 0:
@@ -362,8 +368,30 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             return False
         return True        
     def clickEntity(self,name,position):
+        self.showAttributes(name)                    
         if self.cplayer:
-            self.cplayer.clickEntity(name,position)            
+            self.cplayer.clickEntity(name,position)
+            
+
+    def showAttributes(self, name):
+        if not s.unitmap.has_key(name):
+            return
+        unit = s.unitmap[name]
+        winMgr = CEGUI.WindowManager.getSingleton()
+        if not winMgr.isWindowPresent("attributes"):
+            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributes")
+            sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
+            sheet.addChildWindow(btn)
+        else:
+            btn = winMgr.getWindow("attributes")
+            
+        btn.setText(str(unit)+"\n"+str(unit.attributes))
+        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.6)))
+        btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))
+        
+        
+        btn.setAlwaysOnTop(True)
+                                
     oncegui = False       
     #runningexecutes = []
     cplayer = None
@@ -395,6 +423,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             position = bodorient.Inverse() * (globalpt - bodpos)
             CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
             self.clickEntity(info.mBody.OgreNode.Name,position)
+
+        
+
 if __name__ == '__main__':
     try:
         application = OgreNewtonApplication()

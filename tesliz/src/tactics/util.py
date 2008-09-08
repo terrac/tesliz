@@ -5,12 +5,12 @@ import ogre.renderer.OGRE as Ogre
 from data.unittypes import *
 s = Singleton()
 
-def buildUnit(unit,unittype,playername,materialname = "Examples/RustySteel"):
+def buildUnit(unit,unittype,level,playername):
     s.unitmap[unit.getName()]=unit
     
     unit.type = unittype
-    getattr(Unittypes(), unittype)(unit)
-    unit.node.getAttachedObject(0).setMaterialName( materialname )
+    getattr(Unittypes(), unittype)(unit,level)
+    
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
         player.unitlist.append(unit)

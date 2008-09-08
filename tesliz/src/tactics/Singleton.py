@@ -6,7 +6,7 @@ import os
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
-
+import winsound
 class Singleton:
     """ A python singleton """
 
@@ -40,6 +40,7 @@ class Singleton:
             unit.body = None
             del self.unitmap[unit.getName()]
             unit.player.unitlist.remove(unit)
+            
             a = ""
             for e in unit.player.unitlist:
                 a += str(e)
@@ -47,6 +48,7 @@ class Singleton:
             if len(unit.player.unitlist) == 0:
                 self.log("endgame")
                 self.endGame()
+            del unit    
                 
         def endGame(self):
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
@@ -55,7 +57,7 @@ class Singleton:
             #sheet.addChildWindow(list)
             list.setText("WINNER !!!!!")
             self.ended = True
-            list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim(0.5)))
+            list.setPosition(CEGUI.UVector2(cegui_reldim(0.335), cegui_reldim(0.3)))
             list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim(0.3)))
             list.setAlwaysOnTop(True)
             
@@ -64,7 +66,11 @@ class Singleton:
             self.logger.info(text)                
             print text
         def screenshot(self):    
-            self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")    
+            self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+        def playsound(self,filename="C:\sound.wav"):
+            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
+        def playmusic(self,filename="C:\sound.wav"):
+            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)        
     # storage for the instance reference
     __instance = None
 

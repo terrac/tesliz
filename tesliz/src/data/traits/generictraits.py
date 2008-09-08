@@ -1,4 +1,5 @@
 from tactics.util import *
+from tactics.Material import *
 import utilities.SampleFramework as sf
 from math import *
 from tactics.Singleton import *
@@ -15,8 +16,10 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         self.hit = False
     
     def userProcess(self):
+        unit1body = None
         
-        
+        print self.m_body0.getOgreNode().getName() +"aoeu"
+        print self.m_body1.getOgreNode().getName()
         ## first, find which body represents the Object unit1body!
         if (self.m_body0.getType() == self.typeID):
             unit1body = self.m_body0
@@ -25,14 +28,17 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         if (self.m_body1.getType() == self.typeID):
             unit1body = self.m_body1
             object = self.m_body0
+            
         if not unit1body:
             return 0
-        
+
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
-            s.unitmap[object.getOgreNode().getName()].damageHitpoints(50)
-            self.hit = True
+            s.unitmap[object.getOgreNode().getName()].damageHitpoints(unit1body.getUserData())
+            
             unit1body.setVelocity(Ogre.Vector3(0,0,0))
+            
+            
         ## okay, found the unit1body... let's adjust the collision based on this.
         #thedir = unit1body.getGlobalDir()
         
@@ -44,51 +50,31 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         return 1
 
 class RangeAttack(object):
-    def __init__ ( self,unit1 = None,unit2= None):
-        self.unit1 = unit1
-        self.unit2 = unit2
-        #self.MatDefault = s.app.World.getDefaultMaterialID()
-        #self.MatObject = OgreNewt.MaterialID( s.app.World )
-        #self.MatPairDefaultObject = OgreNewt.MaterialPair( s.app.World, self.MatDefault, self.MatObject )
-         
-        #self.ObjectCallback =  ObjectMatCallback( 1 )
-         
-         
-        #self.MatPairDefaultObject.setContactCallback( self.ObjectCallback )
-        #self.MatPairDefaultObject.setDefaultFriction( 1.5, 1.4 )        
-        
 
-    def set(self,unit1 = None,unit2= None):     
-        self.unit1 = unit1
-        self.unit2 = unit2
-    def getName(self):
-        return "Fireball"
-        
-    def overallValue(self):
-        return 10             
-    unit1 = None
-    unit2 = None     
+    name="Fireball"
+    value=10     
 
     
-    def setUnitAndPosition(self,unit2,position):
-        self.unit2 = unit2
-        
-        
-        if not self.unit2:            
-            return False
-        return True
-    
+    unit2 = None
+#    def ready(self):
+#        return self.unit2
     
     def execute(self,timer):
-    	if not self.unit2.body or not self.unit1.body:
+    	if not self.unit1.body:
     		return
-    
+        
+        vector1 = self.unit1.body.getOgreNode().getPosition()
+        if self.unit2:
+            vector2 = self.unit2.body.getOgreNode().getPosition()
+        else:
+            self.endPos.y = vector1.y
+            vector2 = self.endPos    
         World = s.app.World
         sceneManager = s.app.sceneManager
 
-        vector1 = self.unit1.body.getOgreNode().getPosition()
+        
         vector1.y += 5
-        direction = self.unit2.body.getOgreNode().getPosition() - vector1
+        direction = vector2 - vector1
         
         name = s.app.getUniqueName()
         
@@ -117,8 +103,14 @@ class RangeAttack(object):
         ## then make the rigid body.    ## need to keep it around see below.......
         body = OgreNewt.Body( World, col)
         #body.setMaterialGroupID( s.app.MatObject )
-        body.setMaterialGroupID( s.app.MatObject )
-        body.setType(1)
+        
+    
+        material =Material(name,ObjectCallback( 2))
+        
+        body.setMaterialGroupID( material.MatObject )
+        body.setType(2)
+        body.setUserData(self.unit1.attributes.damage)
+        
         ##no longer need the collision shape object
         del col
 
@@ -143,7 +135,7 @@ class RangeAttack(object):
         s.framelistener.addTimedBody(body,5)
         
    
-        
+        s.framelistener.timer = 2
         self.unit1.player.endTurn()
         return False
              
@@ -152,56 +144,28 @@ class RangeAttack(object):
 
 class JumpAttack(object):
     def __init__ ( self,unit1 = None,unit2= None):
-        self.unit1 = unit1
-        self.unit2 = unit2
         self.lastlen = None
-
-    def set(self,unit1 = None,unit2= None):     
-        self.unit1 = unit1
-        self.unit2 = unit2
         self.init = False
-    def getName(self):
-        return "JumpAttack"
+    name= "JumpAttack"
         
-    def overallValue(self):
-        return 10             
-    unit1 = None
-    unit2 = None     
-
+    value = 10   
     
-    def setUnitAndPosition(self,unit2,position):
-        self.unit2 = unit2
-        
-        
-        if not self.unit2:            
-            return False
-        return True
-    
+    def ready(self):
+        return self.unit2
     
     def execute(self, timer):
         if not self.unit2.body or not self.unit1.body:
             return
-        if self.init:
-            if s.app.ObjectCallback.hit or self.unit1.body.getVelocity().length() == self.lastlen:
-                return False
-            if not s.app.ObjectCallback.hit :
-                self.lastlen=self.unit1.body.getVelocity().length()
-                #s.screenshot()
-                name = s.app.getUniqueName()
-            
-                node = s.app.sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
-                                
-                node.setPosition(self.unit1.node.getPosition())
-                
-                psm = ogre.ParticleSystemManager.getSingleton()
-                particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), 'RedTorch')
-                print str(self.unit1.node.getPosition()) + str(self.unit1.body.getVelocity().length())        
-                node.attachObject(particleSystem2)
-                s.framelistener.timer = .2
-                
-                return True
-        self.init = True
-        s.app.ObjectCallback.hit = False
+#        if self.init:
+#            if s.app.ObjectCallback.hit or self.unit1.body.getVelocity().length() == self.lastlen:
+#                return False
+#            if not s.app.ObjectCallback.hit :
+#                self.lastlen=self.unit1.body.getVelocity().length()
+#                s.framelistener.timer = .2
+#                
+#                return True
+#        self.init = True
+#        s.app.ObjectCallback.hit = False
         World = s.app.World
         sceneManager = s.app.sceneManager
 
@@ -213,9 +177,13 @@ class JumpAttack(object):
         
         name = s.app.getUniqueName()
         body = self.unit1.body
-        body.setMaterialGroupID( s.app.MatObject )
+        
+        World = s.app.World
+        sceneManager = s.app.sceneManager
+        material =Material(name,ObjectCallback( 1 ))
+        
+        body.setMaterialGroupID( material.MatObject )
         body.setType(1)
- 
         
         quat = Ogre.Quaternion(Ogre.Degree(45),Ogre.Vector3(0,1,0))
         body.setPositionOrientation(vector1,quat)
@@ -233,6 +201,7 @@ class JumpAttack(object):
         
         s.framelistener.timer = 5
         self.unit1.player.endTurn()
-        return True
+        s.playsound()
+        return False
              
      

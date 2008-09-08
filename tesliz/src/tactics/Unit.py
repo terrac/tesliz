@@ -10,12 +10,16 @@ class Attributes(object):
     #node = None
     moves = 5
     damage = 5
+    sight = 10
     node = None
+    
     def increment(self):
         if self.curMovement < self.speed:
             self.curMovement += 1
             return False
         return True     
+    def __str__( self ):
+        return str(self.hitpoints)
     
 class Unit(object):
    
