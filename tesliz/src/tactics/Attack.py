@@ -11,19 +11,23 @@ class Attack(object):
     name = "Attack"
     value= 5     
 
+    range=5
+    
+    
     
     
     def execute(self,timer):
         
         if not self.unit1.body or not self.unit2.body:
             return
-        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > 5:
+        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > self.range:
+            s.log(str(self.unit1)+" Attack failed")
             return 
         
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
         
         
-        self.unit2.body.setVelocity(direction )        
+        #self.unit2.body.setVelocity(direction )        
         s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.unit1.attributes.damage)
         
         return False

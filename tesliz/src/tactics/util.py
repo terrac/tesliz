@@ -18,6 +18,8 @@ def buildUnit(unit,unittype,level,playername):
         
     else:
         s.playermap[unit.getName()] = player
+        
+    
 
 
 def buildPhysics(unit,type= None):        

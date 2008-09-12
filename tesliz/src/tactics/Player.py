@@ -182,7 +182,9 @@ class ComputerPlayer(object):
         for eunit in s.unitmap.values():
             if not eunit.player ==self:
                 sf.Application.debugText = str(unit) +"going after"+str(eunit)
-                #s.framelistener.addToQueue(unit,Move(unit,eunit.node.getPosition()))
+                move = Move()
+                setStart(move,unit,None,eunit.node.getPosition())
+                s.framelistener.addToQueue(unit,move)
                 map = dict()
                 try:            
                     while not self.getHighest(map,unit,eunit).action:

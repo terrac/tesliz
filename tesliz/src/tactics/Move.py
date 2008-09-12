@@ -10,7 +10,7 @@ class Move(object):
     
     name= "Move"
 
-    value= 7
+    value= 0
 
     
     startPos = None
@@ -33,9 +33,10 @@ class Move(object):
         direction.normalise()
         self.body.setVelocity(direction*20)
         boo =distance(self.startPos, position) < self.unit1.attributes.moves
-        print distance(self.startPos, position)
+        #print distance(self.startPos, position)
         if not boo:
             self.body.setVelocity(direction*1)
+            self.body.freeze()
         
         return boo
 

@@ -42,8 +42,6 @@ class Unittypes(object):
         
         range = NumberedTraits([RangeAttack()],[5])
         unit.traits["BlackMagic"] = range
-        #unit.traits["GenericTraits"] = {"Fireball":Fireball()}
-        
         
         unit.attributes.hitpoints = 50* level        
         unit.attributes.damage = 50* level

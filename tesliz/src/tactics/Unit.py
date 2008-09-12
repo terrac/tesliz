@@ -11,8 +11,9 @@ class Attributes(object):
     moves = 5
     damage = 5
     sight = 10
-    node = None
     
+    node = None
+    type = None
     def increment(self):
         if self.curMovement < self.speed:
             self.curMovement += 1
@@ -34,6 +35,14 @@ class Unit(object):
     traits = None
     attributes = None
     actionqueue = []
+    visible = True
+    
+    def getVisible(self):
+        return self.visible
+    def setVisible(self,bool):
+        self.node.setVisible(bool)
+        self.visible = bool
+
     def getName(self):
         return self.node.getName()
     def increment(self):

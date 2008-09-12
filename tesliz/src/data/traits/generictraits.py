@@ -18,8 +18,8 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
     def userProcess(self):
         unit1body = None
         
-        print self.m_body0.getOgreNode().getName() +"aoeu"
-        print self.m_body1.getOgreNode().getName()
+        #print self.m_body0.getOgreNode().getName() +"aoeu"
+        #print self.m_body1.getOgreNode().getName()
         ## first, find which body represents the Object unit1body!
         if (self.m_body0.getType() == self.typeID):
             unit1body = self.m_body0
@@ -53,7 +53,7 @@ class RangeAttack(object):
 
     name="Fireball"
     value=10     
-
+    range = 50
     
     unit2 = None
 #    def ready(self):

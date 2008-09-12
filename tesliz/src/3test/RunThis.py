@@ -14,6 +14,7 @@ from tactics.Turn import *
 from tactics.Player import *
 from tactics.Move import *
 from data.settings import *
+from data.aisettings import *
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
 from utilities.CEGUIFrameListener import *
 from utilities.CEGUI_framework import *
@@ -81,7 +82,7 @@ class OgreNewtonApplication (sf.Application):
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         dotscene = Dotscene()
         self.sceneManager = dotscene.setup_scene(self.sceneManager,self.currentmap,self)
-        
+        mental = Mental()
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
         sheet.addChildWindow(btn)
@@ -186,31 +187,33 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
     #then you can have both
     def addToQueue(self, unit,action):
-#        try:
-#            dist =distance(action.unit2.node.getPosition(),action.unit1.node.getPosition())
-##            mindis = None
-#            try:
-#                mindis = action.minimumDistance
-#            except :
-#                mindis = 0
-##            maxdis 
-#            try:
-#                maxdis = action.maximumDistance
-#            except:
-#                maxdis = 0            
-#            
-#            
-#            if mindis > 0:
-#                if mindis > dist:
-#                    return False
-#            if maxdis > 0:
-#                if maxdis < dist:
-#                    return False    
-#        except Exception, e:
-#            print e
+
+        
         unit.actionqueue.append(action)
         self.unitqueues.append(unit)
+    def addToBackground(self,obj,action):
+        obj.bqueue.append(action)
+        self.backgroundqueue.append(obj)
+         
     unitqueues = []   
+    backgroundqueue = []
+    def getActiveQueue(self):
+        return len(self.unitqueues)
+
+    def clearActions(self,unit):
+        try:
+            self.unitqueues.remove(unit)
+            unit.actionqueue.clear()
+        except:
+            pass
+            
+    def isActive(self,unit):
+        
+        if len( unit.actionqueue):
+            return True
+        
+                  
+        return False    
     #turn = Turn()
     def frameStarted(self, frameEvent):
         ## in this frame listener we control the camera movement, and allow the user to "shoot" cylinders
@@ -221,12 +224,23 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #        if s.ended:
 #            return 
         for eunit in s.playermap["Computer1"].unitlist:
-            eunit.node.setVisible(False)
+            
+            bool = False
             for unit in s.playermap["Player1"].unitlist:
                 if distance(eunit.node.getPosition(),unit.node.getPosition()) < unit.attributes.sight:
-                    eunit.node.setVisible(True)
-                    break    
-        #todo somewhat inefficient
+                    
+                    bool = True
+                    break
+            if eunit.getVisible() != bool:    
+                eunit.setVisible(bool)
+                
+                if bool:
+                    line = str(eunit.node.getName())+" a "+eunit.type+" arrives"
+                else:
+                    line = str(eunit.node.getName())+" a "+eunit.type+" leaves"
+                s.mental.broadcast(line)
+                s.log(line)
+        #todo somewhat inefficient add a timeexprire variable and make straightforward
         list = []
         while len(s.app.timedbodies) > 0:
             body, time = s.app.timedbodies.pop()
@@ -355,7 +369,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 break
             if s.turnbased :   
                     break
-
+        for bg in self.backgroundqueue:
+            if len(bg.bqueue) == 0:
+                self.backgroundqueue.remove(bg)
+            for iexecute in bg.bqueue:    
+                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
+                if not boo:
+                    bg.bqueue.remove(iexecute)
+                break;
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False

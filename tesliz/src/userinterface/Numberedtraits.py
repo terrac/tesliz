@@ -9,7 +9,8 @@ class NumberedTraits(object):
         self.listnumbers = listnumbers
                
          
-    
+    def getClassList(self):
+        return self.listclasses
     
     def getAbilities(self):
         retlist = []
@@ -25,4 +26,7 @@ class NumberedTraits(object):
     def useAbility(self,text):
         i = self.cmap[str(text)]
         self.listnumbers[i] = self.listnumbers[i] -1
-        return self.listclasses[i]
+        
+        usable = self.listclasses[i]
+        #usable.used = True        
+        return usable
