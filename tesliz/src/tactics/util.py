@@ -53,7 +53,7 @@ def buildPhysics(unit,type= None):
     
     ## note that we have to keep the bodies around :)
   
-    body.setAutoFreeze(0)
+    body.setAutoFreeze(1)
     body.setLinearDamping(0)
     body.setAngularDamping(Ogre.Vector3(0,0,0))
     body.setStandardForceCallback()
@@ -62,6 +62,7 @@ def buildPhysics(unit,type= None):
   #  OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Z)
     OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_X)
     #body.setUserData(unit)
+    
 
 def buildImmoblePhysics(unit):
     #floor = s.app.sceneManager.createEntity("Floor1", "Cube.mesh" )        
@@ -82,4 +83,3 @@ def buildImmoblePhysics(unit):
     bod.setPositionOrientation( Ogre.Vector3(0.0,-25.0,0.0), Ogre.Quaternion.IDENTITY )
     
     s.app.bodies.append ( bod )
-

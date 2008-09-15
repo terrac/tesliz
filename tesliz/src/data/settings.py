@@ -7,6 +7,7 @@ class Settings(object):
     #playermap = {"Player1":ComputerPlayer(),"Computer1":ComputerPlayer()}
     #playermap = {"Player1":ComputerPlayer(),"Computer1":HumanPlayer()}
     def __init__(self):
-        s.turnbased = False
-        s.app.currentmap = 'linainverse1'
-        s.app.World.setWorldSize(Ogre.Vector3(-50,-20,-10),Ogre.Vector3(50,20,5))
+        s.turnbased = True
+        s.fog = False
+        s.app.currentmap = 'scene01'
+        s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))

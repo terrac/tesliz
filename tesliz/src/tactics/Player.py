@@ -10,12 +10,14 @@ import utilities.SampleFramework as sf
 s = Singleton()
 class HumanPlayer(object):
 
-    #def __init__(self):
+    def __init__(self):
+        self.actionSelected = False
         
     def endTurn(self):
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
         s.turn.pause = False
         s.turn.nextUnitTurn()
+        self.actionSelected = False
 
         
     
@@ -80,6 +82,8 @@ class HumanPlayer(object):
                 sf.Application.debugText = "Action failed"
                 return
             sf.Application.debugText = "Action Succeeded"
+            self.removeFrom.removeItem(self.toRemove)
+            self.actionSelected = False
             s.framelistener.addToQueue(self.cunit,self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        
@@ -89,13 +93,33 @@ class HumanPlayer(object):
         list.addItem(item)
         
     def handleAction(self,e):
+        if not e.window.getFirstSelectedItem():
+            return
         text = str(e.window.getFirstSelectedItem().getText())
+        item =e.window.getFirstSelectedItem()
+        
+        if text == "Cancel":
+            try:
+                self.iexecute.choiceEnd()
+            except:
+                pass  
+            item.setText(self.choosing)
+            self.iexecute = None
+            self.actionSelected = False
+            return                    
+        if self.actionSelected:
+            return
         
         if not isinstance(e.window,CEGUI.ListboxTextItem):    
-            e.window.removeItem(e.window.getFirstSelectedItem())   
+            self.choosing = item.getText()
+            self.toRemove = item
+            self.removeFrom = e.window
+            item.setText("Cancel")
+            self.actionSelected = True 
+           
         if text == "EndTurn" or e.window.getItemCount() == 0:
             self.listmap = dict()
-            self.endTurn()
+            self.endTurn()            
             return        
         self.currentTrait = text
         list = self.cunit.traits[text].getAbilities()
@@ -104,19 +128,19 @@ class HumanPlayer(object):
             return
         sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
         winMgr = CEGUI.WindowManager.getSingleton()
-        list = winMgr.createWindow("TaharezLook/Listbox", "abilitylist")
-        sheet.addChildWindow(list)
-        list.setText("abilitylist")
-        list.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
-        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-        list.setAlwaysOnTop(True)
+        list1 = winMgr.createWindow("TaharezLook/Listbox", "abilitylist")
+        sheet.addChildWindow(list1)
+        list1.setText("abilitylist")
+        list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
+        list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        list1.setAlwaysOnTop(True)
         
         self.listmap = dict()
 
         
         for ability in list:
-            self.additem(list,ability)
-        list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAbility")
+            self.additem(list1,ability)
+        list1.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAbility")
         
     currentTrait = None    
     def handleAbility(self, e):

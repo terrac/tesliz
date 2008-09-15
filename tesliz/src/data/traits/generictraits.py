@@ -49,11 +49,11 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
 
         return 1
 
-class RangeAttack(object):
+class ProjectileAttack(object):
 
     name="Fireball"
     value=10     
-    range = 50
+    range = 10
     
     unit2 = None
 #    def ready(self):
@@ -109,7 +109,7 @@ class RangeAttack(object):
         
         body.setMaterialGroupID( material.MatObject )
         body.setType(2)
-        body.setUserData(self.unit1.attributes.damage)
+        body.setUserData(self.unit1.attributes.intelligence)
         
         ##no longer need the collision shape object
         del col
@@ -205,3 +205,34 @@ class JumpAttack(object):
         return False
              
      
+class Attack(object):
+
+    name = "Attack"
+    value= 5     
+
+    range=5
+    animation = "Walk"
+    
+    
+    
+    def execute(self,timer):
+        
+        if not self.unit1.body or not self.unit2.body:
+            return
+        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > self.range:
+            s.log(str(self.unit1)+" Attack failed")
+            return 
+        
+        direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
+        
+        entity = self.unit1.node.getAttachedObject(0)
+        if entity.hasSkeleton():
+            animationState = entity.getAnimationState(self.animation)
+            animationState.setLoop(False)
+            animationState.setEnabled(True)
+            s.app.animations.append(animationState)
+            
+        #self.unit2.body.setVelocity(direction )        
+        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.unit1.attributes.strength)
+        
+        return False

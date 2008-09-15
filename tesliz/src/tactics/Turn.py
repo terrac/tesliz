@@ -34,6 +34,9 @@ class Turn(object):
             return
         if len(self.turnlist)== 0:
             return
+        
+      #  for x in s.unitmap.values():
+      #      x.body.freeze()      
         self.pause = True
         s.framelistener.timer = 1
         unit =self.turnlist.pop()

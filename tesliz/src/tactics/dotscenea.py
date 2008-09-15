@@ -220,7 +220,11 @@ def parse_camera(sceneManager, xml_node):
                     camera_xml_node, 'clipping', 'nearPlaneDist', 'farPlaneDist')
         camera.FOVy = ogre.Degree(fov)
         #print 'added camera: "%s" fov: %f type: %s clipping: %f,%f' % (name, fov, projectionType,camera.nearClipDistance,camera.farClipDistance)
-        scene_node.attachObject(camera)
+        #scene_node.attachObject(camera)
+        s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
+        s.app.msnCam.attachObject( s.app.camera )
+        s.app.camera.setPosition(0.0, 0.0, 0.0)
+        s.app.msnCam.setPosition( scene_node.getPosition())
         camera_list.append(camera)
     return camera_list
 

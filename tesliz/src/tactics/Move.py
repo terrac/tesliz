@@ -15,28 +15,69 @@ class Move(object):
     
     startPos = None
     time = 5
+    def choiceStart(self):
+        pos = self.unit1.body.getOgreNode().getPosition()        
+        #self.startPos =position  
+        #self.endPos.y = position.y
+        name = "circle"
+        mesh = "cylinder.mesh"
+        scene_node = s.app.sceneManager.rootSceneNode.createChildSceneNode(name)
+        scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+        size = self.unit1.attributes.moves
+        size = size * .60
+        scene_node.scale = Ogre.Vector3(size,size,size)
+        
+        scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+        attachMe = s.app.sceneManager.createEntity(name,mesh)
+        #print 'added entity: "%s" %s' % (name, mesh)
+        scene_node.attachObject(attachMe)
+        #TODO: for later 
+      #  attachMe.setMaterialName( "Examples/RustySteel" )
+        attachMe.setNormaliseNormals(True)
+        
+        
+    def choiceEnd(self):        
+        s.app.sceneManager.rootSceneNode.removeChild("circle")
+             
     def execute(self,timer):    	#dir(tactics.util)
-    	if self.unit1:
-    		self.body = self.unit1.body
-        if not self.body:
+#    	if self.unit1:
+#    		self.unit1.body = self.unit1.body
+        if not self.unit1.body:
             s.log("looks like a destroyed unit got here")
             return
-    	self.time -= timer
-        if self.time < 0:
-            return
-        	
-        position = self.body.getOgreNode().getPosition()
+#    	self.time -= timer
+#        if self.time < 0:
+#            return
+        self.unit1.body.unFreeze()	
+        position = self.unit1.body.getOgreNode().getPosition()
         if not self.startPos:
             self.startPos =position  
             self.endPos.y = position.y
+            entity = self.unit1.node.getAttachedObject(0)
+            if entity.hasSkeleton():
+                self.animationState = entity.getAnimationState("Walk")
+                self.animationState.setLoop(True)
+                self.animationState.setEnabled(True)
+
+        entity = self.unit1.node.getAttachedObject(0)
+        if entity.hasSkeleton():        
+            self.animationState.addTime(timer)    
         direction = self.endPos-position
         direction.normalise()
-        self.body.setVelocity(direction*20)
-        boo =distance(self.startPos, position) < self.unit1.attributes.moves
+        self.unit1.body.setVelocity(direction*20)
+        finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
+        if not finishedMoving:
+            finishedMoving =distance(self.endPos, position) < 1
+#        print distance(self.endPos, position)
+#        print finishedMoving
         #print distance(self.startPos, position)
-        if not boo:
-            self.body.setVelocity(direction*1)
-            self.body.freeze()
+        #print self.unit1.attributes.moves
+        #print self.startPos
+        #print position
+        if finishedMoving:
+            self.unit1.body.setVelocity(direction*1)
+            self.unit1.body.freeze()
+            
         
-        return boo
+        return not finishedMoving
 

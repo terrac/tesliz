@@ -4,13 +4,16 @@ s = Singleton()
 
 class Attributes(object):
     hitpoints = 5
-    speed = None
+    speed = 5
     curMovement = 0
     player = None
     #node = None
     moves = 5
-    damage = 5
-    sight = 10
+    #damage = 5
+    sight = 100
+    strength = 5
+    intelligence = 5
+    dexterity = 5
     
     node = None
     type = None
@@ -37,6 +40,7 @@ class Unit(object):
     actionqueue = []
     visible = True
     
+    
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):
@@ -58,5 +62,5 @@ class Unit(object):
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
             
-           # s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
+            #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
