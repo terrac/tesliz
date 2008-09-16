@@ -6,6 +6,18 @@ s = Singleton()
 #    return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
 
 class Move(object):
+
+    def getEndPos(self):
+        return self.__endPos
+
+
+    def setEndPos(self, value):
+        self.__endPos = value
+
+
+    def delEndPos(self):
+        del self.__endPos
+
     action = False
     
     name= "Move"
@@ -14,6 +26,7 @@ class Move(object):
 
     
     startPos = None
+    endPos = None
     time = 5
     def choiceStart(self):
         pos = self.unit1.body.getOgreNode().getPosition()        
@@ -51,8 +64,10 @@ class Move(object):
         self.unit1.body.unFreeze()	
         position = self.unit1.body.getOgreNode().getPosition()
         if not self.startPos:
+            
             self.startPos =position  
             self.endPos.y = position.y
+    
             entity = self.unit1.node.getAttachedObject(0)
             if entity.hasSkeleton():
                 self.animationState = entity.getAnimationState("Walk")
@@ -73,7 +88,9 @@ class Move(object):
             
         
 #        print distance(self.endPos, position)
-        print finishedMoving
+        #print self.startPos
+        #print self.endPos
+        #print finishedMoving
         #print distance(self.startPos, position)
         #print self.unit1.attributes.moves
         #print self.startPos
@@ -83,4 +100,6 @@ class Move(object):
                 x.body.freeze()    
         
         return not finishedMoving
+
+    endPos = property(getEndPos, setEndPos, delEndPos, "EndPos's Docstring")
 
