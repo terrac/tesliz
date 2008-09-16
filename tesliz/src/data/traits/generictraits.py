@@ -34,10 +34,11 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
 
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
-            s.unitmap[object.getOgreNode().getName()].damageHitpoints(unit1body.getUserData())
+            attack = unit1body.getUserData()
+            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.unit1.attributes.intelligence,attack.type)
             
             unit1body.setVelocity(Ogre.Vector3(0,0,0))
-            
+            object.setVelocity(Ogre.Vector3(0,0,0))
             
         ## okay, found the unit1body... let's adjust the collision based on this.
         #thedir = unit1body.getGlobalDir()
@@ -54,7 +55,7 @@ class ProjectileAttack(object):
     name="Fireball"
     value=10     
     range = 10
-    
+    type = "fire"
     unit2 = None
 #    def ready(self):
 #        return self.unit2
@@ -109,7 +110,7 @@ class ProjectileAttack(object):
         
         body.setMaterialGroupID( material.MatObject )
         body.setType(2)
-        body.setUserData(self.unit1.attributes.intelligence)
+        body.setUserData(self)
         
         ##no longer need the collision shape object
         del col
@@ -133,7 +134,7 @@ class ProjectileAttack(object):
         
         ## note that we have to keep the bodies around :)
         s.framelistener.addTimedBody(body,5)
-        
+        s.framelistener.addTimedBody(self,5)
    
         s.framelistener.timer = 2
         self.unit1.player.endTurn()
@@ -185,6 +186,8 @@ class JumpAttack(object):
         body.setMaterialGroupID( material.MatObject )
         body.setType(1)
         
+        body.setUserData(self.unit1.attributes.strength)
+        
         quat = Ogre.Quaternion(Ogre.Degree(45),Ogre.Vector3(0,1,0))
         body.setPositionOrientation(vector1,quat)
         velocity = sqrt(distance(vector1,vector2)* 9.8 / sin(2.0 * 45.0 * pi/180.0))
@@ -212,8 +215,11 @@ class Attack(object):
 
     range=5
     animation = "Walk"
+    type = "bludgeon"
+    sound = "sword.wav"
     
-    
+    def getDamage(self):
+        return self.unit1.attributes.strength
     
     def execute(self,timer):
         
@@ -231,8 +237,12 @@ class Attack(object):
             animationState.setLoop(False)
             animationState.setEnabled(True)
             s.app.animations.append(animationState)
-            
+           
+        s.playsound(self.sound)    
         #self.unit2.body.setVelocity(direction )        
-        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.unit1.attributes.strength)
+        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),type)
         
         return False
+    
+
+#class SummonUnit(object):    

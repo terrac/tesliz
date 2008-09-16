@@ -1,4 +1,4 @@
-from tactics.util import *
+#from tactics.util import *
 from tactics.Player import *
 from tactics.Singleton import *
 s = Singleton()

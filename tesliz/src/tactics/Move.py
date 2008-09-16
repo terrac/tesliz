@@ -68,16 +68,19 @@ class Move(object):
         finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
         if not finishedMoving:
             finishedMoving =distance(self.endPos, position) < 1
+        #   self.unit1.body.setVelocity(direction*1)
+        #    self.unit1.body.freeze()
+            
+        
 #        print distance(self.endPos, position)
-#        print finishedMoving
+        print finishedMoving
         #print distance(self.startPos, position)
         #print self.unit1.attributes.moves
         #print self.startPos
-        #print position
+        #print positio        if finishedMoving:
         if finishedMoving:
-            self.unit1.body.setVelocity(direction*1)
-            self.unit1.body.freeze()
-            
+            for x in s.unitmap.values():
+                x.body.freeze()    
         
         return not finishedMoving
 

@@ -14,7 +14,7 @@ class Attributes(object):
     strength = 5
     intelligence = 5
     dexterity = 5
-    
+    resistance = dict()
     node = None
     type = None
     def increment(self):
@@ -56,7 +56,9 @@ class Unit(object):
     def startTurn(self):
         self.player.startTurn(self)
         
-    def damageHitpoints(self,number,eunit=None):
+    def damageHitpoints(self,number,type,eunit=None):
+        if self.attributes.resistance.has_key(type):
+            number = self.attributes.resistance[type] * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:

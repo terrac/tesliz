@@ -19,7 +19,7 @@ def buildUnit(unit,unittype,level,playername):
     else:
         s.playermap[unit.getName()] = player
         
-    
+    buildPhysics(unit,"Ellipsoid")
 
 
 def buildPhysics(unit,type= None):        
