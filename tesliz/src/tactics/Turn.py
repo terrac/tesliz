@@ -48,9 +48,36 @@ class Turn(object):
         s.framelistener.cplayer = unit.player
         
     
-        unit.startTurn()           
+        self.show(unit)
+        unit.startTurn()
+                   
     turnlist = []          
-
+    def show(self,unit):
+        pos = unit.body.getOgreNode().getPosition()
+        sceneManager = s.app.sceneManager        
+        #self.startPos =position  
+        #self.endPos.y = position.y
+        name = "turncircle"
+        mesh = "cylinder.mesh"
+        if not sceneManager.hasSceneNode(name):
+            scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+            attachMe = s.app.sceneManager.createEntity(name,mesh)            
+            scene_node.attachObject(attachMe)
+            attachMe.setNormaliseNormals(True)
+        else:
+            scene_node = sceneManager.getSceneNode(name)
+        scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+        
+        size = 1
+        scene_node.scale = Ogre.Vector3(size,size,size)
+        
+        scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+        
+        
+        
+            
+        
+         
 class RealTimeTurn(object):
     def __init__(self):
         s.turn = self

@@ -59,13 +59,14 @@ class ProjectileAttack(object):
     unit2 = None
 #    def ready(self):
 #        return self.unit2
+    sound = "fireball.wav"
     
     def execute(self,timer):
     	if not self.unit1.body:
     		return
         
         vector1 = self.unit1.body.getOgreNode().getPosition()
-        if self.unit2:
+        if self.unit2 and self.unit2.body:
             vector2 = self.unit2.body.getOgreNode().getPosition()
         else:
             self.endPos.y = vector1.y
@@ -138,6 +139,7 @@ class ProjectileAttack(object):
    
         s.framelistener.timer = 2
         self.unit1.player.endTurn()
+        s.playsound(self.sound)
         return False
              
    

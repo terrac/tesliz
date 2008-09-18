@@ -58,9 +58,9 @@ class Move(object):
         if not self.unit1.body:
             s.log("looks like a destroyed unit got here")
             return
-#    	self.time -= timer
-#        if self.time < 0:
-#            return
+    	self.time -= timer
+        if self.time < 0:
+            return
         self.unit1.body.unFreeze()	
         position = self.unit1.body.getOgreNode().getPosition()
         if not self.startPos:

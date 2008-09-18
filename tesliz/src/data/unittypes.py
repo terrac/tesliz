@@ -14,7 +14,7 @@ s = Singleton()
 
 
 def setupBasic(unit, level):
-    unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+    #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
     move = Traits([Move()])
     unit.traits["Move"] = move
     attack = Traits([Attack()])

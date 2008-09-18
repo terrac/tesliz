@@ -20,7 +20,25 @@ class HumanPlayer(object):
         self.actionSelected = False
 
         
+    def setVisualMarker(self,unit):
+        pos = unit.body.getOgreNode().getPosition()
+        sceneManager = s.app.sceneManager        
+        #self.startPos =position  
+        #self.endPos.y = position.y
+        name = s.app.getUniqueName()
+        mesh = "ellipsoid.mesh"
     
+        scene_node = unit.node.createChildSceneNode(name)
+        attachMe = s.app.sceneManager.createEntity(name,mesh)            
+        scene_node.attachObject(attachMe)
+        attachMe.setNormaliseNormals(True)
+    
+        scene_node.position = Ogre.Vector3(0,2,0)
+        scene_node.getAttachedObject(0).setMaterialName("LightGreen/SOLID")
+                
+        size = .3
+        scene_node.scale = Ogre.Vector3(size,size,size)
+        
     
     #Tells you what the id of the last cegui hooks for the framelistener was    
     hookid = "Player1"

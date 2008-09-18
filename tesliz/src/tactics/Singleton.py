@@ -62,7 +62,7 @@ class Singleton:
             list.setAlwaysOnTop(True)
             
         def log(self,text):
-            sf.Application.debugText = text
+            sf.Application.debugText = str(text)
             self.logger.info(text)                
             print text
         def screenshot(self):    
