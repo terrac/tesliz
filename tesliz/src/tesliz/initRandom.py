@@ -78,6 +78,10 @@ class RandomBuilder(OgreNewtonApplication):
                     buildUnit(unit,unittype,random.randint(1,3),player)
                     unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+                    try:
+                        s.playermap[player].setVisualMarker(unit)
+                    except:
+                        pass
                     print scene_node.position
                     print unittype
                     print player
