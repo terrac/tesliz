@@ -17,5 +17,7 @@ class Mental:
 #        grammar.addLine("is weak to", fighter)
 #        grammar.addLine("arrives", fighter)
 #        grammar.addLine("leaves", fighter)
-        
+
+        #                angry/calm happy/sad
+#        s.mental.state = {"angry":0,"happy":0}
         

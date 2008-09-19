@@ -1,4 +1,4 @@
-#from data.traits.Generictraits import *
+
 
 class Traits(object):
     

@@ -44,8 +44,8 @@ class RandomBuilder(OgreNewtonApplication):
         
         for x in range(0,10):
             for z in range(0,10):
-                x = x * 2
-                z = z * 2
+                x = x * 3
+                z = z * 3
                 start = Ogre.Vector3(x,50,z)
                 end = Ogre.Vector3(x,-50,z)
                 self.ray = OgreNewt.BasicRaycast( self.World, start,end )

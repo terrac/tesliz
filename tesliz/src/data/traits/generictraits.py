@@ -37,8 +37,8 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
             attack = unit1body.getUserData()
             s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.unit1.attributes.intelligence,attack.type)
             
-            unit1body.setVelocity(Ogre.Vector3(0,0,0))
-            object.setVelocity(Ogre.Vector3(0,0,0))
+            #unit1body.setVelocity(Ogre.Vector3(0,0,0))
+            #object.setVelocity(Ogre.Vector3(0,0,0))
             
         ## okay, found the unit1body... let's adjust the collision based on this.
         #thedir = unit1body.getGlobalDir()
@@ -49,6 +49,7 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         #self.setContactTangentAcceleration( result_accel.length(), 0 )
 
         return 1
+
 
 class ProjectileAttack(object):
 
@@ -65,6 +66,9 @@ class ProjectileAttack(object):
     	if not self.unit1.body:
     		return
         
+        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > self.range:
+            s.log(str(self.unit1)+" Attack failed")
+            return
         vector1 = self.unit1.body.getOgreNode().getPosition()
         if self.unit2 and self.unit2.body:
             vector2 = self.unit2.body.getOgreNode().getPosition()
@@ -75,8 +79,11 @@ class ProjectileAttack(object):
         sceneManager = s.app.sceneManager
 
         
+        
         vector1.y += 5
         direction = vector2 - vector1
+        #direction.normalise()
+        #vector1 = vector1 +direction * 2
         
         name = s.app.getUniqueName()
         
@@ -227,8 +234,9 @@ class Attack(object):
         
         if not self.unit1.body or not self.unit2.body:
             return
-        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > self.range:
-            s.log(str(self.unit1)+" Attack failed")
+        dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
+        if dis > self.range:
+            s.log(str(self.unit1)+" Attack failed"+str(dis)+" "+str(self.range))
             return 
         
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()

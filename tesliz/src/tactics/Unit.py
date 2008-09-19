@@ -60,9 +60,23 @@ class Unit(object):
         if self.attributes.resistance.has_key(type):
             number = self.attributes.resistance[type] * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
+        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number))
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
             
             #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
+    def getWantedRange(self):
+        hv = 0
+        ha = None
+        for trait in self.traits.values():
+            for action in trait.getClassList():
+                if action.value > hv:
+                    hv = action.value
+                    ha = action
+        try:
+            return action.range -2
+        except:
+            return 2
+                    

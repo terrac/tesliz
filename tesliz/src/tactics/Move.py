@@ -63,6 +63,7 @@ class Move(object):
             return
         self.unit1.body.unFreeze()	
         position = self.unit1.body.getOgreNode().getPosition()
+        s.event.update(position)
         if not self.startPos:
             
             self.startPos =position  
@@ -79,10 +80,10 @@ class Move(object):
             self.animationState.addTime(timer)    
         direction = self.endPos-position
         direction.normalise()
-        self.unit1.body.setVelocity(direction*20)
+        self.unit1.body.setVelocity(direction*5)
         finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
         if not finishedMoving:
-            finishedMoving =distance(self.endPos, position) < 1
+            finishedMoving =distance(self.endPos, position) < 2
         #   self.unit1.body.setVelocity(direction*1)
         #    self.unit1.body.freeze()
             

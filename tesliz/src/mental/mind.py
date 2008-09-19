@@ -8,7 +8,9 @@ import copy
 s = Singleton()
 
 class Mind:
+
     
+        
     
     def __init__(self):
         self.minds = []
@@ -18,7 +20,9 @@ class Mind:
         for u in self.minds:
             u.broadcast(item)
 
-
+    def broadcast(self,item,unit):
+        #create cegui or billboard
+        self.broadcast(item)
     def addMind(self,mind):
         self.minds.append(mind)
 

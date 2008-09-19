@@ -3,7 +3,7 @@ import copy
 from tactics.Singleton import *
 from tactics.Move import *
 from tactics.datautil import *
-#from data.traits.Generictraits import *
+
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
@@ -220,23 +220,35 @@ class ComputerPlayer(object):
     s = Singleton()
     hookid = "Computer1"
     def startTurn(self,unit):        
-        
+        lodis = 99
+        lounit = None
         for eunit in s.unitmap.values():
             if not eunit.player ==self:
-                sf.Application.debugText = str(unit) +"going after"+str(eunit)
-                move = Move()
-                setStart(move,unit,None,eunit.node.getPosition())
-                s.framelistener.addToQueue(unit,move)
-                map = dict()
-                try:            
-                    while not self.getHighest(map,unit,eunit).action:
-                        print map
-                except Exception,e:
-                    print e
-                s.turn.pause = False    
-                
-                s.turn.nextUnitTurn()
-                break     
+                dis = distance(eunit.node.getPosition(),unit.node.getPosition())
+                if dis < lodis:
+                    lodis =dis
+                    lounit = eunit
+        eunit = lounit
+        sf.Application.debugText = str(unit) +"going after"+str(eunit)
+        move = Move()
+        newdir = eunit.node.getPosition() - unit.node.getPosition()
+        newdir.normalise()
+        newpos =eunit.node.getPosition()+ newdir * unit.getWantedRange()
+        #print unit.getWantedRange()
+        #print newpos
+        #print eunit.node.getPosition()
+        setStart(move,unit,None,newpos)
+        s.framelistener.addToQueue(unit,move)
+        map = dict()
+        try:            
+            while not self.getHighest(map,unit,eunit).action:
+                print map
+        except Exception,e:
+            print e
+        s.turn.pause = False    
+        
+        s.turn.nextUnitTurn()
+        
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       
     def clickEntity(self,name,position):

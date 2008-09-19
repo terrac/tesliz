@@ -385,7 +385,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if len(bg.bqueue) == 0:
                 self.backgroundqueue.remove(bg)
             for iexecute in bg.bqueue:    
-                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
+                boo = iexecute.tick(frameEvent.timeSinceLastFrame)
                 if not boo:
                     bg.bqueue.remove(iexecute)
                 break;

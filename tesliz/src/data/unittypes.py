@@ -63,8 +63,8 @@ class Unittypes(object):
     def Spark(self,unit,level):
         setupBasic(unit, level)
         setupStats(unit, level, 4, 40, 5,10,10)
-        unit.attributes.speed = 2
-        unit.attributes.intelligence = 30
+
+   
         attack = Attack()
         attack.range = 20
         attack.name = "Pistol"
@@ -87,12 +87,12 @@ class Unittypes(object):
     
     def Robot(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 7, 100, 50,5,3)
+        setupStats(unit, level, 4, 100, 50,5,3)
         unit.attributes.resistance = {"slash":.50,"bludgeon":50,"pierce":.50}
         
     def ZaiSoldier(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 4,45,15,10)
+        setupStats(unit, level, 5,45,15,10)
         unit.attributes.resistance = {"slash":.80,"bludgeon":80,"pierce":.80}    
     
         

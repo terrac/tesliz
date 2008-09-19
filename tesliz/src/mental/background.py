@@ -3,7 +3,7 @@ import copy
 from tactics.Singleton import *
 from tactics.Move import *
 from tactics.datautil import *
-#from data.traits.Generictraits import *
+
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
@@ -17,9 +17,9 @@ class Combat(object):
         self.unit =unit
         self.getBest = getBest
 
-    def execute(self,timer):
+    def tick(self,timer):
         unit = self.unit
-        
+         
         if s.framelistener.isActive(unit):
             return True
         for eunit in s.unitmap.values():
@@ -47,8 +47,9 @@ class Combat(object):
                     
                 
                 s.turn.nextUnitTurnUnpause()
-                break     
-                return True           
+                s.mental.state["angry"] = 50#     
+                return True
+        s.mental.state["angry"] = 0           
         return False
     
 
@@ -61,16 +62,40 @@ class Leader(object):
         self.unit =unit
         self.pos = pos
 
-    def execute(self,timer):
+    def tick(self,timer):
+        if s.mental.state["angry"] > 10:
+            return True
         unit = self.unit
         if s.framelistener.isActive(unit):
             return True
-        s.mental.broadcast("follow me")
+        s.mental.broadcast("follow me",unit)
         move = Move()
         setStart(move,unit,None,self.pos)
         s.framelistener.addToQueue(unit,move)
         if distance(unit.node.getPosition(),self.pos) < 3:
-            s.mental.broadcast("We are here")
+            s.mental.broadcast("We are here",unit)
             return False
         return True
+
+
+class Follower(object):
     
+    
+    def __init__(self,unit,leader):
+        self.unit =unit
+        self.leader = leader
+        
+
+    def tick(self,timer):
+        if s.mental.state["angry"] > 10:
+            return True
+        unit = self.unit
+        if s.framelistener.isActive(unit):
+            return True
+        
+        move = Move()
+        setStart(move,unit,leader)
+        s.framelistener.addToQueue(unit,move)
+        
+        return True
+        
