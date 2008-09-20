@@ -14,7 +14,7 @@ class Singleton:
         """ Implementation of the singleton interface """
         def __init__(self):
            self.logger = logging.getLogger('myapp')
-           if os.exists('tesliz.log'):
+           if os.path.exists('tesliz.log'):
                os.remove('tesliz.log')
            
            hdlr = logging.FileHandler('tesliz.log')
