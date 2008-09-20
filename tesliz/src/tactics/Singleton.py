@@ -14,10 +14,9 @@ class Singleton:
         """ Implementation of the singleton interface """
         def __init__(self):
            self.logger = logging.getLogger('myapp')
-           try:
+           if os.exists('tesliz.log'):
                os.remove('tesliz.log')
-           except:
-               pass
+           
            hdlr = logging.FileHandler('tesliz.log')
 #           formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
            formatter = logging.Formatter('%(message)s')
