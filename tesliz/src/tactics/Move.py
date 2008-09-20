@@ -63,7 +63,8 @@ class Move(object):
             return
         self.unit1.body.unFreeze()	
         position = self.unit1.body.getOgreNode().getPosition()
-        s.event.update(position)
+        if s.event:
+            s.event.update(position)
         if not self.startPos:
             
             self.startPos =position  

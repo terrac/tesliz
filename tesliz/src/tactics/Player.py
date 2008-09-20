@@ -12,9 +12,11 @@ class HumanPlayer(object):
 
     def __init__(self):
         self.actionSelected = False
+        self.removeFrom = None
         
     def endTurn(self):
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
+        CEGUI.WindowManager.getSingleton().destroyWindow("mentallist")
         s.turn.pause = False
         s.turn.nextUnitTurn()
         self.actionSelected = False
@@ -81,10 +83,42 @@ class HumanPlayer(object):
         for trait in self.cunit.traits:
             self.additem(list,trait)
         self.additem(list,"EndTurn")            
-        list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")    
+        list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")
+        
+        if self.cunit.mental:
+            list = winMgr.createWindow("TaharezLook/Listbox", "mentallist")
+            sheet.addChildWindow(list)
+            list.setText("list")
+            list.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( .4)))
+            list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+            list.setAlwaysOnTop(True)
+            #display mental
+            
+            for x in self.cunit.mental.getMentalCommands():
+                self.additem(list,x.name) 
+            list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleMental")   
     listholder = []
     
-    
+    def handleMental(self, e):
+        #aoeu dir(e.window.getFirstSelectedItem().getText())
+        text = None
+        if isinstance(e,str):
+            text = e
+        else:    
+            text = e.window.getFirstSelectedItem().getText()
+        
+        for x in  self.cunit.mental.getMentalCommands():
+            if x.name == text:
+                toexecute = x
+            
+        try:
+            setStart(toexecute,self.cunit)
+            self.iexecute = copy.copy(toexecute)
+        except Exception, ex:
+            print repr(ex)
+        s.log(text)
+        self.removeFrom = None
+        #CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")    
 
     
 
@@ -100,7 +134,8 @@ class HumanPlayer(object):
                 sf.Application.debugText = "Action failed"
                 return
             sf.Application.debugText = "Action Succeeded"
-            self.removeFrom.removeItem(self.toRemove)
+            if self.removeFrom:
+                self.removeFrom.removeItem(self.toRemove)
             self.actionSelected = False
             s.framelistener.addToQueue(self.cunit,self.iexecute)
             self.iexecute = None    
@@ -118,6 +153,7 @@ class HumanPlayer(object):
         
         if text == "Cancel":
             try:
+                CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
                 self.iexecute.choiceEnd()
             except:
                 pass  

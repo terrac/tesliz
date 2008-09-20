@@ -1,54 +1,30 @@
-from tesliz.runthis import *
-import data.unittypes
+from utilities.physics import *
+from tactics.Singleton import *
+import ogre.physics.OgreNewt as OgreNewt
+from tactics.Unit import *
 from tactics.util import *
 import random
-class RandomBuilder(OgreNewtonApplication):
-    def __init__(self):
-        OgreNewtonApplication.__init__(self)
-        
-    def parseSceneFile(self):
-        pass    
-    def _createScene ( self ):        
-        OgreNewtonApplication._createScene(self)
-        self.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()
-        self.msnCam.attachObject( self.camera )
-        self.camera.setPosition(0.0, 0.0, 0.0)
-        self.msnCam.setPosition( 20, -7.0, 32.0)
+s = Singleton()
+
+class Event:
+    def __init__(self,str,level,pos):
+        self.str = str
+        self.level = level
+        self.pos = pos
     
-        ##make a light
-        light = self.sceneManager.createLight( "Light1" )
-        light.setType( Ogre.Light.LT_POINT )
-        light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
-        floor = self.sceneManager.createEntity("Floor", "simple_terrain.mesh" )
-        floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode" )
-        floornode.attachObject( floor )
-        floor.setMaterialName( "Examples/DarkMaterial" )
-    
-        floor.setCastShadows( False )
-    
-        ##Ogre.Vector3 siz(100.0, 10.0, 100.0)
-        col = OgreNewt.TreeCollision( self.World, floornode, True )
-        bod = OgreNewt.Body( self.World, col )
+    def execute(self):
+        ulist = ["Spark"]
         
-        ##floornode.setScale( siz )
-        bod.attachToNode( floornode )
-        bod.setPositionOrientation( Ogre.Vector3(0.0,-10.0,0.0), Ogre.Quaternion.IDENTITY )
-        
-        self.bodies.append ( bod )
-    
-        
-        ulist = dir(data.unittypes.Unittypes())
-        ulist =filter(lambda x: not x.startswith("_"),ulist)
 
         playerlist = s.playermap.keys()
         
-        for x in range(0,10):
-            for z in range(0,10):
-                x = x * 3
-                z = z * 3
-                start = Ogre.Vector3(x,50,z)
-                end = Ogre.Vector3(x,-50,z)
-                self.ray = OgreNewt.BasicRaycast( self.World, start,end )
+        for x in range(0,self.level):
+            for z in range(0,self.level):
+                #x = x * 3
+                #z = z * 3
+                start = Ogre.Vector3(self.pos.x+x,self.pos.y+50,self.pos.z+z)
+                end = Ogre.Vector3(self.pos.x+x,self.pos.y+-50,self.pos.z+z)
+                self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
                 info = self.ray.getFirstHit()
                 
                 
@@ -90,12 +66,13 @@ class RandomBuilder(OgreNewtonApplication):
                     #self.clickEntity(info.mBody.OgreNode.Name,position)
         for x in s.unitmap.values():
                 x.body.freeze()   
-        
 
-    
-if __name__ == '__main__':
-    try:
-        application = RandomBuilder()
-        application.go()
-    except Ogre.OgreException, e:
-        print e
+class EventPositions:
+    def __init__(self,map):
+        self.map = map
+    def update(self,pos):
+        for x in self.map.keys():
+            print distance(x,pos)
+            if distance(x,pos) < 10:
+                self.map[x].execute()
+                del self.map[x]

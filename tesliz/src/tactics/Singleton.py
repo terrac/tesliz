@@ -14,7 +14,10 @@ class Singleton:
         """ Implementation of the singleton interface """
         def __init__(self):
            self.logger = logging.getLogger('myapp')
-           os.remove('tesliz.log')
+           try:
+               os.remove('tesliz.log')
+           except:
+               pass
            hdlr = logging.FileHandler('tesliz.log')
 #           formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
            formatter = logging.Formatter('%(message)s')
@@ -34,6 +37,7 @@ class Singleton:
         vector = Ogre.Vector3(0,0,0)
         turnbased = True
         ended = False
+        event = None
         def removeUnit(self,unit):
             
             self.app.sceneManager.getRootSceneNode().removeChild(unit.node)

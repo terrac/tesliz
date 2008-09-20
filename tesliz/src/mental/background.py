@@ -3,6 +3,7 @@ import copy
 from tactics.Singleton import *
 from tactics.Move import *
 from tactics.datautil import *
+from mental.commands import *
 
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
@@ -58,17 +59,17 @@ class Combat(object):
 class Leader(object):
     
     
-    def __init__(self,unit,pos):
+    def __init__(self,unit,pos = None):
         self.unit =unit
         self.pos = pos
 
-    def tick(self,timer):
-        if s.mental.state["angry"] > 10:
+    def execute(self,timer):
+        if self.unit.mental.state["angry"] > 10:
             return True
         unit = self.unit
         if s.framelistener.isActive(unit):
             return True
-        s.mental.broadcast("follow me",unit)
+        s.chatbox.broadcast("follow me",unit)
         move = Move()
         setStart(move,unit,None,self.pos)
         s.framelistener.addToQueue(unit,move)
@@ -77,6 +78,8 @@ class Leader(object):
             return False
         return True
 
+    def getMentalCommands(self):        
+        return [SetPosition("leadto",self)]
 
 class Follower(object):
     
@@ -87,7 +90,7 @@ class Follower(object):
         
 
     def tick(self,timer):
-        if s.mental.state["angry"] > 10:
+        if self.unit.mental.state["angry"] > 10:
             return True
         unit = self.unit
         if s.framelistener.isActive(unit):

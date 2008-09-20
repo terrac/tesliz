@@ -303,8 +303,11 @@ class Dotscene(object):
             unit.node = scene_node
             module = __import__("data.maps."+self.filename)
             module = getattr(module,'maps')
+           
             #eval(str("from data."+self.filename+" import *"))
-            getattr(getattr(module,self.filename).Unitdata(), name)(unit)
+            map = getattr(module,self.filename).Unitdata()
+            map.setupEvents()
+            getattr(map, name)(unit)
             
 
             

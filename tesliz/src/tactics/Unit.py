@@ -39,7 +39,7 @@ class Unit(object):
     attributes = None
     actionqueue = []
     visible = True
-    
+    mental = None
     
     def getVisible(self):
         return self.visible

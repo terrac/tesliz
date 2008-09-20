@@ -11,26 +11,32 @@ class Mind:
 
     
         
+    state = {"angry":0,"happy":0}
+    def __init__(self,minds = []):
+        self.minds = minds
     
-    def __init__(self):
-        self.minds = []
-        self.state = "normal"
-        self.unitlist= []
+        
     def broadcast(self,item):
         for u in self.minds:
             u.broadcast(item)
 
     def broadcast(self,item,unit):
-        #create cegui or billboard
+        s.chatbox.add(unit.getName()+": "+item)
         self.broadcast(item)
     def addMind(self,mind):
         self.minds.append(mind)
+        
+    def getMentalCommands(self):
+        list = []
+        for x in self.minds:
+            list =list +x.getMentalCommands()
+        return list
 
 class Fighter(Mind):
-    def __init__(self):
+    def __init__(self,unit):
         Mind.__init__(self)
         self.cfightvalue = 0
-
+        self.unit = unit
         self.bqueue =[]
     def broadcast(self,item):                
        #super(Fighter, self).broadcast(item)
@@ -41,10 +47,10 @@ class Fighter(Mind):
            if self.cfightvalue and self.cfightvalue-eunit.value >10:
                return False
            else:
-                for unit in self.unitlist:
-                    combat = Combat(unit,action.Attack)
-                    
-                    s.framelistener.addToBackground(self,combat)
-                    s.framelistener.clearActions(unit)
-                    return
-               
+                unit = self.unit
+                combat = Combat(unit,action.Attack)
+                
+                s.framelistener.addToBackground(self,combat)
+                s.framelistener.clearActions(unit)
+                return
+           
