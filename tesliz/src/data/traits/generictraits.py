@@ -18,8 +18,6 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
     def userProcess(self):
         unit1body = None
         
-        #print self.m_body0.getOgreNode().getName() +"aoeu"
-        #print self.m_body1.getOgreNode().getName()
         ## first, find which body represents the Object unit1body!
         if (self.m_body0.getType() == self.typeID):
             unit1body = self.m_body0
@@ -35,7 +33,7 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
-            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.unit1.attributes.intelligence,attack.type)
+            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.unit1.attributes.intelligence,attack.type,attack.unit1)
             
             #unit1body.setVelocity(Ogre.Vector3(0,0,0))
             #object.setVelocity(Ogre.Vector3(0,0,0))
@@ -61,12 +59,18 @@ class ProjectileAttack(object):
 #    def ready(self):
 #        return self.unit2
     sound = "fireball.wav"
-    
+   
+    def ready(self):
+        dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
+        if dis > self.range:
+            return False
+        return True
+   
     def execute(self,timer):
-    	if not self.unit1.body:
+    	if not self.unit1 or  not self.unit1.body or  not self.endPos:
     		return
         
-        if distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition()) > self.range:
+        if distance(self.endPos, self.unit1.body.getOgreNode().getPosition()) > self.range:
             s.log(str(self.unit1)+" Attack failed")
             return
         vector1 = self.unit1.body.getOgreNode().getPosition()
@@ -230,6 +234,16 @@ class Attack(object):
     def getDamage(self):
         return self.unit1.attributes.strength
     
+    def ready(self):
+        try:
+            if not self.unit2:
+                return False
+        except:
+            return False
+        dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
+        if dis > self.range:
+            return False
+        return True
     def execute(self,timer):
         
         if not self.unit1.body or not self.unit2.body:
@@ -250,7 +264,7 @@ class Attack(object):
            
         s.playsound(self.sound)    
         #self.unit2.body.setVelocity(direction )        
-        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),type)
+        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),type,self.unit1)
         
         return False
     

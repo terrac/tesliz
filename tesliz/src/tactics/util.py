@@ -1,7 +1,9 @@
 from tactics.Singleton import *
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.renderer.OGRE as Ogre
-
+from mental.mind import *
+from mental.background import *
+from tactics.Unit import *
 import data.unittypes
 s = Singleton()
 
@@ -80,6 +82,36 @@ def buildImmoblePhysics(unit):
     
     ##floornode.setScale( siz )
     bod.attachToNode( node )
-    bod.setPositionOrientation( Ogre.Vector3(0.0,-25.0,0.0), Ogre.Quaternion.IDENTITY )
+    bod.setPositionOrientation( unit.node.getPosition(),unit.node.getOrientation() )
     
     s.app.bodies.append ( bod )
+
+def setupExtra(unit, mental = None):
+    player = unit.player
+    try:
+        player.setVisualMarker(unit)
+    except:
+        pass
+    if s.fog and player.name == "Computer1":
+        unit.setVisible(False)
+    if not mental:
+        mental = Mind()
+        mental.map={"combat":Combat(unit,action.Attack)}
+        #mental.state = {"angry":0,"happy":0}
+    unit.mental = mental
+    return unit
+def createUnit(position,player,unittype,level=1,material = "Examples/RustySteel" ,mesh = 'cylinder.mesh' ,name = None,mental = None):
+    if not name:
+        name = s.app.getUniqueName()+unittype +"-"+player.name   
+    sceneManager = s.app.sceneManager                        
+    scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)                        
+    scene_node.position = position             
+    attachMe = sceneManager.createEntity(name,mesh)    
+    scene_node.attachObject(attachMe)
+    unit = Unit()
+    unit.node = scene_node
+    buildUnit(unit,unittype,level,player.name)
+    unit.node.getAttachedObject(0).setMaterialName(material)
+    
+    setupExtra(unit, mental)
+    return unit

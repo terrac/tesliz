@@ -19,9 +19,10 @@ class RandomBuilder(OgreNewtonApplication):
         light = self.sceneManager.createLight( "Light1" )
         light.setType( Ogre.Light.LT_POINT )
         light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
-        floor = self.sceneManager.createEntity("Floor", "simple_terrain.mesh" )
+        floor = self.sceneManager.createEntity("Floor", "plane.mesh" )
         floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode" )
         floornode.attachObject( floor )
+        floornode.setScale(Ogre.Vector3(20,20,20))
         floor.setMaterialName( "Examples/DarkMaterial" )
     
         floor.setCastShadows( False )
@@ -52,7 +53,7 @@ class RandomBuilder(OgreNewtonApplication):
                 info = self.ray.getFirstHit()
                 
                 
-                #print "au"
+                
                 if (info.mBody):
                     
                     #bodpos, bodorient = info.mBody.getPositionOrientation()
@@ -82,9 +83,7 @@ class RandomBuilder(OgreNewtonApplication):
                         s.playermap[player].setVisualMarker(unit)
                     except:
                         pass
-                    print scene_node.position
-                    print unittype
-                    print player
+                    s.log(str(position) +str(unittype) +str(player),self)
                     #getattr(unittypes,(unit,rand)
                     #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
                     #self.clickEntity(info.mBody.OgreNode.Name,position)

@@ -219,7 +219,7 @@ def parse_camera(sceneManager, xml_node):
             camera.nearClipDistance, camera.farClipDistance = parse_floats(
                     camera_xml_node, 'clipping', 'nearPlaneDist', 'farPlaneDist')
         camera.FOVy = ogre.Degree(fov)
-        #print 'added camera: "%s" fov: %f type: %s clipping: %f,%f' % (name, fov, projectionType,camera.nearClipDistance,camera.farClipDistance)
+        
         #scene_node.attachObject(camera)
         s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
         s.app.msnCam.attachObject( s.app.camera )
@@ -266,7 +266,7 @@ def parse_light(sceneManager, xml_node):
         except IndexError:
             pass
         
-        #print 'added light: "%s"' % name
+        
         scene_node.attachObject(attachMe)
         return attachMe
     except IndexError:
@@ -294,7 +294,7 @@ class Dotscene(object):
             name = str(thingy['name'].nodeValue)
             mesh = str(thingy['meshFile'].nodeValue)
             attachMe = sceneManager.createEntity(name,mesh)
-            #print 'added entity: "%s" %s' % (name, mesh)
+            
             scene_node.attachObject(attachMe)
             #TODO: for later 
           #  attachMe.setMaterialName( "Examples/RustySteel" )

@@ -65,10 +65,10 @@ class OgreNewtonApplication (sf.Application):
 
         s.app = self
         s.playermap = Settings().playermap
-        if s.turnbased:
-            Turn()
-        else:
-            RealTimeTurn()
+#        if s.turnbased:
+#            Turn()
+#        else:
+#            RealTimeTurn()
         
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
                 Ogre.RENDER_QUEUE_OVERLAY, False, 3000, self.sceneManager )
@@ -143,7 +143,7 @@ class OgreNewtonApplication (sf.Application):
     def _configure(self):
         
         cur = self.root.restoreConfig();
-        print cur
+        
         #carryOn = self.root.showConfigDialog()
         if not cur:
             cur = self.root.showConfigDialog()
@@ -160,6 +160,13 @@ class OgreNewtonApplication (sf.Application):
         
         return "unique"+str(self.count)
     count = 0;
+    def setTurnbased(self,bool):
+            s.turnbased = bool
+            if bool:
+                s.turn = Turn()
+            else:
+                s.turn = RealTimeTurn()
+            s.log("turnbased = " +str(s.turnbased))
 
        
 class OgreNewtonFrameListener(CEGUIFrameListener):
@@ -225,6 +232,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
               
 #        if s.ended:
 #            return 
+
+        for u in s.unitmap.values():
+            if u.node.getPosition().y < -50:
+                u.damageHitpoints(50,"darkness")
         for x in s.app.animations:
             x.addTime(frameEvent.timeSinceLastFrame)
             if not x.getEnabled():
@@ -246,15 +257,24 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                         line = str(eunit.node.getName())+" a "+eunit.type+" arrives"
                     else:
                         line = str(eunit.node.getName())+" a "+eunit.type+" leaves"
-                    s.mental.broadcast(line)
+                    #s.grammar.broadcast(line,s.playermap["Computer1"].unitlist)
+                    
                     s.log(line)
+        if len(s.playermap["Computer1"].unitlist) == 0:
+            if s.turnbased:
+                s.app.setTurnbased(False)
+                
+        else:
+            if not s.turnbased:
+                s.app.setTurnbased(True)
+                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
         list = []
         while len(s.app.timedbodies) > 0:
             body, time = s.app.timedbodies.pop()
             time -= frameEvent.timeSinceLastFrame
             tuple = body,time
-            #print tuple
+            
             if time > 0:
                list.append(tuple) 
             else:
@@ -371,6 +391,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
         s.turn.doTurn()        
         for unit in self.unitqueues:
+           # print unit.actionqueue
             if len(unit.actionqueue) == 0:
                 self.unitqueues.remove(unit)
             for iexecute in unit.actionqueue:
@@ -380,15 +401,17 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                     
                 break
             if s.turnbased :   
-                    break
-        for bg in self.backgroundqueue:
-            if len(bg.bqueue) == 0:
-                self.backgroundqueue.remove(bg)
-            for iexecute in bg.bqueue:    
-                boo = iexecute.tick(frameEvent.timeSinceLastFrame)
-                if not boo:
-                    bg.bqueue.remove(iexecute)
-                break;
+                break
+#        for bg in self.backgroundqueue:
+#            #print self.backgroundqueue
+#            if len(bg.bqueue) == 0:
+#                self.backgroundqueue.remove(bg)
+#            for iexecute in bg.bqueue:    
+#                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
+#                if not boo:
+#                    bg.bqueue.remove(iexecute)
+#                if s.turnbased:
+#                    break
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False
@@ -446,7 +469,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         info = self.ray.getFirstHit()
     
         #dir(info.mBody).OgreNode.Name)
-       # print dir(info.mBody)
+       
         #position =info.mDistance * info.mNormal + start
         
     

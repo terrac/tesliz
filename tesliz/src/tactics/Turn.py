@@ -2,6 +2,27 @@ from tactics.Singleton import *
 import logging
 log = logging.getLogger('')
 s = Singleton()
+
+def show(unit):
+    pos = unit.body.getOgreNode().getPosition()
+    sceneManager = s.app.sceneManager        
+    name = "turncircle"
+    mesh = "cylinder.mesh"
+    if not sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        attachMe = s.app.sceneManager.createEntity(name,mesh)            
+        scene_node.attachObject(attachMe)
+        attachMe.setNormaliseNormals(True)
+    else:
+        scene_node = sceneManager.getSceneNode(name)
+    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+    
+    size = 1
+    scene_node.scale = Ogre.Vector3(size,size,size)
+    
+    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    
+   
 class Turn(object):
     
     
@@ -21,6 +42,7 @@ class Turn(object):
             return
         
         for unit in s.unitmap.values():
+            
             if unit.increment():
                self.turnlist.append(unit) 
                
@@ -48,31 +70,10 @@ class Turn(object):
         s.framelistener.cplayer = unit.player
         
     
-        self.show(unit)
+        show(unit)
         unit.startTurn()
                    
     turnlist = []          
-    def show(self,unit):
-        pos = unit.body.getOgreNode().getPosition()
-        sceneManager = s.app.sceneManager        
-        #self.startPos =position  
-        #self.endPos.y = position.y
-        name = "turncircle"
-        mesh = "cylinder.mesh"
-        if not sceneManager.hasSceneNode(name):
-            scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
-            attachMe = s.app.sceneManager.createEntity(name,mesh)            
-            scene_node.attachObject(attachMe)
-            attachMe.setNormaliseNormals(True)
-        else:
-            scene_node = sceneManager.getSceneNode(name)
-        scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
-        
-        size = 1
-        scene_node.scale = Ogre.Vector3(size,size,size)
-        
-        scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
-        
         
         
             
@@ -83,12 +84,17 @@ class RealTimeTurn(object):
         s.turn = self
         
     def doTurn(self):
-        if len(s.framelistener.unitqueues) == 0:
-            for player in s.playermap.values():
-                for unit in player.unitlist:
-                    unit.startTurn()
+        pass
+        #self.pause = False
+#        if len(s.framelistener.unitqueues) == 0:
+#            for player in s.playermap.values():
+#                for unit in player.unitlist:
+#                    unit.startTurn()
+                    #show(unit)
+                    #break
     def nextUnitTurn(self):
         s.framelistener.cplayer = s.playermap["Player1"]
+        
     def nextUnitTurnUnpause(self):
-        self.pause = False
+        #self.pause = False
         self.nextUnitTurn()                        

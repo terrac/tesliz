@@ -42,7 +42,7 @@ class Move(object):
         
         scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
         attachMe = s.app.sceneManager.createEntity(name,mesh)
-        #print 'added entity: "%s" %s' % (name, mesh)
+        
         scene_node.attachObject(attachMe)
         #TODO: for later 
       #  attachMe.setMaterialName( "Examples/RustySteel" )
@@ -82,21 +82,15 @@ class Move(object):
         direction = self.endPos-position
         direction.normalise()
         self.unit1.body.setVelocity(direction*5)
-        finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
+        finishedMoving = False
+        if s.turnbased:
+            finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
         if not finishedMoving:
             finishedMoving =distance(self.endPos, position) < 2
         #   self.unit1.body.setVelocity(direction*1)
         #    self.unit1.body.freeze()
             
-        
-#        print distance(self.endPos, position)
-        #print self.startPos
-        #print self.endPos
-        #print finishedMoving
-        #print distance(self.startPos, position)
-        #print self.unit1.attributes.moves
-        #print self.startPos
-        #print positio        if finishedMoving:
+
         if finishedMoving:
             for x in s.unitmap.values():
                 x.body.freeze()    

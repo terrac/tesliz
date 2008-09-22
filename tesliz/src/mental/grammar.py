@@ -4,7 +4,8 @@ class Grammar:
         self.startMap = dict()
         self.endMap = dict()
         
-    def broadcast(self,text):
+    def broadcast(self,text,unit):
+        unitlist = unit.player.unitlist
         list = text.split()
         slist = set()
         elist = set()
@@ -13,9 +14,11 @@ class Grammar:
                 slist = slist.union(self.startMap[u])
             if self.endMap.has_key(u):
                 elist =elist.union(self.endMap[u])
-        f = slist.intersection(elist)
-        for v in f:
-            v.broadcast(text)
+        validhits = slist.intersection(elist)
+        for mental in validhits:
+            for unit in unitlist:#call fighter for each unit in list
+                if unit.mental:
+                    mental.broadcast(text,unit)
 
 
 

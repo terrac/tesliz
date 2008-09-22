@@ -23,7 +23,7 @@ def setupBasic(unit, level):
     #unit.attributes.damage = 50 * level
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
-    unit.attributes.speed = speed * level
+    unit.attributes.speed = speed 
     unit.attributes.hitpoints = hitpoints * level    
     unit.attributes.strength = strength * level
     unit.attributes.dexterity = dexterity * level

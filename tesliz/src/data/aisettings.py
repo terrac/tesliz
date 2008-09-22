@@ -7,29 +7,36 @@ from tactics.Singleton import *
 s = Singleton()
 
 class Chatbox:
-    def add(self,list,name):        
-        item =CEGUI.ListboxTextItem (name)        
+    listholder = []
+    def add(self,text,unit):        
+        item =CEGUI.ListboxTextItem (text+":"+unit.getName())        
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
-        list.addItem(item)         
+        
+        self.list.addItem(item)         
     def __init__(self):
         sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
         winMgr = CEGUI.WindowManager.getSingleton()
-        list = winMgr.createWindow("TaharezLook/Listbox", "chatbox")
-        sheet.addChildWindow(list)
-        list.setText("actionlist")
-        list.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
-        list.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
-        list.setAlwaysOnTop(True)
+        self.list = winMgr.createWindow("TaharezLook/Listbox", "chatbox")
+        sheet.addChildWindow(self.list)
+        self.list.setText("actionlist")
+        self.list.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
+        self.list.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
+        self.list.setAlwaysOnTop(True)
 class Mental:
     def __init__(self):
         s.chatbox = Chatbox()
+        fighter = Fighter()       
+        s.grammar = Grammar()
+        s.grammar.addLine("is weak to", fighter)
+        s.grammar.addLine("arrives", fighter)
+        s.grammar.addLine("leaves", fighter)
+                
+#    def broadcast(self,text,name = None):
         
-   
-    listholder = []
     
     
-        #fighter = Fighter()
+ 
 #        fighter.unitlist.append(s.unitmap["lina"])
 #        grammar= Grammar()
 #        timer = Timer()

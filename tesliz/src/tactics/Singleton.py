@@ -37,6 +37,7 @@ class Singleton:
         turnbased = True
         ended = False
         event = None
+        
         def removeUnit(self,unit):
             
             self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
@@ -50,7 +51,7 @@ class Singleton:
             self.log(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
             if len(unit.player.unitlist) == 0:
                 self.log("endgame")
-                self.endGame()
+                #self.endGame()
             del unit    
                 
         def endGame(self):
@@ -58,22 +59,26 @@ class Singleton:
             winMgr = CEGUI.WindowManager.getSingleton()
             list = winMgr.getWindow("QuitButton")
             #sheet.addChildWindow(list)
-            list.setText("WINNER !!!!!")
+            for x in self.unitmap.values():                
+                list.setText(x.player.name+" WINNER !!!!!")
+                break;
             self.ended = True
             list.setPosition(CEGUI.UVector2(cegui_reldim(0.335), cegui_reldim(0.3)))
-            list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim(0.3)))
+            list.setSize(CEGUI.UVector2(cegui_reldim(0.3), cegui_reldim(0.1)))
             list.setAlwaysOnTop(True)
             
-        def log(self,text):
-            sf.Application.debugText = str(text)
-            self.logger.info(text)                
-            print text
+        def log(self,text,calling = None):
+            text = str(text)
+            sf.Application.debugText = text
+            self.logger.info(text+ str(calling))                
+            print text+ str(calling)
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
         def playsound(self,filename="C:\sound.wav"):
             winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
-            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)        
+            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
+    
     # storage for the instance reference
     __instance = None
 

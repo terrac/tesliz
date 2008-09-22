@@ -22,14 +22,15 @@ class Traits(object):
             retlist.append(string)
         return retlist
     
-    def useAbility(self,text):
+    def getAbility(self,text):
         i = self.cmap[str(text)]
         
         
         usable = self.listclasses[i]
         #usable.used = True        
         return usable
-    
+    def useAbility(self,text):
+        pass
 
 class NumberedTraits(object):
     
@@ -58,6 +59,11 @@ class NumberedTraits(object):
         i = self.cmap[str(text)]
         self.listnumbers[i] = self.listnumbers[i] -1
         
+        #usable = self.listclasses[i]
+        #usable.used = True        
+        #return usable
+    def getAbility(self,text):
+        i = self.cmap[str(text)]                
         usable = self.listclasses[i]
         #usable.used = True        
         return usable

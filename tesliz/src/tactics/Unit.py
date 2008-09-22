@@ -6,7 +6,7 @@ class Attributes(object):
     hitpoints = 5
     speed = 5
     curMovement = 0
-    player = None
+    #player = None
     #node = None
     moves = 5
     #damage = 5
@@ -15,12 +15,14 @@ class Attributes(object):
     intelligence = 5
     dexterity = 5
     resistance = dict()
-    node = None
+    #node = None
     type = None
     def increment(self):
         if self.curMovement < self.speed:
             self.curMovement += 1
             return False
+        else:
+            self.curMovement = 0        
         return True     
     def __str__( self ):
         return str(self.hitpoints)
@@ -50,17 +52,18 @@ class Unit(object):
     def getName(self):
         return self.node.getName()
     def increment(self):
+       # print self.getName()+" "+str(self.attributes.curMovement)        
         return self.attributes.increment()
     
      
     def startTurn(self):
         self.player.startTurn(self)
         
-    def damageHitpoints(self,number,type,eunit=None):
+    def damageHitpoints(self,number,type = None,eunit=None):
         if self.attributes.resistance.has_key(type):
             number = self.attributes.resistance[type] * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number))
+        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+str(type))
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)

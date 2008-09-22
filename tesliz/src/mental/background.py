@@ -17,11 +17,30 @@ class Combat(object):
     def __init__(self,unit,getBest):
         self.unit =unit
         self.getBest = getBest
+       # s.turnbased = True
+        #self.bqueue =[]
+        #self.cfightvalue = 0
 
-    def tick(self,timer):
+    def getMentalCommands(self):
+        pass
+#    def setup(self,unit,eunit):
+#        #if self.cfightvalue and self.cfightvalue-eunit.value >10:
+#        #    return False
+#        #else:
+#        unit = self.unit
+#        
+#        
+#        s.framelistener.addToBackground(self,self)
+#        s.framelistener.clearActions(unit)
+#        #    self.cfightvalue = eunit.value
+
+
+    def execute(self,timer):
+        #aoeu
         unit = self.unit
          
         if s.framelistener.isActive(unit):
+            print "aoeu"
             return True
         for eunit in s.unitmap.values():
             if not eunit.player ==unit.player and eunit.getVisible():
@@ -44,13 +63,14 @@ class Combat(object):
                         s.framelistener.addToQueue(unit,copy.copy(abil))
                         bool =abil.action
                 except Exception,e:
-                    print e
+                    s.log( e,self)
                     
                 
                 s.turn.nextUnitTurnUnpause()
-                s.mental.state["angry"] = 50#     
+                unit.mental.state["angry"] = 50#     
                 return True
-        s.mental.state["angry"] = 0           
+        unit.mental.state["angry"] = 0
+        s.turnbased = False           
         return False
     
 
@@ -59,9 +79,10 @@ class Combat(object):
 class Leader(object):
     
     
-    def __init__(self,unit,pos = None):
+    def __init__(self,unit,endPos = None):
         self.unit =unit
-        self.pos = pos
+        self.endPos = endPos
+        self.bqueue =[]
 
     def execute(self,timer):
         if self.unit.mental.state["angry"] > 10:
@@ -79,7 +100,7 @@ class Leader(object):
         return True
 
     def getMentalCommands(self):        
-        return [SetPosition("leadto",self)]
+        return [BroadcastMessage("follow me","follow me",self.unit),BroadcastMessage("stop following me","following me",self.unit)]
 
 class Follower(object):
     
@@ -89,7 +110,7 @@ class Follower(object):
         self.leader = leader
         
 
-    def tick(self,timer):
+    def execute(self,timer):
         if self.unit.mental.state["angry"] > 10:
             return True
         unit = self.unit
