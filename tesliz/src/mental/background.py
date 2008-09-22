@@ -39,38 +39,42 @@ class Combat(object):
         #aoeu
         unit = self.unit
          
-        if s.framelistener.isActive(unit):
-            print "aoeu"
-            return True
-        for eunit in s.unitmap.values():
-            if not eunit.player ==unit.player and eunit.getVisible():
-                #sf.Application.debugText = str(unit) +"going after"+str(eunit)
-                #s.framelistener.addToQueue(unit,Move(unit,eunit.node.getPosition()))
+        lodis = 999
+        lounit = None
+        for eunit in s.unitmap.values():            
+            if not eunit.player ==unit.player:
+                dis = distance(eunit.node.getPosition(),unit.node.getPosition())
+                if dis < lodis:
+                    lodis =dis
+                    lounit = eunit
+        if not lounit:
+            s.endGame()
+            return
+        eunit = lounit
+        bool =False
+        
+        try:            
+            while not bool:
+                abil = self.getBest(unit)
                 
-                bool =False
                 
-                try:            
-                    while not bool:
-                        abil = self.getBest(unit)
-                        
-                        
-                        if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
-                            move = Move()
-                            setStart(move,unit,None,eunit.node.getPosition())
-                            s.framelistener.addToQueue(unit,move)
-                            
-                        setStart(abil,unit,eunit)
-                        s.framelistener.addToQueue(unit,copy.copy(abil))
-                        bool =abil.action
-                except Exception,e:
-                    s.log( e,self)
+                if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
+                    move = Move()
+                    setStart(move,unit,None,eunit.node.getPosition())
+                    s.framelistener.addToQueue(unit,move)
                     
-                
-                s.turn.nextUnitTurnUnpause()
-                unit.mental.state["angry"] = 50#     
-                return True
+                setStart(abil,unit,eunit)
+                s.framelistener.addToQueue(unit,copy.copy(abil))
+                bool =abil.action
+        except Exception,e:
+            s.log( e,self)
+            
+        
+        s.turn.nextUnitTurnUnpause()
+        unit.mental.state["angry"] = 50#     
+        return True
         unit.mental.state["angry"] = 0
-        s.turnbased = False           
+                   
         return False
     
 

@@ -81,7 +81,7 @@ class ComputerPlayer(object):
         unit.mental.map["combat"].execute(0)
         s.turn.pause = False    
         
-        s.turn.nextUnitTurn()
+        s.turn.nextUnitTurnUnpause()
         
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       
