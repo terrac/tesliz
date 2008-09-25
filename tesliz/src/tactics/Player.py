@@ -12,7 +12,7 @@ class HumanPlayer(object):
 
     def __init__(self,name):
         self.name = name
-        self.interface = HumanInterface()
+        self.interface = HumanInterface(self)
 
         
     def endTurn(self):
@@ -53,7 +53,11 @@ class HumanPlayer(object):
        if s.turnbased:
            self.interface.cunit = self.cunit
            self.interface.displayActions()
-           
+       else:
+           for x in unit.mental.map.values():
+               if x.running:
+                   x.execute(0)
+                   
        
            
     
@@ -77,8 +81,10 @@ class ComputerPlayer(object):
 
     s = Singleton()
     def startTurn(self,unit):        
-        
-        unit.mental.map["combat"].execute(0)
+        for x in unit.mental.map.values():
+            if x.running:
+                x.execute(0)
+        #unit.mental.map["combat"].execute(0)
         s.turn.pause = False    
         
         s.turn.nextUnitTurnUnpause()

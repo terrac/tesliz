@@ -6,7 +6,9 @@ from tactics.Event import *
 class Unitdata(object):
     def bandit2(self,unit):
         buildUnit(unit,"FastFighter",1,"Player1")
-        setupExtra(unit)
+        mental = Mind()
+        mental.map={"combat":Combat(unit,action.Attack),"follower":Follower(unit)}
+        setupExtra(unit,mental)
         
                        
     def bandit1(self,unit):
@@ -18,6 +20,7 @@ class Unitdata(object):
         mental = Mind()
         mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit)}
         setupExtra(unit,mental)
+        
         #unit.mental = Mind([Leader(unit),Fighter(unit)])
     
         
@@ -26,7 +29,7 @@ class Unitdata(object):
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):
-        zai = ["Spark","ZaiSoldier"]
+        zai = ["ZaiSoldier"]
         vec = Ogre.Vector3(10,-20,0)
         vec2 = Ogre.Vector3(30,-20,0)
         #vec3 = Ogre.Vector3(-30,-20,0)

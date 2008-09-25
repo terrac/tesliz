@@ -1,3 +1,7 @@
+import copy
+
+
+
 class Grammar:
     def __init__(self):
         
@@ -16,8 +20,8 @@ class Grammar:
                 elist =elist.union(self.endMap[u])
         validhits = slist.intersection(elist)
         for mental in validhits:
-            for unit in unitlist:#call fighter for each unit in list
-                if unit.mental:
+            for u in unitlist:#call fighter for each unit in list
+                if u.mental:
                     mental.broadcast(text,unit)
 
 

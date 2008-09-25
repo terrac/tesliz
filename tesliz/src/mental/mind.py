@@ -34,9 +34,12 @@ class Mind:
         
         list = []
         for x in self.map.values():
-            y = x.getMentalCommands()
-            if y:
-                list = list + y
+            try:
+                y = x.getMentalCommands()
+                if y:
+                    list = list + y
+            except:
+                pass
         return list
 
 class Fighter(Mind):
@@ -55,3 +58,32 @@ class Fighter(Mind):
 
            combat.setup(unit, eunit) 
                       
+class RunPlayer:
+    #only brodcasts to same player and only if that unit is talking
+    def __init__(self,name):
+        self.name = name
+    
+    
+    def broadcast(self,text,unit):
+        #if self.unit == unit:
+        for x in unit.player.unitlist:                
+            try:
+                x.mental.map[self.name].broadcast(text,unit)
+            except Exception, e:
+                print str(e)+str(x)+str(x.mental.map)
+class KnowledgeBase:
+    def __init__(self):
+        self.map = dict()
+    def addKnowledge(self,text,base,place = "General"):   
+        if not self.map.has_key(place):
+            self.map[place] = dict()
+        if not self.map[place].has_key(base):
+            self.map[place][base] = []     
+        self.map[place][base].append(text)
+    def getKnowledge(self,base,place = "General"):
+        return self.map[place][base]
+    def getKnowledgeList(self,base,place = ["General"]):
+        for x in place:
+            if self.map.has_key(x):
+                return self.map[x][base]
+    

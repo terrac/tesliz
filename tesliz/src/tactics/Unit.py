@@ -37,12 +37,13 @@ class Unit(object):
         self.traits = dict()
     body = None
     type = None
+    timeleft = 0
     traits = None
     attributes = None
     actionqueue = []
     visible = True
     mental = None
-    
+    knowledgelist = ["General"]
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):
@@ -63,11 +64,11 @@ class Unit(object):
         if self.attributes.resistance.has_key(type):
             number = self.attributes.resistance[type] * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+str(type))
+        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type)
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
-            
+    
             #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
     def getWantedRange(self):

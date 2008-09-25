@@ -23,15 +23,20 @@ class Chatbox:
         self.list.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
         self.list.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
         self.list.setAlwaysOnTop(True)
-class Mental:
+class AIsettings:
     def __init__(self):
         s.chatbox = Chatbox()
         fighter = Fighter()       
         s.grammar = Grammar()
-        s.grammar.addLine("is weak to", fighter)
-        s.grammar.addLine("arrives", fighter)
+        #s.grammar.addLine("is weak to", fighter)
+        #s.grammar.addLine("arrives", fighter)
         s.grammar.addLine("leaves", fighter)
-                
+        
+        follower = RunPlayer("follower")
+        s.grammar.addLine("follow me", follower)
+    
+        s.knowledge = KnowledgeBase()
+        s.knowledge.addKnowledge("Your mother is a hamster","battlecry")
 #    def broadcast(self,text,name = None):
         
     

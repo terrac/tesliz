@@ -32,6 +32,7 @@ class Turn(object):
     def __init__(self):
         s.turn = self
         
+        
     pause = False    
     def doTurn(self):
 
@@ -83,8 +84,20 @@ class RealTimeTurn(object):
     def __init__(self):
         s.turn = self
         
+        self.turnindex = 0
     def doTurn(self):
-        pass
+        maplen = len(s.unitmap.values())
+        if maplen == 0:
+            s.endGame()
+            return
+        if maplen <= self.turnindex:
+            self.turnindex = 0
+        unit = s.unitmap.values()[self.turnindex]
+        s.framelistener.cplayer = unit.player
+        unit.startTurn()
+        
+        show(unit)
+        self.turnindex += 1
         #self.pause = False
 #        if len(s.framelistener.unitqueues) == 0:
 #            for player in s.playermap.values():
@@ -93,7 +106,8 @@ class RealTimeTurn(object):
                     #show(unit)
                     #break
     def nextUnitTurn(self):
-        s.framelistener.cplayer = s.playermap["Player1"]
+        pass
+        #s.framelistener.cplayer = s.playermap["Player1"]
         
     def nextUnitTurnUnpause(self):
         #self.pause = False

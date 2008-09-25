@@ -1,6 +1,6 @@
 
 # 
-#   OgreNewt library - connecting Ogre and Newton!
+#   OgreNewt library - connecting Ogre and Newton!i
 #   Demo01_TheBasics - basic demo that shows a simple OgreNewt world, and how
 #   to setup basic rigid bodies.
 # 
@@ -65,6 +65,7 @@ class OgreNewtonApplication (sf.Application):
 
         s.app = self
         s.playermap = Settings().playermap
+        
 #        if s.turnbased:
 #            Turn()
 #        else:
@@ -86,9 +87,11 @@ class OgreNewtonApplication (sf.Application):
         CEGUI.System.getSingleton().setGUISheet( sheet )
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
+        mental = AIsettings()
+        
         self.parseSceneFile()
         
-        mental = Mental()
+        
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
         sheet.addChildWindow(btn)
@@ -140,6 +143,7 @@ class OgreNewtonApplication (sf.Application):
         self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
         self.root.addFrameListener(self.frameListener)
         Singleton().framelistener = self.frameListener
+        
     def _configure(self):
         
         cur = self.root.restoreConfig();
@@ -198,9 +202,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     #then you can have both
     def addToQueue(self, unit,action):
 
-        
+        action.running = True
         unit.actionqueue.append(action)
-        self.unitqueues.append(unit)
+        if not unit in self.unitqueues:
+            self.unitqueues.append(unit)
     def addToBackground(self,obj,action):
         obj.bqueue.append(action)
         self.backgroundqueue.append(obj)
@@ -223,7 +228,41 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             return True
         
                   
-        return False    
+        return False
+    def runQueue(self,timer):
+        for unit in self.unitqueues:
+            #print unit.timeleft
+            #print unit
+            if unit.timeleft > 0:
+                unit.timeleft -= timer
+                #print timer
+                #print unit.timeleft
+                #print unit
+                #print unit.timeleft
+                continue
+            #print unit
+            if len(unit.actionqueue) == 0:
+                self.unitqueues.remove(unit)
+                continue
+            iexecute = unit.actionqueue[0]
+            boo = False
+            boo = iexecute.execute(timer)
+            #print iexecute
+            #print unit.timeleft
+            if not boo:
+                unit.actionqueue.pop()
+                try:
+                    unit.timeleft = iexecute.timeleft
+                    print unit.timeleft
+                except:
+                    pass
+                
+                    
+                    #print "removed"+str(iexecute)
+                
+            
+            if s.turnbased :   
+                break    
     #turn = Turn()
     def frameStarted(self, frameEvent):
         ## in this frame listener we control the camera movement, and allow the user to "shoot" cylinders
@@ -260,14 +299,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                     #s.grammar.broadcast(line,s.playermap["Computer1"].unitlist)
                     
                     s.log(line)
-        if len(s.playermap["Computer1"].unitlist) == 0:
-            if s.turnbased:
-                s.app.setTurnbased(False)
-                
-        else:
-            if not s.turnbased:
-                s.app.setTurnbased(True)
-                
+#        if len(s.playermap["Computer1"].unitlist) == 0:
+#            if s.turnbased:
+#                s.app.setTurnbased(False)
+#                
+#        else:
+#            if not s.turnbased:
+#                s.app.setTurnbased(True)
+#                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
         list = []
         while len(s.app.timedbodies) > 0:
@@ -386,22 +425,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 
                 self.timer = 0.2
         self.timer -= frameEvent.timeSinceLastFrame
-        if (self.timer > 0.0):
-            return True
+        #if (self.timer > 0.0):
+        #    return True
 
         s.turn.doTurn()        
-        for unit in self.unitqueues:
-           # print unit.actionqueue
-            if len(unit.actionqueue) == 0:
-                self.unitqueues.remove(unit)
-            for iexecute in unit.actionqueue:
-                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
-                if not boo:
-                    unit.actionqueue.remove(iexecute)
-                    
-                break
-            if s.turnbased :   
-                break
+        self.runQueue(frameEvent.timeSinceLastFrame)
 #        for bg in self.backgroundqueue:
 #            #print self.backgroundqueue
 #            if len(bg.bqueue) == 0:

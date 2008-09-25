@@ -19,7 +19,7 @@ class BroadcastMessage:
         self.unit = unit
         self.text = text
         
-    
+    needsasecondclick = False
     def clicked(self):
         s.grammar.broadcast(self.text,self.unit)
         s.chatbox.add(self.text,self.unit)

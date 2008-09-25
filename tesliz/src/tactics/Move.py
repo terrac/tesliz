@@ -6,7 +6,7 @@ s = Singleton()
 #    return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
 
 class Move(object):
-
+    needsasecondclick = True
     def getEndPos(self):
         return self.__endPos
 
@@ -24,7 +24,7 @@ class Move(object):
 
     value= 0
 
-    
+    timeleft = -1
     startPos = None
     endPos = None
     time = 5

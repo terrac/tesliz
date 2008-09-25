@@ -9,7 +9,8 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 
 class HumanInterface:
-    def __init__(self):
+    def __init__(self,player):
+        self.player = player
         self.actionSelected = False
         self.removeFrom = None
 
@@ -86,7 +87,8 @@ class HumanInterface:
         #    pass
         try:
             setStart(toexecute,self.cunit)
-            self.iexecute = copy.copy(toexecute)
+            if toexecute.needsasecondclick:
+                self.iexecute = copy.copy(toexecute)
         except Exception, ex:
             print repr(ex)
         s.log(text)
@@ -97,9 +99,10 @@ class HumanInterface:
 
     def clickEntity(self,name,position):
         if not s.turnbased and s.unitmap.has_key(name):
-            if s.unitmap[name] in self.unitlist:
-                self.endTurn()
-                s.unitmap[name].startTurn() 
+            if s.unitmap[name] in self.player.unitlist:
+                #self.endTurn()
+                self.cunit = s.unitmap[name] 
+                #s.unitmap[name].startTurn() 
                 self.displayActions()
         if self.iexecute:
             unit = None
@@ -191,7 +194,8 @@ class HumanInterface:
         self.abilityused = text
         try:
             setStart(toexecute,self.cunit)
-            self.iexecute = copy.copy(toexecute)
+            if toexecute.needsasecondclick:
+                self.iexecute = copy.copy(toexecute)
         except Exception, ex:
             print repr(ex)
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
@@ -206,4 +210,5 @@ class HumanInterface:
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
         CEGUI.WindowManager.getSingleton().destroyWindow("mentallist")
         self.actionSelected = False
-        self.cunit.player.endTurn()
+        if self.cunit:
+            self.cunit.player.endTurn()

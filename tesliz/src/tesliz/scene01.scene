@@ -14,12 +14,7 @@
       <scale x=".3" y=".3" z=".3"/>
       <entity name="bandit2" meshFile="cylinder.mesh"/>
     </node>
-    <node name="bandit1">
-      <position x="11.294511" y="-10.900315" z="5.703125"/>
-      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".3" y=".3" z=".3"/>
-      <entity name="bandit1" meshFile="cylinder.mesh"/>
-    </node>
+
     <node name="Lamp">
       <position x="4.076245" y="1.005454" z="5.903862"/>
       <quaternion x="0.169076" y="0.272171" z="0.755880" w="0.570948"/>

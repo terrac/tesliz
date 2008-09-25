@@ -9,7 +9,18 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 from utilities.physics import *
+import random
 s = Singleton()
+
+class RandomUtterance:
+    
+    def __init__(self,unit,base):
+        self.unit =unit
+        self.base = base
+    def execute(self,timer):
+        battlecrymap = s.knowledge.getKnowledgeList(self.base,self.unit.knowledgelist)
+        s.chatbox.add(battlecrymap[random.randrange(0,len(battlecrymap))],self.unit)
+
 
 class Combat(object):
     
@@ -17,28 +28,22 @@ class Combat(object):
     def __init__(self,unit,getBest):
         self.unit =unit
         self.getBest = getBest
-       # s.turnbased = True
-        #self.bqueue =[]
-        #self.cfightvalue = 0
+        self.running = True
+        self.battlecry = RandomUtterance(unit,"battlecry")
+        self.battlecry.called = False
 
     def getMentalCommands(self):
         pass
-#    def setup(self,unit,eunit):
-#        #if self.cfightvalue and self.cfightvalue-eunit.value >10:
-#        #    return False
-#        #else:
-#        unit = self.unit
-#        
-#        
-#        s.framelistener.addToBackground(self,self)
-#        s.framelistener.clearActions(unit)
-#        #    self.cfightvalue = eunit.value
 
 
     def execute(self,timer):
         #aoeu
         unit = self.unit
-         
+        
+        if not s.framelistener.isActive(self.unit):
+            if not self.battlecry.called:
+                self.battlecry.execute(timer)
+                self.battlecry.called = True
         lodis = 999
         lounit = None
         for eunit in s.unitmap.values():            
@@ -47,9 +52,10 @@ class Combat(object):
                 if dis < lodis:
                     lodis =dis
                     lounit = eunit
-        if not lounit:
-            s.endGame()
-            return
+        if not lounit:                
+            unit.mental.state["angry"] = 0
+            return False
+            
         eunit = lounit
         bool =False
         
@@ -70,12 +76,9 @@ class Combat(object):
             s.log( e,self)
             
         
-        s.turn.nextUnitTurnUnpause()
+        
         unit.mental.state["angry"] = 50#     
         return True
-        unit.mental.state["angry"] = 0
-                   
-        return False
     
 
 
@@ -87,14 +90,16 @@ class Leader(object):
         self.unit =unit
         self.endPos = endPos
         self.bqueue =[]
+        self.running = False
 
     def execute(self,timer):
+        
         if self.unit.mental.state["angry"] > 10:
             return True
         unit = self.unit
         if s.framelistener.isActive(unit):
             return True
-        s.chatbox.broadcast("follow me",unit)
+        s.chatbox.add("follow me",unit)
         move = Move()
         setStart(move,unit,None,self.pos)
         s.framelistener.addToQueue(unit,move)
@@ -109,12 +114,25 @@ class Leader(object):
 class Follower(object):
     
     
-    def __init__(self,unit,leader):
+    def __init__(self,unit):
         self.unit =unit
-        self.leader = leader
+        self.leader = None
         
 
+  
+        
+    state = "calm"    
+    running = False
+    def broadcast(self,text,unit):
+        if text == "follow me":
+            self.running = True
+            self.leader = unit
+        if text == "stop following me":
+            self.running = False
+        
     def execute(self,timer):
+        if not self.leader:
+            return False
         if self.unit.mental.state["angry"] > 10:
             return True
         unit = self.unit
@@ -122,8 +140,10 @@ class Follower(object):
             return True
         
         move = Move()
-        setStart(move,unit,leader)
+        setStart(move,unit,self.leader)
         s.framelistener.addToQueue(unit,move)
         
         return True
+
+    #leader = property(None, setLeader, None, None)
         

@@ -33,7 +33,7 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
-            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.unit1.attributes.intelligence,attack.type,attack.unit1)
+            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.damage,attack.type,attack.unit1)
             
             #unit1body.setVelocity(Ogre.Vector3(0,0,0))
             #object.setVelocity(Ogre.Vector3(0,0,0))
@@ -56,6 +56,8 @@ class ProjectileAttack(object):
     range = 10
     type = "fire"
     unit2 = None
+    timeleft = 3
+    needsasecondclick = True
 #    def ready(self):
 #        return self.unit2
     sound = "fireball.wav"
@@ -67,6 +69,8 @@ class ProjectileAttack(object):
         return True
    
     def execute(self,timer):
+        print str(self.unit1) + "a"
+        
     	if not self.unit1 or  not self.unit1.body or  not self.endPos:
     		return
         
@@ -82,7 +86,7 @@ class ProjectileAttack(object):
         World = s.app.World
         sceneManager = s.app.sceneManager
 
-        
+        self.damage = self.unit1.attributes.intelligence
         
         vector1.y += 5
         direction = vector2 - vector1
@@ -149,7 +153,7 @@ class ProjectileAttack(object):
         s.framelistener.addTimedBody(self,5)
    
         s.framelistener.timer = 2
-        self.unit1.player.endTurn()
+        #self.unit1.player.endTurn()
         s.playsound(self.sound)
         return False
              
@@ -225,12 +229,12 @@ class Attack(object):
 
     name = "Attack"
     value= 5     
-
+    timeleft = 3
     range=5
     animation = "Walk"
     type = "bludgeon"
     sound = "sword.wav"
-    
+    needsasecondclick = True
     def getDamage(self):
         return self.unit1.attributes.strength
     
@@ -245,7 +249,8 @@ class Attack(object):
             return False
         return True
     def execute(self,timer):
-        
+        print "aoeu"
+        print self.unit1.timeleft
         if not self.unit1.body or not self.unit2.body:
             return
         dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
@@ -264,7 +269,7 @@ class Attack(object):
            
         s.playsound(self.sound)    
         #self.unit2.body.setVelocity(direction )        
-        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),type,self.unit1)
+        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),self.type,self.unit1)
         
         return False
     
