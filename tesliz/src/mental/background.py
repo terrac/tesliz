@@ -18,9 +18,26 @@ class RandomUtterance:
         self.unit =unit
         self.base = base
     def execute(self,timer):
-        battlecrymap = s.knowledge.getKnowledgeList(self.base,self.unit.knowledgelist)
-        s.chatbox.add(battlecrymap[random.randrange(0,len(battlecrymap))],self.unit)
+        utterance = s.knowledge.getRandomFromParent("nobility","battlecry")
+        s.chatbox.add(utterance,self.unit)
 
+
+
+class Response:
+    
+    def __init__(self,unit):
+        self.unit =unit
+        self.running = False
+
+    def broadcast(self,text,unit):
+        map = s.knowledge.getKnowledgeList(self.base,self.unit.knowledgelist)
+        if len(map) > 0:
+            association = map[random.randrange(0,len(map))],self.unit        
+            map = s.knowledge.getKnowledgeList(association,self.unit.knowledgelist)
+            s.chatbox.add(map.value)
+        
+
+        
 
 class Combat(object):
     
@@ -31,6 +48,7 @@ class Combat(object):
         self.running = True
         self.battlecry = RandomUtterance(unit,"battlecry")
         self.battlecry.called = False
+        
 
     def getMentalCommands(self):
         pass
@@ -40,10 +58,6 @@ class Combat(object):
         #aoeu
         unit = self.unit
         
-        if not s.framelistener.isActive(self.unit):
-            if not self.battlecry.called:
-                self.battlecry.execute(timer)
-                self.battlecry.called = True
         lodis = 999
         lounit = None
         for eunit in s.unitmap.values():            
@@ -55,6 +69,14 @@ class Combat(object):
         if not lounit:                
             unit.mental.state["angry"] = 0
             return False
+        
+        
+        if not s.framelistener.isActive(self.unit):
+            if not self.battlecry.called:
+                self.battlecry.execute(timer)
+                self.battlecry.called = True
+                
+        s.framelistener.clearActions(self.unit)
             
         eunit = lounit
         bool =False
@@ -109,7 +131,7 @@ class Leader(object):
         return True
 
     def getMentalCommands(self):        
-        return [BroadcastMessage("follow me","follow me",self.unit),BroadcastMessage("stop following me","following me",self.unit)]
+        return [BroadcastMessage("follow me","follow me",self.unit,"myside"),BroadcastMessage("stop following me","following me",self.unit,"myside")]
 
 class Follower(object):
     

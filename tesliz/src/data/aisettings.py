@@ -34,9 +34,35 @@ class AIsettings:
         
         follower = RunPlayer("follower")
         s.grammar.addLine("follow me", follower)
-    
+        
+        
+        convo = RunAll("conversation")
+        s.grammar.addLine("has occurred", convo)
+        
         s.knowledge = KnowledgeBase()
+        
+        s.knowledge.addTree("general","environment")
+        s.knowledge.addTree("general", "people")
+        s.knowledge.addTree("people", "bloodthirsty")
+        
+        s.knowledge.addTree("general", "words")
+        s.knowledge.addTree("environment","revolution")
+        s.knowledge.addTree("environment","nobility")                
+        
         s.knowledge.addKnowledge("Your mother is a hamster","battlecry")
+        s.knowledge.addKnowledge("For the revolution!","battlecry","revolution")
+        s.knowledge.addKnowledge("Down with the nobility!","battlecry","revolution")
+        s.knowledge.addKnowledge("Kill your landlord!","battlecry","revolution")
+        s.knowledge.addKnowledge("My son has died in your war!","battlecry","revolution")
+        s.knowledge.addKnowledge("Waaaaaaaaaaaaaaaaaaarrrr","battlecry","bloodthirsty")
+        s.knowledge.addKnowledge("Your bones will decorate my living room","battlecry","bloodthirsty")
+        s.knowledge.addKnowledge("You liberal scum die","battlecry","nobility")
+        s.knowledge.addKnowledge("Protect the homeland","battlecry","nobility")
+        
+        s.knowledge.addTree("nobility","lina")
+        s.knowledge.addKnowledge("","waiting")
+        s.knowledge.addKnowledge("waiting","revolution","lina")
+        s.knowledge.printMap()
 #    def broadcast(self,text,name = None):
         
     

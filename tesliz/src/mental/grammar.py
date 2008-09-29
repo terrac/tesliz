@@ -1,5 +1,8 @@
 import copy
+from tactics.Singleton import *
 
+
+s = Singleton()
 
 
 class Grammar:
@@ -8,8 +11,11 @@ class Grammar:
         self.startMap = dict()
         self.endMap = dict()
         
-    def broadcast(self,text,unit):
-        unitlist = unit.player.unitlist
+    def broadcast(self,text,unit,broadcastto= "all"):
+        if broadcastto == "all":
+            unitlist = s.unitmap.values()
+        else :
+            unitlist = unit.player.unitlist
         list = text.split()
         slist = set()
         elist = set()

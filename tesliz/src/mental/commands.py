@@ -14,14 +14,15 @@ class SetPosition:
     
     
 class BroadcastMessage:
-    def __init__(self,name,text,unit):
+    def __init__(self,name,text,unit,to = "all"):
         self.name =name
         self.unit = unit
         self.text = text
+        self.to = to
         
     needsasecondclick = False
     def clicked(self):
-        s.grammar.broadcast(self.text,self.unit)
+        s.grammar.broadcast(self.text,self.unit,self.to)
         s.chatbox.add(self.text,self.unit)
     
     def execute(self,timer):

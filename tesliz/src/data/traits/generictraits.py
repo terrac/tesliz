@@ -8,6 +8,26 @@ import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 s = Singleton()
 
+def show(unit):
+    pos = unit.body.getOgreNode().getPosition()
+    sceneManager = s.app.sceneManager        
+    name = "turncircle"
+    mesh = "cylinder.mesh"
+    if not sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        attachMe = s.app.sceneManager.createEntity(name,mesh)            
+        scene_node.attachObject(attachMe)
+        attachMe.setNormaliseNormals(True)
+    else:
+        scene_node = sceneManager.getSceneNode(name)
+    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+    
+    size = 1
+    scene_node.scale = Ogre.Vector3(size,size,size)
+    
+    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    
+
 class ObjectCallback ( OgreNewt.ContactCallback ):
 
     def __init__ ( self, typeID ) :
@@ -230,7 +250,7 @@ class Attack(object):
     name = "Attack"
     value= 5     
     timeleft = 3
-    range=5
+    range=50
     animation = "Walk"
     type = "bludgeon"
     sound = "sword.wav"
@@ -249,8 +269,9 @@ class Attack(object):
             return False
         return True
     def execute(self,timer):
-        print "aoeu"
-        print self.unit1.timeleft
+        #show (self.unit1)
+     
+        
         if not self.unit1.body or not self.unit2.body:
             return
         dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
@@ -271,6 +292,9 @@ class Attack(object):
         #self.unit2.body.setVelocity(direction )        
         s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),self.type,self.unit1)
         
+#        print self.unit1
+#        print self.unit2
+#        print self.unit2.attributes.hitpoints
         return False
     
 

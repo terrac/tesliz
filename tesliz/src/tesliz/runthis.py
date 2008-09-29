@@ -55,6 +55,7 @@ class OgreNewtonApplication (sf.Application):
     
     def _createScene ( self ):
         
+        
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -143,6 +144,7 @@ class OgreNewtonApplication (sf.Application):
         self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
         self.root.addFrameListener(self.frameListener)
         Singleton().framelistener = self.frameListener
+        self.frameListener.showDebugOverlay(False)
         
     def _configure(self):
         
@@ -229,7 +231,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         
                   
         return False
+    a =       0
     def runQueue(self,timer):
+        self.a += timer
         for unit in self.unitqueues:
             #print unit.timeleft
             #print unit
@@ -240,7 +244,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 #print unit
                 #print unit.timeleft
                 continue
-            #print unit
+           
+            
+            #print str(self.a) +" "+ str(unit)+" "+str(len(unit.actionqueue))
+            #print unit.actionqueue
+#            for x in self.unitqueues:
+#                print x
             if len(unit.actionqueue) == 0:
                 self.unitqueues.remove(unit)
                 continue
@@ -253,7 +262,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 unit.actionqueue.pop()
                 try:
                     unit.timeleft = iexecute.timeleft
-                    print unit.timeleft
+                    unit.timeleft += random.random()*.1
+                    
                 except:
                     pass
                 

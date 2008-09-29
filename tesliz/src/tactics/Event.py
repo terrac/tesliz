@@ -15,7 +15,7 @@ class Event:
     def execute(self):
         ulist = self.ulist
         
-
+        s.grammar.broadcast("revolution has occurred",None)
         playerlist = s.playermap.values()
         
         for x in range(0,self.level):

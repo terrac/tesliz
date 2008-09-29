@@ -71,7 +71,7 @@ class Singleton:
             text = str(text)
             sf.Application.debugText = text
             self.logger.info(text+ str(calling))                
-            print text+ str(calling)
+            #print text+ str(calling)
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
         def playsound(self,filename="C:\sound.wav"):

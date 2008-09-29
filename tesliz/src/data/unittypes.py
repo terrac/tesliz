@@ -24,7 +24,7 @@ def setupBasic(unit, level):
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed 
-    unit.attributes.hitpoints = hitpoints * level + 500000
+    unit.attributes.hitpoints =  500000
     unit.attributes.strength = strength * level
     unit.attributes.dexterity = dexterity * level
     unit.attributes.intelligence = intelligence * level

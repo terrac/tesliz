@@ -35,15 +35,16 @@ class Unit(object):
     def __init__(self):
         self.attributes = Attributes()
         self.traits = dict()
-    body = None
-    type = None
-    timeleft = 0
-    traits = None
-    attributes = None
-    actionqueue = []
-    visible = True
-    mental = None
-    knowledgelist = ["General"]
+        self.body = None
+        self.type = None
+        self.timeleft = 0
+        
+        
+        self.actionqueue = []
+        self.visible = True
+        self.mental = None
+        self.knowledgelist = ["General"]
+        
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):

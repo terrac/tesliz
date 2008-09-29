@@ -96,7 +96,7 @@ class RealTimeTurn(object):
         s.framelistener.cplayer = unit.player
         unit.startTurn()
         
-        show(unit)
+        #show(unit)
         self.turnindex += 1
         #self.pause = False
 #        if len(s.framelistener.unitqueues) == 0:
