@@ -63,13 +63,13 @@ class Unit(object):
         
     def damageHitpoints(self,number,type = None,eunit=None):
         if self.attributes.resistance.has_key(type):
-            number = self.attributes.resistance[type] * number
+            number = (1-self.attributes.resistance[type]) * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
         s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type)
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
-    
+            print self
             #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
     def getWantedRange(self):

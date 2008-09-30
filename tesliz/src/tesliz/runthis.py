@@ -220,9 +220,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     def clearActions(self,unit):
         try:
             self.unitqueues.remove(unit)
-            unit.actionqueue.clear()
         except:
             pass
+        unit.actionqueue = []
+        
             
     def isActive(self,unit):
         

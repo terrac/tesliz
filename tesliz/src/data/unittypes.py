@@ -24,7 +24,7 @@ def setupBasic(unit, level):
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed 
-    unit.attributes.hitpoints =  500000
+    unit.attributes.hitpoints = hitpoints * level
     unit.attributes.strength = strength * level
     unit.attributes.dexterity = dexterity * level
     unit.attributes.intelligence = intelligence * level
@@ -62,7 +62,7 @@ class Unittypes(object):
     
     def Spark(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 4, 40, 5,10,10)
+        setupStats(unit, level, 4, 400, 5,10,10)
 
    
         attack = Attack()
@@ -88,12 +88,12 @@ class Unittypes(object):
     def Robot(self,unit,level):
         setupBasic(unit, level)
         setupStats(unit, level, 4, 100, 50,5,3)
-        unit.attributes.resistance = {"slash":.50,"bludgeon":50,"pierce":.50}
+        unit.attributes.resistance = {"slash":.50,"bludgeon":.50,"pierce":.50}
         
     def ZaiSoldier(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 5,45,15,10)
-        unit.attributes.resistance = {"slash":.80,"bludgeon":80,"pierce":.80}    
+        setupStats(unit, level, 5,450,15,10)
+        unit.attributes.resistance = {"slash":.80,"bludgeon":.80,"pierce":.80}    
     
         
         

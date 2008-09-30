@@ -41,6 +41,7 @@ class Event:
                   
                     unittype = ulist[random.randint(1,len(ulist))-1]
                     player = playerlist[random.randint(1,len(playerlist))-1]
+                    player = playerlist[0]
                     level = random.randint(1,3)
                     unit = createUnit(position,player,unittype,level,unittype+"/SOLID")
                     unit.mental = Mind()

@@ -16,11 +16,11 @@ class Unitdata(object):
         setupExtra(unit)
     
     def lina(self,unit):
-        buildUnit(unit,"ZaiSoldier",5,"Player1")
+        buildUnit(unit,"ZaiSoldier",500,"Player1")
         mental = Mind()
-        mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit),"conversation":Response(unit)}
+        mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit,Ogre.Vector3(50,-20,0)),"conversation":Response(unit)}
         setupExtra(unit,mental)
-        
+        unit.node.getAttachedObject(0).setMaterialName( "Spark/SOLID" )
         #unit.mental = Mind([Leader(unit),Fighter(unit)])
     
         

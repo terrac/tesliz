@@ -14,11 +14,12 @@ s = Singleton()
 
 class RandomUtterance:
     
-    def __init__(self,unit,base):
+    def __init__(self,unit,type,base):
         self.unit =unit
+        self.type = type
         self.base = base
     def execute(self,timer):
-        utterance = s.knowledge.getRandomFromParent("nobility","battlecry")
+        utterance = s.knowledge.getRandomFromParent(self.type,self.base)
         s.chatbox.add(utterance,self.unit)
 
 
@@ -46,7 +47,7 @@ class Combat(object):
         self.unit =unit
         self.getBest = getBest
         self.running = True
-        self.battlecry = RandomUtterance(unit,"battlecry")
+        self.battlecry = RandomUtterance(unit,"revolution","battlecry")
         self.battlecry.called = False
         
 
@@ -93,9 +94,13 @@ class Combat(object):
                     
                 setStart(abil,unit,eunit)
                 s.framelistener.addToQueue(unit,copy.copy(abil))
+  #              print unit
+
+ #               print unit.actionqueue
                 bool =abil.action
         except Exception,e:
-            s.log( e,self)
+            pass
+            #s.log( e,self.unit)
             
         
         
@@ -112,20 +117,22 @@ class Leader(object):
         self.unit =unit
         self.endPos = endPos
         self.bqueue =[]
-        self.running = False
+        self.running = True
 
     def execute(self,timer):
         
         if self.unit.mental.state["angry"] > 10:
+            self.unit.body.freeze()
             return True
         unit = self.unit
         if s.framelistener.isActive(unit):
+            
             return True
         s.chatbox.add("follow me",unit)
         move = Move()
-        setStart(move,unit,None,self.pos)
+        setStart(move,unit,None,self.endPos)
         s.framelistener.addToQueue(unit,move)
-        if distance(unit.node.getPosition(),self.pos) < 3:
+        if distance(unit.node.getPosition(),self.endPos) < 3:
             s.mental.broadcast("We are here",unit)
             return False
         return True

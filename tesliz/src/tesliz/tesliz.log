@@ -1,217 +1,92 @@
 turnbased = FalseNone
-follow meNone
-Vector3(10, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FF98B0><tactics.Event.Event instance at 0x0203F170>
-Vector3(10, -24, 1.5)ZaiSoldier<tactics.Player.HumanPlayer object at 0x01FF9870><tactics.Event.Event instance at 0x0203F170>
-Vector3(11.5, -24, 0)ZaiSoldier<tactics.Player.HumanPlayer object at 0x01FF9870><tactics.Event.Event instance at 0x0203F170>
-Vector3(12.25, -24, 1.5)ZaiSoldier<tactics.Player.HumanPlayer object at 0x01FF9870><tactics.Event.Event instance at 0x0203F170>
+Vector3(10, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
+Vector3(10, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
+Vector3(11.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
+Vector3(12.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
 unique3ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-ZaiSoldier unique3ZaiSoldier-Computer1 damages ZaiSoldier unique4ZaiSoldier-Player1 for 3600with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-ZaiSoldier lina damages ZaiSoldier unique3ZaiSoldier-Computer1 for 6000with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-ZaiSoldier unique8ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1200with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-ZaiSoldier unique4ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 2400with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-ZaiSoldier unique6ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 3600with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-FastFighter bandit2 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1600with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BCF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203B9D0>
-ZaiSoldier unique3ZaiSoldier-Computer1 damages ZaiSoldier unique4ZaiSoldier-Player1 for 3600with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BFF0>
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BDF0>
-ZaiSoldier unique8ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1200with type:bludgeonNone
-ZaiSoldier unique4ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 2400with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BEF0>
-ZaiSoldier unique6ZaiSoldier-Player1 damages ZaiSoldier unique3ZaiSoldier-Computer1 for 3600with type:bludgeonNone
-'Attack' object has no attribute 'action'<mental.background.Combat object at 0x0203BAF0>
-ZaiSoldier lina damages ZaiSoldier unique3ZaiSoldier-Computer1 for 6000with type:bludgeonNone
+unique4ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique5ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique6ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+ZaiSoldier unique4ZaiSoldier-Computer1 damages FastFighter bandit2 for 45with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
+FastFighter bandit2 destroyed.  Unitlist1ZaiSoldier linaNone
+ZaiSoldier unique3ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique3ZaiSoldier-Computer1 destroyed.  Unitlist3ZaiSoldier unique4ZaiSoldier-Computer1ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique4ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique4ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique4ZaiSoldier-Computer1 destroyed.  Unitlist2ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique5ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1 destroyed.  Unitlist1ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique6ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique6ZaiSoldier-Computer1 destroyed.  Unitlist0None
+endgameNone
+Vector3(30, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(30, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(30, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(31.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(32.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(33.375, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(33, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(34.5, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+Vector3(36.75, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+unique7ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique8ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique9ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique10ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique11ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique12ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique13ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique14ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+unique15ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
+ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique7ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique8ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique7ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique7ZaiSoldier-Computer1 destroyed.  Unitlist8ZaiSoldier unique8ZaiSoldier-Computer1ZaiSoldier unique9ZaiSoldier-Computer1ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
+ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique8ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique8ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique8ZaiSoldier-Computer1 destroyed.  Unitlist7ZaiSoldier unique9ZaiSoldier-Computer1ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
+ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique9ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique9ZaiSoldier-Computer1 destroyed.  Unitlist6ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
+ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique10ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1 destroyed.  Unitlist5ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
+ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier lina damages ZaiSoldier unique11ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique11ZaiSoldier-Computer1 destroyed.  Unitlist4ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None

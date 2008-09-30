@@ -269,14 +269,19 @@ class Attack(object):
             return False
         return True
     def execute(self,timer):
-        #show (self.unit1)
-     
         
+     
+        #print self.unit1
         if not self.unit1.body or not self.unit2.body:
+            #print self.unit2.attributes.hitpoints
+            #print "aoeu"
             return
+        
+        show (self.unit1)
         dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
         if dis > self.range:
             s.log(str(self.unit1)+" Attack failed"+str(dis)+" "+str(self.range))
+            s.playsound()
             return 
         
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()

@@ -62,7 +62,7 @@ class AIsettings:
         s.knowledge.addTree("nobility","lina")
         s.knowledge.addKnowledge("","waiting")
         s.knowledge.addKnowledge("waiting","revolution","lina")
-        s.knowledge.printMap()
+       # s.knowledge.printMap()
 #    def broadcast(self,text,name = None):
         
     
