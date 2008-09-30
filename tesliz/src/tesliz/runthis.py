@@ -170,8 +170,10 @@ class OgreNewtonApplication (sf.Application):
             s.turnbased = bool
             if bool:
                 s.turn = Turn()
+                s.AIon = False
             else:
                 s.turn = RealTimeTurn()
+                s.AIon = True
             s.log("turnbased = " +str(s.turnbased))
 
        

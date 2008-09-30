@@ -35,11 +35,13 @@ class Turn(object):
         
     pause = False    
     def doTurn(self):
-
-        if self.pause:
+        
+        if self.pause and not s.AIon:
             return
+        
         if len(self.turnlist) > 0:
             self.nextUnitTurn()
+            
             return
         
         for unit in s.unitmap.values():
@@ -53,7 +55,7 @@ class Turn(object):
     def nextUnitTurn(self):
         if not s.framelistener.getActiveQueue() == 0:        
             return
-        if (s.framelistener.timer > 0.0) or s.ended or self.pause:
+        if (s.framelistener.timer > 0.0) or s.ended or self.pause and not s.AIon:
             return
         if len(self.turnlist)== 0:
             return

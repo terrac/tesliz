@@ -50,7 +50,7 @@ class HumanPlayer(object):
        self.cunit = unit 
        sf.Application.debugText = self.cunit.type
        #self.s.framelistener.cunit = cunit
-       if s.turnbased:
+       if not s.AIon:
            self.interface.cunit = self.cunit
            self.interface.displayActions()
        else:

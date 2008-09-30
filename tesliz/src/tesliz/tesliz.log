@@ -1,41 +1,57 @@
-turnbased = FalseNone
-Vector3(10, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
-Vector3(10, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
-Vector3(11.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
-Vector3(12.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020450A8>
+turnbased = TrueNone
+FastFighter bandit2None
+ZaiSoldier linaNone
+Vector3(10, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DB70>
+Vector3(10, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DB70>
+Vector3(11.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DB70>
+Vector3(12.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DB70>
 unique3ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique4ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique5ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique6ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-ZaiSoldier unique4ZaiSoldier-Computer1 damages FastFighter bandit2 for 45with type:bludgeonNone
-ZaiSoldier unique5ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
-FastFighter bandit2 destroyed.  Unitlist1ZaiSoldier linaNone
-ZaiSoldier unique3ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier linaNone
 ZaiSoldier lina damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
 ZaiSoldier unique3ZaiSoldier-Computer1 destroyed.  Unitlist3ZaiSoldier unique4ZaiSoldier-Computer1ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique4ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+FastFighter bandit2None
+FastFighter bandit2 damages ZaiSoldier unique4ZaiSoldier-Computer1 for 4.0with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1None
 ZaiSoldier unique5ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique4ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique4ZaiSoldier-Computer1 destroyed.  Unitlist2ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique5ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique4ZaiSoldier-Computer1None
+ZaiSoldier unique4ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
+ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
+ZaiSoldier linaNone
 ZaiSoldier lina damages ZaiSoldier unique5ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique5ZaiSoldier-Computer1 destroyed.  Unitlist1ZaiSoldier unique6ZaiSoldier-Computer1None
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique5ZaiSoldier-Computer1 destroyed.  Unitlist2ZaiSoldier unique4ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
+FastFighter bandit2None
+FastFighter bandit2 damages ZaiSoldier unique4ZaiSoldier-Computer1 for 4.0with type:bludgeonNone
+ZaiSoldier unique4ZaiSoldier-Computer1None
+ZaiSoldier unique4ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
+ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
+FastFighter bandit2 destroyed.  Unitlist1ZaiSoldier linaNone
+ZaiSoldier linaNone
+ZaiSoldier lina damages ZaiSoldier unique4ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
+ZaiSoldier unique4ZaiSoldier-Computer1 destroyed.  Unitlist1ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1None
+ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier linaNone
 ZaiSoldier lina damages ZaiSoldier unique6ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
 ZaiSoldier unique6ZaiSoldier-Computer1 destroyed.  Unitlist0None
 endgameNone
-Vector3(30, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(30, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(30, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(31.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(32.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(33.375, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(33, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(34.5, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
-Vector3(36.75, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FB98B0><tactics.Event.Event instance at 0x020451C0>
+ZaiSoldier linaNone
+ZaiSoldier linaNone
+ZaiSoldier linaNone
+ZaiSoldier linaNone
+Vector3(30, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(30, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(30, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(31.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(32.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(33.375, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(33, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(34.5, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
+Vector3(36.75, -24, 3)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FFB8B0><tactics.Event.Event instance at 0x0207DE18>
 unique7ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique8ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique9ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
@@ -45,48 +61,13 @@ unique12ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique13ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique14ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
 unique15ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique7ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique8ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
+ZaiSoldier linaNone
 ZaiSoldier lina damages ZaiSoldier unique7ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
 ZaiSoldier unique7ZaiSoldier-Computer1 destroyed.  Unitlist8ZaiSoldier unique8ZaiSoldier-Computer1ZaiSoldier unique9ZaiSoldier-Computer1ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
-ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique8ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
+ZaiSoldier linaNone
 ZaiSoldier lina damages ZaiSoldier unique8ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
 ZaiSoldier unique8ZaiSoldier-Computer1 destroyed.  Unitlist7ZaiSoldier unique9ZaiSoldier-Computer1ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
-ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique10ZaiSoldier-Computer1None
+ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+ZaiSoldier unique14ZaiSoldier-Computer1None
 ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique9ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique9ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique9ZaiSoldier-Computer1 destroyed.  Unitlist6ZaiSoldier unique10ZaiSoldier-Computer1ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
-ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique10ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique10ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique10ZaiSoldier-Computer1 destroyed.  Unitlist5ZaiSoldier unique11ZaiSoldier-Computer1ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
-ZaiSoldier unique12ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier unique15ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique13ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique14ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique11ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique11ZaiSoldier-Computer1 destroyed.  Unitlist4ZaiSoldier unique12ZaiSoldier-Computer1ZaiSoldier unique13ZaiSoldier-Computer1ZaiSoldier unique14ZaiSoldier-Computer1ZaiSoldier unique15ZaiSoldier-Computer1None
