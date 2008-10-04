@@ -21,6 +21,8 @@ class Unitdata(object):
         mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit,Ogre.Vector3(50,-20,0)),"conversation":Response(unit)}
         setupExtra(unit,mental)
         unit.node.getAttachedObject(0).setMaterialName( "Spark/SOLID" )
+        
+        unit.knowledgelist.insert(0,unit.getName())
         #unit.mental = Mind([Leader(unit),Fighter(unit)])
     
         

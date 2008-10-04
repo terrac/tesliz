@@ -43,8 +43,8 @@ class Unit(object):
         self.actionqueue = []
         self.visible = True
         self.mental = None
-        self.knowledgelist = ["General"]
-        
+        self.knowledgelist = ["general"]
+    
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):

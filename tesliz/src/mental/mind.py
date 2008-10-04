@@ -58,34 +58,33 @@ class Fighter(Mind):
 
            combat.setup(unit, eunit) 
                       
-class RunPlayer:
+class Run:
     #only brodcasts to same player and only if that unit is talking
-    def __init__(self, name):
+    def __init__(self,name, list2 = None):
         self.name = name
+        if isinstance(list2,list):
+            self.list2 = list2
+        else:
+            self.getList = list2
     
-    
-    def broadcast(self, text, unit):
+    def getList(self,unitbroadcastto,unitbroadcasting):
+        return self.list
+    def Player(self,unitbroadcastto,unitbroadcasting):
+        return unitbroadcasting.player.unitlist
+    def Self(self,unitbroadcastto,unitbroadcasting):
+        return [unitbroadcastto]
+    def All(self,unitbroadcastto,unitbroadcasting):
+        return s.unitmap.values()
+    def broadcast(self, text,unitbroadcastto, unitbroadcasting):
         #if self.unit == unit:
-        for x in unit.player.unitlist:                
+        for x in self.getList(self,unitbroadcastto,unitbroadcasting):                
             try:
-                x.mental.map[self.name].broadcast(text, unit)
+                x.mental.map[self.name].broadcast(text, unitbroadcastto,unitbroadcasting)
             except Exception, e:
                 print str(e) + str(x) + str(x.mental.map)
 
 
-class RunAll:
-    #only brodcasts to same player and only if that unit is talking
-    def __init__(self, name):
-        self.name = name
-    
-    
-    def broadcast(self, text, unit):
-        #if self.unit == unit:
-        for x in s.unitmap.values():                
-            try:
-                x.mental.map[self.name].broadcast(text, unit)
-            except Exception, e:                
-                print str(e) + str(x) + str(x.mental.map)
+
                 
 class Tree:
     def __init__(self, value, type = 0):
@@ -96,7 +95,7 @@ class Tree:
         return self.map.__len__() +1
 
     def has_key(self,a):
-        self.map.has_key(a)
+        return self.map.has_key(a)
     def __getitem__(self, key):
         return self.map.__getitem__(key)
     
@@ -139,6 +138,17 @@ class Tree:
 class KnowledgeBase:
     def __init__(self):
         self.map = Tree("general",1)
+
+    def getTypeMap(self, place, baselist):
+        
+        for base in baselist:            
+            map = self.getParent(base, self.map)
+
+            map = self.getParent(place, map)
+            if map:
+                break    
+        return map
+
         
     def addTree(self,parent,child):
         p = self.getParent(parent,self.map)
@@ -153,7 +163,7 @@ class KnowledgeBase:
     def getParent(self,parent,map):
         if not map:
             return
-        if map.value==parent:
+        if map.value==parent and map.type == 1:
             return map
         else:
             for x in map.values():
@@ -179,10 +189,8 @@ class KnowledgeBase:
 #            if self.map.has_key(x):               
 #                return self.map[x][base]
     def getRandomFromParent(self, place,base):
-        map = self.getParent(place,self.map)
-        print map
-        map = self.getParent(base,map)
-        print map
+        map = self.getTypeMap(place, base)
+        
         if len(map) == 1:
             return map.value
         return map.values()[random.randrange(0,len(map.values()))].value
@@ -192,4 +200,4 @@ class KnowledgeBase:
         print map
         for x in map.values():
             self.printMap(x)
-        
+

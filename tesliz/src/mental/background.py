@@ -14,28 +14,49 @@ s = Singleton()
 
 class RandomUtterance:
     
-    def __init__(self,unit,type,base):
+    def __init__(self,unit,type):
         self.unit =unit
         self.type = type
-        self.base = base
     def execute(self,timer):
-        utterance = s.knowledge.getRandomFromParent(self.type,self.base)
+        utterance = s.knowledge.getRandomFromParent(self.type,self.unit.knowledgelist)
         s.chatbox.add(utterance,self.unit)
 
 
+class ExecuteList:
+    def __init__(self,list):
+        self.list = list
+    
+    def execute(self,unit):
+        for x in self.list:
+            x.execute(unit)
+        
+class BroadcastM:
+    def __init__(self,text,to = "all"):        
 
+        self.text = text
+        self.to = to
+            
+    def execute(self,unit):        
+        s.grammar.broadcast(self.text,unit,self.to)
+        if self.to != "self":
+            s.chatbox.add(self.text,unit)
+        s.log(self.text,self)
+        
 class Response:
     
     def __init__(self,unit):
         self.unit =unit
         self.running = False
 
-    def broadcast(self,text,unit):
-        map = s.knowledge.getKnowledgeList(self.base,self.unit.knowledgelist)
-        if len(map) > 0:
-            association = map[random.randrange(0,len(map))],self.unit        
-            map = s.knowledge.getKnowledgeList(association,self.unit.knowledgelist)
-            s.chatbox.add(map.value)
+    def broadcast(self,text,unitbroadcastto,unitbroadcasting):
+        text =text.split()[0]
+        map = s.knowledge.getTypeMap(text,self.unit.knowledgelist)
+        list =map.values()
+        if len(list) > 0:
+            map = list[random.randrange(0,len(list))]     
+            #map = s.knowledge.getTypeMap(association.value,self.unit.knowledgelist)
+            map.value.execute(self.unit)
+            
         
 
         
@@ -47,7 +68,7 @@ class Combat(object):
         self.unit =unit
         self.getBest = getBest
         self.running = True
-        self.battlecry = RandomUtterance(unit,"revolution","battlecry")
+        self.battlecry = RandomUtterance(unit,"battlecry")
         self.battlecry.called = False
         
 
@@ -120,7 +141,8 @@ class Leader(object):
         self.running = True
 
     def execute(self,timer):
-        
+        if not self.endPos:
+            return False
         if self.unit.mental.state["angry"] > 10:
             self.unit.body.freeze()
             return True
@@ -152,7 +174,7 @@ class Follower(object):
         
     state = "calm"    
     running = False
-    def broadcast(self,text,unit):
+    def broadcast(self,text,unitbroadcastto,unitbroadcasting):
         if text == "follow me":
             self.running = True
             self.leader = unit
@@ -175,4 +197,38 @@ class Follower(object):
         return True
 
     #leader = property(None, setLeader, None, None)
+class FamilySupporter:
+    def __init__(self,familylist,familyprotector = None):
+        self.familylist = familylist
+        self.familyprotector = familyprotector
+        self.emap = {"fine" : Response("worry",50,"fear of spouse death"),}
+        self.contextlist = []
+    def broadcast(self,text,unitbroadcastto,unitbroadcasting):
+        if unit == self.familyprotector:
+            self.emap[text].setEmotion(self)
+    def execute(self,timer):
+        #combat recedes, wait for spouse
+        #I was so worried about you
+        #what about you?
+        #ill stay here
+        pass   
+
+class FamilyProtector:
+    def __init__(self,familylist):
+        self.familylist = familylist   
         
+                 
+    def execute(self,timer):
+        #angry - > combat
+        # anger recedes = > find spouse
+        #thank god you are ok
+        #we will be fine, but stay here I've brought these troops to guard you
+        #I will be fine.  I need to keep this castle safe though
+        
+        #keep track of family supporter pos
+        pass         
+class FamilyDependent:
+    def __init__(self,familylist):
+        self.familylist = familylist    
+    def execute(self,timer):
+        pass          

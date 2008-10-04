@@ -8,7 +8,7 @@ s = Singleton()
 
 class Chatbox:
     listholder = []
-    def add(self,text,unit):        
+    def add(self,text,unit ):        
         item =CEGUI.ListboxTextItem (text+":"+unit.getName())        
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
@@ -32,11 +32,11 @@ class AIsettings:
         #s.grammar.addLine("arrives", fighter)
         s.grammar.addLine("leaves", fighter)
         
-        follower = RunPlayer("follower")
+        follower = Run("follower",Run.Player)
         s.grammar.addLine("follow me", follower)
         
         
-        convo = RunAll("conversation")
+        convo = Run("conversation",Run.Self)
         s.grammar.addLine("has occurred", convo)
         
         s.knowledge = KnowledgeBase()
@@ -53,6 +53,7 @@ class AIsettings:
         s.knowledge.addKnowledge("For the revolution!","battlecry","revolution")
         s.knowledge.addKnowledge("Down with the nobility!","battlecry","revolution")
         s.knowledge.addKnowledge("Kill your landlord!","battlecry","revolution")
+        s.knowledge.addKnowledge("The robots took my job","battlecry","revolution")
         s.knowledge.addKnowledge("My son has died in your war!","battlecry","revolution")
         s.knowledge.addKnowledge("Waaaaaaaaaaaaaaaaaaarrrr","battlecry","bloodthirsty")
         s.knowledge.addKnowledge("Your bones will decorate my living room","battlecry","bloodthirsty")
@@ -60,8 +61,10 @@ class AIsettings:
         s.knowledge.addKnowledge("Protect the homeland","battlecry","nobility")
         
         s.knowledge.addTree("nobility","lina")
-        s.knowledge.addKnowledge("","waiting")
-        s.knowledge.addKnowledge("waiting","revolution","lina")
+        #s.knowledge.addKnowledge("I have been waiting for this","waiting")
+        execlist = ExecuteList([BroadcastM("I have been waiting for this","myside"),BroadcastM("your spouse is in danger","self")])
+        s.knowledge.addKnowledge(execlist,"revolution","lina")
+        
        # s.knowledge.printMap()
 #    def broadcast(self,text,name = None):
         

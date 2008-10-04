@@ -14,6 +14,8 @@ class Grammar:
     def broadcast(self,text,unit,broadcastto= "all"):
         if broadcastto == "all":
             unitlist = s.unitmap.values()
+        elif broadcastto == "self":
+            unitlist = [unit]
         else :
             unitlist = unit.player.unitlist
         list = text.split()
@@ -28,7 +30,7 @@ class Grammar:
         for mental in validhits:
             for u in unitlist:#call fighter for each unit in list
                 if u.mental:
-                    mental.broadcast(text,unit)
+                    mental.broadcast(text,u,unit)
 
 
 
