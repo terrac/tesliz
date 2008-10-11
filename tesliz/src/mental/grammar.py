@@ -1,6 +1,6 @@
 import copy
 from tactics.Singleton import *
-
+from mental.mind import *
 
 s = Singleton()
 
@@ -43,4 +43,3 @@ class Grammar:
             
         self.startMap[list[0]].add(mind)
         self.endMap[list[len(list)-1]].add(mind)
-        
