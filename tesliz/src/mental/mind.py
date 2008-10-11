@@ -110,7 +110,11 @@ class Tree:
     def __str__( self ):
         return str(self.value) +" "+str(self.map.__str__())
     def values(self):
-        return self.map.values()               
+        return self.map.values()   
+    def add(self, string):
+        x = Tree(string)
+        self.map[string] =x        
+        return x     
 #class KnowledgeBase:
 #    def __init__(self):
 #        self.map = dict()
