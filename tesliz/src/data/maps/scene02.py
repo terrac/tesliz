@@ -4,19 +4,19 @@ from mental.background import *
 from tactics.Event import *
 
 class Unitdata(object):
-    def bandit2(self,unit):
-        buildUnit(unit,"FastFighter","Human",1,"Player1")
+    def terra(self,unit):
+        buildUnit(unit,"Spark",3,"Player1")
         mental = Mind()
         mental.map={"combat":Combat(unit,action.Attack),"follower":Follower(unit)}
         setupExtra(unit,mental)
         
                        
-    def bandit1(self,unit):
-        buildUnit(unit,"FastFighter","Kobold",1,"Computer1")
+    def matt(self,unit):
+        buildUnit(unit,"Ta",3,"Player1")
         setupExtra(unit)
     
     def lina(self,unit):
-        buildUnit(unit,"ZaiSoldier","Human",500,"Player1")
+        buildUnit(unit,"ZaiSoldier",3,"Player1")
         mental = Mind()
         mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit,Ogre.Vector3(50,-20,0)),"conversation":Response(unit)}
         setupExtra(unit,mental)
@@ -31,7 +31,7 @@ class Unitdata(object):
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):
-        zai = zai = {"Kobold":["RedMage"],"Human":["ZaiSoldier"]}
+        zai = {"kobold":["Fighter","Leader","GreenMage"]}
         vec = Ogre.Vector3(10,-20,0)
         vec2 = Ogre.Vector3(30,-20,0)
         #vec3 = Ogre.Vector3(-30,-20,0)

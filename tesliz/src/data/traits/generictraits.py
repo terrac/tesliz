@@ -70,17 +70,17 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
 
 
 class ProjectileAttack(object):
-
-    name="Fireball"
-    value=10     
-    range = 10
-    type = "fire"
-    unit2 = None
-    timeleft = 3
-    needsasecondclick = True
-#    def ready(self):
-#        return self.unit2
-    sound = "fireball.wav"
+    
+    def __init__(self):
+        self.particlename = 'RedTorch'
+        self.name="Fireball"
+        self.value=10     
+        self.range = 10
+        self.type = "fire"
+        self.unit2 = None
+        self.timeleft = 3
+        self.needsasecondclick = True
+        self.sound = "fireball.wav"
    
     def ready(self):
         dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
@@ -120,7 +120,8 @@ class ProjectileAttack(object):
         node.setPosition(0.0, 0.0, 0.0)
         
         psm = ogre.ParticleSystemManager.getSingleton()
-        particleSystem2 = sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), 'RedTorch')        
+
+        particleSystem2 = sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)
         
         
@@ -302,5 +303,97 @@ class Attack(object):
 #        print self.unit2.attributes.hitpoints
         return False
     
+class Boost(object):
+    def __init__(self,affect,name = "Boost"):
+        self.name = name
+        self.value= 5     
+        self.timeleft = 0
+        self.range=0
+        self.animation = "Walk"
+        self.affect = affect
+        self.type = "music"
+    sound = "boost.wav"
+    needsasecondclick = False
+
+    def execute(self,timer):
+        
+     
+        #print self.unit1
+        if not self.unit1.body:
+            return
+        
+        show (self.unit1)
+        
+        am = self.unit1.attributes.affect
+        if am.has_key(self.type):
+            am[self.type].teardown(self.unit1)
+        am[self.type] = self.affect
+        am[self.type].setup(self.unit1)
+
+        
+        entity = self.unit1.node.getAttachedObject(0)
+        if entity.hasSkeleton():
+            animationState = entity.getAnimationState(self.animation)
+            animationState.setLoop(False)
+            animationState.setEnabled(True)
+            s.app.animations.append(animationState)
+           
+        s.playsound(self.sound)    
+        
+        return False
 
 #class SummonUnit(object):    
+
+
+class GridTargeting(object):
+    
+    def __init__(self,relativePos,todo):
+        self.relativePos = relativePos(self)
+        self.particlename = 'RedTorch'
+        self.name="Fireball"
+        self.value=10     
+        self.range = 10
+        self.type = "fire"
+        self.unit2 = None
+        self.timeleft = 3
+        self.needsasecondclick = True
+        self.sound = "fireball.wav"
+        self.todo = todo
+    def offset1(self):
+        x = 0,0,0
+        return [x]
+    def offset2(self):
+        a = 0,0,0
+        b = 1,0,0
+        c = 0,0,1
+        d = -1,0,0
+        e = 0,0,-1
+        return [a,b,c,d,e]
+    def execute(self,timer):
+        print str(self.unit1) + "a"
+        
+        if not self.unit1 or  not self.unit1.body or  not self.endPos:
+            return
+        unitlist = []
+        for pos in self.relativePos:
+            x,y,z = pos
+            x = x + self.endPos.x            
+            y = y + self.endPos.y
+            z = z + self.endPos.z
+            
+            start = Ogre.Vector3(x,y+5,z)
+            end = Ogre.Vector3(x,y-5,z)
+            self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
+            info = self.ray.getFirstHit()
+            if info.mBody:
+                name = info.mBody.getOgreNode().getName()
+                if s.unitmap.has_key(name):
+                    unit = s.unitmap[name]
+                    unitlist.append(unit)
+                else:
+                    unit = None
+            else:
+                unit = None
+            for to in self.todo:
+                to.execute(self.unit1,unit,Ogre.Vector3(x,y,z))
+       

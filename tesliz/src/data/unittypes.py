@@ -10,6 +10,7 @@ from tactics.Singleton import *
 import ogre.renderer.OGRE as ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
+from data.actionlist import *
 s = Singleton()
 
 
@@ -32,7 +33,8 @@ def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,int
         
 
 class Unittypes(object):
-
+    
+    
 
     def FastFighter(self,unit,level):
         setupBasic(unit, level)
@@ -56,13 +58,18 @@ class Unittypes(object):
         setupBasic(unit, level)
         
         setupStats(unit, level, 5, 30, 5,5,20)
-        range = NumberedTraits([ProjectileAttack()],[5])
-        unit.traits["FireMagic"] = range        
+        projectile = ProjectileAttack()
+        projectile.name = "Waterball"
+        projectile.type = "water"
+        projectile.sound = "waterball.wav"
+        projectile.particlename = 'BlueTorch'
+        range = NumberedTraits([projectile],[5])
+        unit.traits["WaterMagic"] = range        
         
     
     def Spark(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 4, 400, 5,10,10)
+        setupStats(unit, level, 4, 50, 5,10,10)
 
    
         attack = Attack()
@@ -87,18 +94,31 @@ class Unittypes(object):
     
     def Robot(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 4, 100, 50,5,3)
+        setupStats(unit, level, 4, 150, 50,5,3)
         unit.attributes.resistance = {"slash":.50,"bludgeon":.50,"pierce":.50}
         
     def ZaiSoldier(self,unit,level):
         setupBasic(unit, level)
-        setupStats(unit, level, 5,450,15,10)
+        setupStats(unit, level, 5,100,15,10)
         unit.attributes.resistance = {"slash":.80,"bludgeon":.80,"pierce":.80}    
     
         
         
+    def Ta(self,unit,level):
+        setupBasic(unit, level)
+        setupStats(unit, level, 5,100,15,10)
+        unit.attributes.resistance = {"slash":.80,"bludgeon":.80,"pierce":.80}
+        affect = Affects(StatAffect({"strength":5}))
+        boost1 = Boost(affect,"strup")        
+        affect = Affect({"dexterity":5})
+        boost2 = Boost(affect,"dexup")
+        trait = Traits([boost1,boost2])
+        unit.traits["Boost"] = trait    
         
+    def Wizard(self,unit,level):
+        setupBasic(unit, level)
         
-        
-
-        
+        setupStats(unit, level, 5, 30, 5,5,20)
+        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")])
+        range = NumberedTraits([fireball],[5])
+        unit.traits["FireMagic"] = range

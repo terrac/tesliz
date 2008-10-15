@@ -89,6 +89,7 @@ class HumanInterface:
             setStart(toexecute,self.cunit)
             if toexecute.needsasecondclick:
                 self.iexecute = copy.copy(toexecute)
+            
         except Exception, ex:
             print repr(ex)
         s.log(text)
@@ -153,7 +154,7 @@ class HumanInterface:
             else:
                 self.removeFrom = None
             
-            self.actionSelected = True 
+            self.actionSelected = item 
            
         if text == "EndTurn" or e.window.getItemCount() == 0:
             self.listmap = dict()
@@ -189,13 +190,18 @@ class HumanInterface:
             text = e
         else:    
             text = e.window.getFirstSelectedItem().getText()
-        
+            item = e.window.getFirstSelectedItem()
         toexecute = self.cunit.traits[self.currentTrait].getAbility(text)
         self.abilityused = text
         try:
             setStart(toexecute,self.cunit)
             if toexecute.needsasecondclick:
                 self.iexecute = copy.copy(toexecute)
+            else:
+                self.actionSelected.setText(self.choosing)
+                self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
+                self.actionSelected = False
+                s.framelistener.addToQueue(self.cunit,copy.copy(toexecute))
         except Exception, ex:
             print repr(ex)
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")

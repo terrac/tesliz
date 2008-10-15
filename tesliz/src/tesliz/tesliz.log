@@ -1,23 +1,20 @@
-turnbased = FalseNone
-I have been waiting for this<mental.background.BroadcastM instance at 0x020577D8>
-your spouse is in danger<mental.background.BroadcastM instance at 0x02057800>
-Vector3(10, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FF98D0><tactics.Event.Event instance at 0x02082B20>
-Vector3(10, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FF98D0><tactics.Event.Event instance at 0x02082B20>
-Vector3(11.5, -24, 0)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FF98D0><tactics.Event.Event instance at 0x02082B20>
-Vector3(12.25, -24, 1.5)ZaiSoldier<tactics.Player.ComputerPlayer object at 0x01FF98D0><tactics.Event.Event instance at 0x02082B20>
-unique3ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-unique4ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-unique5ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-unique6ZaiSoldier-Computer1 a ZaiSoldier arrivesNone
-ZaiSoldier unique4ZaiSoldier-Computer1 damages FastFighter bandit2 for 45with type:bludgeonNone
-ZaiSoldier unique5ZaiSoldier-Computer1 damages FastFighter bandit2 for 15with type:bludgeonNone
-FastFighter bandit2 destroyed.  Unitlist1ZaiSoldier linaNone
-ZaiSoldier unique3ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique3ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique3ZaiSoldier-Computer1 destroyed.  Unitlist3ZaiSoldier unique4ZaiSoldier-Computer1ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
-ZaiSoldier unique4ZaiSoldier-Computer1 damages ZaiSoldier lina for 9.0with type:bludgeonNone
-ZaiSoldier unique5ZaiSoldier-Computer1 damages ZaiSoldier lina for 3.0with type:bludgeonNone
-ZaiSoldier lina damages ZaiSoldier unique4ZaiSoldier-Computer1 for 1500.0with type:bludgeonNone
-ZaiSoldier unique4ZaiSoldier-Computer1 destroyed.  Unitlist2ZaiSoldier unique5ZaiSoldier-Computer1ZaiSoldier unique6ZaiSoldier-Computer1None
-ZaiSoldier unique6ZaiSoldier-Computer1 damages ZaiSoldier lina for 6.0with type:bludgeonNone
+turnbased = TrueNone
+blah32 8 a Wizard arrivesNone
+blah8 2 a Wizard arrivesNone
+blah16 4 a Wizard arrivesNone
+blah32 6 a Wizard arrivesNone
+blah12 2 a Wizard arrivesNone
+blah24 4 a Wizard arrivesNone
+blah32 4 a Wizard arrivesNone
+blah40 4 a Wizard arrivesNone
+blah14 0 a Wizard arrivesNone
+blah18 0 a Wizard arrivesNone
+Wizard blah40 4None
+Wizard blah40 4 damages Wizard blah36 2 for 20with type:fireNone
+Wizard blah18 0None
+Wizard blah18 0 damages Wizard blah16 0 for 20with type:fireNone
+Wizard blah18 0 damages Wizard blah14 0 for 20with type:fireNone
+Wizard blah32 2None
+Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone
+Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone
+Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone

@@ -65,7 +65,7 @@ class OgreNewtonApplication (sf.Application):
         
 
         s.app = self
-        s.playermap = Settings().playermap
+        Settings()
         
 #        if s.turnbased:
 #            Turn()

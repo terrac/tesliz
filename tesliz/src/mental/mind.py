@@ -106,11 +106,13 @@ class Tree:
         self.map.__delitem__(key)
     
     def __iter__(self):
-        self.map.__iter__()
+        return self.map.__iter__()
     def __str__( self ):
         return str(self.value) +" "+str(self.map.__str__())
     def values(self):
         return self.map.values()   
+    def keys(self):
+        return self.map.keys()
     def add(self, string):
         x = Tree(string)
         self.map[string] =x        

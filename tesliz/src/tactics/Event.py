@@ -7,13 +7,13 @@ import random
 s = Singleton()
 
 class Event:
-    def __init__(self,ulist,level,pos):
-        self.ulist = ulist
+    def __init__(self,umap,level,pos):
+        self.umap = umap
         self.level = level
         self.pos = pos
     
     def execute(self):
-        ulist = self.ulist
+        umap = self.umap
         
         s.grammar.broadcast("revolution has occurred",None)
         playerlist = s.playermap.values()
@@ -38,12 +38,15 @@ class Event:
                     
                     position = start + ( dira* ( (end - start).length() * info.mDistance ));
                     position.y += 1
-                  
+                    
+                    rlist = umap.keys()
+                    racetype = rlist[random.randint(1,len(rlist))-1]
+                    ulist = umap[racetype]
                     unittype = ulist[random.randint(1,len(ulist))-1]
                     player = playerlist[random.randint(1,len(playerlist))-1]
                     player = playerlist[0]
                     level = random.randint(1,3)
-                    unit = createUnit(position,player,unittype,level,unittype+"/SOLID")
+                    unit = createUnit(position,player,unittype,racetype,level,unittype+"/SOLID")
                     unit.mental = Mind()
                     unit.mental.map  ={"combat":Combat(unit,action.Attack),"follower":Follower(unit)}
                     

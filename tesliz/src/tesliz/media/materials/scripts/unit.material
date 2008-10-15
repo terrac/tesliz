@@ -80,3 +80,32 @@ material ZaiSoldier/SOLID
 		}
 	}
 }
+material Ta/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture boy.JPG
+			}
+		}
+	}
+}
+
+material Wizard/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture boy.JPG
+			}
+		}
+	}
+}

@@ -49,6 +49,7 @@ class Response:
         self.running = False
 
     def broadcast(self,text,unitbroadcastto,unitbroadcasting):
+        
         text =text.split()[0]
         map = s.knowledge.getTypeMap(text,self.unit.knowledgelist)
         list =map.values()

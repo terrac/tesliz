@@ -3,20 +3,20 @@ from tactics.Singleton import *
 s = Singleton()
 
 class Attributes(object):
-    hitpoints = 5
-    speed = 5
-    curMovement = 0
-    #player = None
-    #node = None
-    moves = 5
-    #damage = 5
-    sight = 100
-    strength = 5
-    intelligence = 5
-    dexterity = 5
-    resistance = dict()
-    #node = None
-    type = None
+    def __init__(self):
+        self.hitpoints = 5
+        self.speed = 5
+        self.curMovement = 0
+        self.moves = 25
+        self.sight = 100
+        self.strength = 5
+        self.intelligence = 5
+        self.dexterity = 5
+        self.resistance = dict()
+        self.affect = dict()
+    
+
+
     def increment(self):
         if self.curMovement < self.speed:
             self.curMovement += 1

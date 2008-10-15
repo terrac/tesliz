@@ -13,16 +13,15 @@ class RandomBuilder(OgreNewtonApplication):
         self.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()
         self.msnCam.attachObject( self.camera )
         self.camera.setPosition(0.0, 0.0, 0.0)
-        self.msnCam.setPosition( 20, -7.0, 32.0)
+        self.msnCam.setPosition( 0.0, -10.0, 20.0)
     
         ##make a light
         light = self.sceneManager.createLight( "Light1" )
         light.setType( Ogre.Light.LT_POINT )
         light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
-        floor = self.sceneManager.createEntity("Floor", "plane.mesh" )
+        floor = self.sceneManager.createEntity("Floor", "simple_terrain.mesh" )
         floornode = self.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode" )
         floornode.attachObject( floor )
-        floornode.setScale(Ogre.Vector3(20,20,20))
         floor.setMaterialName( "Examples/DarkMaterial" )
     
         floor.setCastShadows( False )
@@ -40,20 +39,20 @@ class RandomBuilder(OgreNewtonApplication):
         
         ulist = dir(data.unittypes.Unittypes())
         ulist =filter(lambda x: not x.startswith("_"),ulist)
-
+        ulist = ["Wizard"]
         playerlist = s.playermap.keys()
         
         for x in range(0,10):
             for z in range(0,10):
-                x = x * 3
-                z = z * 3
+                x = x * 2
+                z = z * 2
                 start = Ogre.Vector3(x,50,z)
                 end = Ogre.Vector3(x,-50,z)
                 self.ray = OgreNewt.BasicRaycast( self.World, start,end )
                 info = self.ray.getFirstHit()
                 
                 
-                
+                #print "au"
                 if (info.mBody):
                     
                     #bodpos, bodorient = info.mBody.getPositionOrientation()
@@ -76,14 +75,17 @@ class RandomBuilder(OgreNewtonApplication):
                     unit.node = scene_node
                     unittype = ulist[random.randint(1,len(ulist))-1]
                     player = playerlist[random.randint(1,len(playerlist))-1]
-                    buildUnit(unit,unittype,random.randint(1,3),player)
+                    buildUnit(unit,unittype,"Human",random.randint(1,3),player)
+                    setupExtra(unit)
                     unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                     try:
                         s.playermap[player].setVisualMarker(unit)
                     except:
                         pass
-                    s.log(str(position) +str(unittype) +str(player),self)
+                    print scene_node.position
+                    print unittype
+                    print player
                     #getattr(unittypes,(unit,rand)
                     #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
                     #self.clickEntity(info.mBody.OgreNode.Name,position)

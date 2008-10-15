@@ -16,3 +16,22 @@ material RedFire
       }
    }
 } 
+
+material BlueFire
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         scene_blend add
+         depth_write off
+
+         texture_unit
+         {
+            texture boy.JPG
+            tex_address_mode clamp
+         }
+      }
+   }
+} 

@@ -7,7 +7,7 @@ from tactics.Unit import *
 import data.unittypes
 s = Singleton()
 
-def buildUnit(unit,unittype,level,playername):
+def buildUnit(unit,unittype,race,level,playername):
     s.unitmap[unit.getName()]=unit
     
     unit.type = unittype
@@ -20,11 +20,11 @@ def buildUnit(unit,unittype,level,playername):
         
     else:
         s.playermap[unit.getName()] = player
-        
-    buildPhysics(unit,"Ellipsoid")
+    unit.node.setScale(s.racemap[race].scale)
+    buildPhysics(unit,"Ellipsoid",s.racemap[race].scale)
 
 
-def buildPhysics(unit,type= None):        
+def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):        
     
     col = None
 
@@ -39,7 +39,7 @@ def buildPhysics(unit,type= None):
     ## something new: moment of inertia for the body.  this describes how much the body "resists"
     ## rotation on each axis.  realistic values here make for MUCH more realistic results.  luckily
     ## OgreNewt has some helper functions for calculating these values for many primitive shapes!
-    inertia = OgreNewt.CalcSphereSolid( 10.0, 1.0 )
+    inertia = OgreNewt.CalcSphereSolid( 10.0, scale.y )
     body.setMassMatrix( 10.0, inertia )
 
     #node.setPosition(0.0, 0.0, 0.0)
@@ -100,7 +100,7 @@ def setupExtra(unit, mental = None):
         #mental.state = {"angry":0,"happy":0}
     unit.mental = mental
     return unit
-def createUnit(position,player,unittype,level=1,material = "Examples/RustySteel" ,mesh = 'cylinder.mesh' ,name = None,mental = None):
+def createUnit(position,player,unittype,race,level=1,material = "Examples/RustySteel" ,mesh = 'cylinder.mesh' ,name = None,mental = None):
     if not name:
         name = s.app.getUniqueName()+unittype +"-"+player.name   
     sceneManager = s.app.sceneManager                        
@@ -110,7 +110,7 @@ def createUnit(position,player,unittype,level=1,material = "Examples/RustySteel"
     scene_node.attachObject(attachMe)
     unit = Unit()
     unit.node = scene_node
-    buildUnit(unit,unittype,level,player.name)
+    buildUnit(unit,unittype,race,level,player.name)
     unit.node.getAttachedObject(0).setMaterialName(material)
     
     setupExtra(unit, mental)
