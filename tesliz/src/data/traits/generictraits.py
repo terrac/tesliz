@@ -170,8 +170,8 @@ class ProjectileAttack(object):
         body.setVelocity( (direction * 5.0) )
         
         ## note that we have to keep the bodies around :)
-        s.framelistener.addTimedBody(body,5)
-        s.framelistener.addTimedBody(self,5)
+        s.framelistener.addTimed(5,node,body,self)
+        
    
         s.framelistener.timer = 2
         #self.unit1.player.endTurn()

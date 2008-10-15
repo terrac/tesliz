@@ -15,6 +15,7 @@ class Particle():
 
         particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)
+        s.framelistener.addTimed(5,node,None)
         
         
 class DamagePhysical():

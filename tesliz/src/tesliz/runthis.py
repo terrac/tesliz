@@ -177,6 +177,11 @@ class OgreNewtonApplication (sf.Application):
             s.log("turnbased = " +str(s.turnbased))
 
        
+class Timed():
+    def __init__(self,seconds,node,body):
+        self.seconds = seconds
+        self.node = node
+        self.body = body
 class OgreNewtonFrameListener(CEGUIFrameListener):
     def __init__(self, renderWindow, camera, Mgr, World, msnCam, NewtonListener):
 
@@ -199,8 +204,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.Debug = False
         self.ShutdownRequested = False
 
-    def addTimedBody(self, body,seconds):
-        x = body,seconds
+    def addTimed(self, seconds,node,*extra):
+        x = Timed(seconds,node,extra)
         s.app.timedbodies.append(x)
 
     #then you can have both
@@ -321,20 +326,23 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #                s.app.setTurnbased(True)
 #                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
-        list = []
-        while len(s.app.timedbodies) > 0:
-            body, time = s.app.timedbodies.pop()
-            time -= frameEvent.timeSinceLastFrame
-            tuple = body,time
+    
+        for x in s.app.timedbodies:
             
-            if time > 0:
-               list.append(tuple) 
-            else:
+        
+            x.seconds -= frameEvent.timeSinceLastFrame
+        
+            
+            if x.seconds < 0:        
+                        
                 try:
-                    s.app.sceneManager.getRootSceneNode().removeChild(body.getOgreNode())
-                except:
-                    pass # so you can add timed other things   
-        s.app.timedbodies = list
+                    
+                    s.app.sceneManager.getRootSceneNode().removeChild(x.node)
+                    s.app.timedbodies.remove(x)
+                except Exception, e:
+                    print e
+                       
+     
                    
                      
         quat = self.msnCam.getOrientation()

@@ -1,20 +1,17 @@
 turnbased = TrueNone
-blah32 8 a Wizard arrivesNone
-blah8 2 a Wizard arrivesNone
+blah4 2 a Wizard arrivesNone
+blah8 4 a Wizard arrivesNone
+blah16 6 a Wizard arrivesNone
 blah16 4 a Wizard arrivesNone
-blah32 6 a Wizard arrivesNone
 blah12 2 a Wizard arrivesNone
-blah24 4 a Wizard arrivesNone
 blah32 4 a Wizard arrivesNone
-blah40 4 a Wizard arrivesNone
+blah12 0 a Wizard arrivesNone
+blah24 2 a Wizard arrivesNone
 blah14 0 a Wizard arrivesNone
+blah32 2 a Wizard arrivesNone
 blah18 0 a Wizard arrivesNone
+blah36 2 a Wizard arrivesNone
 Wizard blah40 4None
-Wizard blah40 4 damages Wizard blah36 2 for 20with type:fireNone
-Wizard blah18 0None
-Wizard blah18 0 damages Wizard blah16 0 for 20with type:fireNone
-Wizard blah18 0 damages Wizard blah14 0 for 20with type:fireNone
-Wizard blah32 2None
-Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone
-Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone
-Wizard blah32 2 damages Wizard blah24 4 for 20with type:fireNone
+Wizard blah40 4 damages Wizard blah16 6 for 20with type:fireNone
+Wizard blah40 4 damages Wizard blah16 6 for 20with type:fireNone
+Wizard blah40 4 damages Wizard blah16 6 for 20with type:fireNone
