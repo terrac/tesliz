@@ -324,11 +324,9 @@ class Boost(object):
         
         show (self.unit1)
         
-        am = self.unit1.attributes.affect
-        if am.has_key(self.type):
-            am[self.type].teardown(self.unit1)
-        am[self.type] = self.affect
-        am[self.type].setup(self.unit1)
+        am = self.unit1.affect
+        
+        am.add(self.affect)
 
         
         entity = self.unit1.node.getAttachedObject(0)

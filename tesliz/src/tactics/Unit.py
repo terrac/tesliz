@@ -1,6 +1,9 @@
 from tactics.Singleton import *
-
+from tactics.Affect import *
 s = Singleton()
+
+
+        
 
 class Attributes(object):
     def __init__(self):
@@ -13,8 +16,7 @@ class Attributes(object):
         self.intelligence = 5
         self.dexterity = 5
         self.resistance = dict()
-        self.affect = dict()
-    
+
 
 
     def increment(self):
@@ -35,6 +37,8 @@ class Unit(object):
     def __init__(self):
         self.attributes = Attributes()
         self.traits = dict()
+        self.affect = AffectHolder(self)
+        self.items = AffectHolder(self)
         self.body = None
         self.type = None
         self.timeleft = 0

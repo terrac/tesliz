@@ -108,9 +108,9 @@ class Unittypes(object):
         setupBasic(unit, level)
         setupStats(unit, level, 5,100,15,10)
         unit.attributes.resistance = {"slash":.80,"bludgeon":.80,"pierce":.80}
-        affect = Affects(StatAffect({"strength":5}))
+        affect = Affects(StatAffect({"strength":5}),"music")
         boost1 = Boost(affect,"strup")        
-        affect = Affect({"dexterity":5})
+        affect =  Affects(StatAffect({"dexterity":5}),"music")
         boost2 = Boost(affect,"dexup")
         trait = Traits([boost1,boost2])
         unit.traits["Boost"] = trait    

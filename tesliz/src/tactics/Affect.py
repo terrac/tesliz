@@ -1,10 +1,16 @@
+from tactics.Singleton import *
+
+s = Singleton()
+
 class Affects:
-    def __init__(self,obj):
-        if isinstance(list,obj):
-            self.alist = list
+    def __init__(self,obj,type):
+        if isinstance(obj,list):
+            self.alist = obj
         else:
-            self.alist = [list]
+            self.alist = [obj]
         self.lights = []
+        self.type = type
+        self.color = 255,0,0
     def setup(self,unit):
         for x in self.alist:
             light = s.app.sceneManager.createLight( s.app.getUniqueName() )
@@ -25,6 +31,21 @@ class Affects:
         for x in self.alist:
             x.teardown(unit)
 
+class AffectHolder():
+    def __init__(self,unit):
+        self.itemmap = dict()
+        self.unit = unit
+    def add(self,item):
+
+        if self.itemmap.has_key(item.type):
+            self.itemmap[item.type].teardown(self.unit)
+        self.itemmap[item.type] = item
+        self.itemmap[item.type].setup(self.unit)
+    def remove(self,type):
+        am =self.itemmap[type]
+        am.teardown(self.unit)
+        del self.itemmap[type]
+        
 class StatAffect:
     def __init__(self,statsup , color = None):
         self.color = color
@@ -38,7 +59,9 @@ class StatAffect:
             y = getattr(unit.attributes,x)
             z =self.statsup[x]
             y += z
+            
             setattr(unit.attributes,x,y)
+            
 
         
     def teardown(self,unit):
