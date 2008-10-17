@@ -30,6 +30,7 @@ class Affects:
             
         for x in self.alist:
             x.teardown(unit)
+    
 
 class AffectHolder():
     def __init__(self,unit):
@@ -45,6 +46,7 @@ class AffectHolder():
         am =self.itemmap[type]
         am.teardown(self.unit)
         del self.itemmap[type]
+    
         
 class StatAffect:
     def __init__(self,statsup , color = None):

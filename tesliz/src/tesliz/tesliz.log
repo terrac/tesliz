@@ -1,14 +1,14 @@
 turnbased = TrueNone
-blah4 2 a Ta arrivesNone
-blah8 4 a Ta arrivesNone
-blah32 8 a Ta arrivesNone
-blah8 2 a Ta arrivesNone
-blah16 4 a Ta arrivesNone
-blah12 2 a Ta arrivesNone
-blah8 0 a Ta arrivesNone
-blah16 2 a Ta arrivesNone
-blah32 4 a Ta arrivesNone
-blah12 0 a Ta arrivesNone
-blah24 2 a Ta arrivesNone
-blah14 0 a Ta arrivesNone
-Ta blah40 4None
+blah4 2 a TimeMage arrivesNone
+blah8 4 a TimeMage arrivesNone
+blah32 8 a TimeMage arrivesNone
+blah8 2 a TimeMage arrivesNone
+blah32 6 a TimeMage arrivesNone
+blah12 2 a TimeMage arrivesNone
+blah32 4 a TimeMage arrivesNone
+blah24 2 a TimeMage arrivesNone
+blah28 2 a TimeMage arrivesNone
+blah32 2 a TimeMage arrivesNone
+blah18 0 a TimeMage arrivesNone
+blah36 2 a TimeMage arrivesNone
+TimeMage blah40 4None

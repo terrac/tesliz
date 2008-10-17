@@ -119,6 +119,43 @@ class Unittypes(object):
         setupBasic(unit, level)
         
         setupStats(unit, level, 5, 30, 5,5,20)
-        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")])
+        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
         range = NumberedTraits([fireball],[5])
         unit.traits["FireMagic"] = range
+        
+    def Priest(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 5, 30, 5,5,20)
+        
+        
+        trait1 = GridTargeting(GridTargeting.offset2,[Particle("WhiteTorch"),DamageMagic(-20,"heal")],"Heal")
+        #add a damage reduction effect that adds a damage reduce of 10 to all for this
+        #trait2 = GridTargeting(GridTargeting.offset2,[Particle("WhiteTorch"),Do(Affects(DamageAffect({"all":10}),"speed"))],"protect")
+        range = NumberedTraits([trait1],[5,5])
+        unit.traits["Priest"] = range
+        
+    def TimeMage(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 5, 30, 5,5,20)
+        
+        
+        trait1 = GridTargeting(GridTargeting.offset2,[Particle("GreenTorch"),AffectOther(Affects(StatAffect({"speed":3}),"speed"))],"haste")
+        trait2 = GridTargeting(GridTargeting.offset2,[Particle("GreenTorch"),AffectOther(Affects(StatAffect({"speed":-3}),"speed"))],"slow")
+        range = NumberedTraits([trait1,trait2],[5,5])
+        unit.traits["TimeMagic"] = range
+        
+    def Ninja(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 5, 30, 5,5,20)
+                
+        unit.traits["Attack"] = Traits([DoubleAttack()])
+        
+    def Knight(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 5, 30, 5,5,20)
+                
+                

@@ -279,11 +279,7 @@ class Attack(object):
             return
         
         show (self.unit1)
-        dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
-        if dis > self.range:
-            s.log(str(self.unit1)+" Attack failed"+str(dis)+" "+str(self.range))
-            s.playsound()
-            return 
+        
         
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
         
@@ -302,6 +298,20 @@ class Attack(object):
 #        print self.unit2
 #        print self.unit2.attributes.hitpoints
         return False
+class DoubleAttack(Attack):
+    def __init__(self):
+        self.attacking = False
+        self.times = 1
+    def execute(self,timer):
+        if not self.attacking:
+            Attack.execute(self,timer)
+            self.times -= 1
+        entity = self.unit1.node.getAttachedObject(0)
+        if entity.hasSkeleton():
+            animationState = entity.getAnimationState("Walk")
+            self.attacking= animationState.getEnabled()
+        return self.times
+            
     
 class Boost(object):
     def __init__(self,affect,name = "Boost"):
@@ -345,10 +355,10 @@ class Boost(object):
 
 class GridTargeting(object):
     
-    def __init__(self,relativePos,todo):
+    def __init__(self,relativePos,todo,name):
         self.relativePos = relativePos(self)
         self.particlename = 'RedTorch'
-        self.name="Fireball"
+        self.name=name
         self.value=10     
         self.range = 10
         self.type = "fire"

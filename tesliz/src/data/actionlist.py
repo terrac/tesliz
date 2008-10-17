@@ -32,4 +32,11 @@ class DamageMagic():
         self.type = type
     def execute(self,unit1,unit,endpos):    
         if unit:    
-            unit.damageHitpoints(self.damage,self.type,unit1)        
+            unit.damageHitpoints(self.damage,self.type,unit1)
+class AffectOther():
+    def __init__(self,affect):
+        self.affect = affect
+    def execute(self,unit1,unit,endpos):
+        if unit:    
+            am = unit.affect        
+            am.add(self.affect)
