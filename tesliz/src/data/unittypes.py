@@ -149,13 +149,13 @@ class Unittypes(object):
     def Ninja(self,unit,level):
         setupBasic(unit, level)
         
-        setupStats(unit, level, 5, 30, 5,5,20)
+        setupStats(unit, level, 3, 40, 10,5,5)
                 
         unit.traits["Attack"] = Traits([DoubleAttack()])
         
     def Knight(self,unit,level):
         setupBasic(unit, level)
         
-        setupStats(unit, level, 5, 30, 5,5,20)
+        setupStats(unit, level, 4, 50, 10,5,5)
                 
                 

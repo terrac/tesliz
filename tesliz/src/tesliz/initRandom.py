@@ -58,7 +58,7 @@ class RandomBuilder(OgreNewtonApplication):
                     #bodpos, bodorient = info.mBody.getPositionOrientation()
                     sceneManager = s.app.sceneManager
                     name = "blah"+str(x)+" "+str(z)
-                    mesh = 'cylinder.mesh' 
+                    mesh = 'zombie.mesh' 
                     scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
                     
                     dira = (end - start)
@@ -75,7 +75,9 @@ class RandomBuilder(OgreNewtonApplication):
                     unit.node = scene_node
                     unittype = ulist[random.randint(1,len(ulist))-1]
                     player = playerlist[random.randint(1,len(playerlist))-1]
-                    buildUnit(unit,unittype,"Human",random.randint(1,3),player)
+                    level = random.randint(1,3)
+                    level = 2
+                    buildUnit(unit,unittype,"Human",level,player)
                     setupExtra(unit)
                     unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")

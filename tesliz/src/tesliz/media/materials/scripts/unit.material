@@ -109,3 +109,56 @@ material Wizard/SOLID
 		}
 	}
 }
+
+material TimeMage/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture green.JPG
+			}
+		}
+	}
+}
+material Priest/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture red.JPG
+			}
+		}
+	}
+}
+material Ninja/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture black.JPG
+			}
+		}
+	}
+}
+material Knight/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture blue.JPG
+			}
+		}
+	}
+}

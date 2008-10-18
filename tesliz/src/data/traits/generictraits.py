@@ -252,7 +252,7 @@ class Attack(object):
     value= 5     
     timeleft = 3
     range=50
-    animation = "Walk"
+    animation = "LOOP"
     type = "bludgeon"
     sound = "sword.wav"
     needsasecondclick = True
@@ -300,16 +300,17 @@ class Attack(object):
         return False
 class DoubleAttack(Attack):
     def __init__(self):
-        self.attacking = False
-        self.times = 1
+        
+        self.times = 2
+        self.time = 2
+        self.curT = 0
     def execute(self,timer):
-        if not self.attacking:
+        self.curT -= timer
+        if self.curT < 0:
             Attack.execute(self,timer)
             self.times -= 1
-        entity = self.unit1.node.getAttachedObject(0)
-        if entity.hasSkeleton():
-            animationState = entity.getAnimationState("Walk")
-            self.attacking= animationState.getEnabled()
+            self.curT = self.time
+        
         return self.times
             
     
@@ -319,7 +320,7 @@ class Boost(object):
         self.value= 5     
         self.timeleft = 0
         self.range=0
-        self.animation = "Walk"
+        self.animation = "LOOP"
         self.affect = affect
         self.type = "music"
     sound = "boost.wav"

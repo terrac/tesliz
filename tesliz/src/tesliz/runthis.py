@@ -494,7 +494,22 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         btn.setText(str(unit)+text)
         #btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.6)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))
-        
+    def showAttributesCurrent(self, name):
+        if not s.unitmap.has_key(name):
+            return
+        unit = s.unitmap[name]
+        winMgr = CEGUI.WindowManager.getSingleton()
+        if not winMgr.isWindowPresent("attributes"):
+            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributes")
+            sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
+            sheet.addChildWindow(btn)
+        else:
+            btn = winMgr.getWindow("attributes")
+        text = "\n"+str(unit.attributes)
+        text += "\n"+str(unit.node.getPosition())    
+        btn.setText(str(unit)+text)
+        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.2)))
+        btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))        
         
         btn.setAlwaysOnTop(True)
                                 

@@ -72,7 +72,7 @@ class Move(object):
     
             entity = self.unit1.node.getAttachedObject(0)
             if entity.hasSkeleton():
-                self.animationState = entity.getAnimationState("Walk")
+                self.animationState = entity.getAnimationState("LOOP")
                 self.animationState.setLoop(True)
                 self.animationState.setEnabled(True)
 

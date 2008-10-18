@@ -63,6 +63,7 @@ class Unit(object):
     
      
     def startTurn(self):
+        s.framelistener.showAttributesCurrent(self.getName())
         self.player.startTurn(self)
         
     def damageHitpoints(self,number,type = None,eunit=None):
