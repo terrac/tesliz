@@ -356,18 +356,19 @@ class Boost(object):
 
 class GridTargeting(object):
     
-    def __init__(self,relativePos,todo,name):
+    def __init__(self,relativePos,todo,name,type = "fire"):
         self.relativePos = relativePos(self)
         self.particlename = 'RedTorch'
         self.name=name
         self.value=10     
         self.range = 10
-        self.type = "fire"
+        self.type = type
         self.unit2 = None
         self.timeleft = 3
         self.needsasecondclick = True
         self.sound = "fireball.wav"
         self.todo = todo
+        
     def offset1(self):
         x = 0,0,0
         return [x]

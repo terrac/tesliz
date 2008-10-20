@@ -293,10 +293,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         for u in s.unitmap.values():
             if u.node.getPosition().y < -50:
                 u.damageHitpoints(50,"darkness")
+        
         for x in s.app.animations:
             x.addTime(frameEvent.timeSinceLastFrame)
-            if not x.getEnabled():
-                s.app.remove(x)
+            
+            #if not x.hasEnded():
+            #    s.app.animations.remove(x)
+                
+                
         
         if s.fog:
             for eunit in s.playermap["Computer1"].unitlist:

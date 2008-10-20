@@ -39,7 +39,8 @@ class RandomBuilder(OgreNewtonApplication):
         
         ulist = dir(data.unittypes.Unittypes())
         ulist =filter(lambda x: not x.startswith("_"),ulist)
-        ulist = ["Wizard","TimeMage","Ninja","Priest","Knight"]
+#        ulist = ["Wizard","TimeMage","Ninja","Priest","Knight"]
+        ulist = ["Priest"]
         playerlist = s.playermap.keys()
         
         for x in range(0,10):

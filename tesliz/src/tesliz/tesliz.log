@@ -1,11 +1,40 @@
 turnbased = TrueNone
-blah8 4 a TimeMage arrivesNone
-blah8 2 a Knight arrivesNone
-blah16 4 a TimeMage arrivesNone
-blah24 4 a Knight arrivesNone
-blah16 2 a Ninja arrivesNone
-blah40 4 a Wizard arrivesNone
-blah12 0 a TimeMage arrivesNone
-blah16 0 a Ninja arrivesNone
+blah4 2 a Priest arrivesNone
+blah8 4 a Priest arrivesNone
+blah16 4 a Priest arrivesNone
+blah32 6 a Priest arrivesNone
+blah24 4 a Priest arrivesNone
+blah32 4 a Priest arrivesNone
+blah40 4 a Priest arrivesNone
+blah24 2 a Priest arrivesNone
+blah14 0 a Priest arrivesNone
+blah28 2 a Priest arrivesNone
+blah32 2 a Priest arrivesNone
+blah18 0 a Priest arrivesNone
 blah36 2 a Priest arrivesNone
-Ninja blah32 4None
+Priest blah40 4None
+Priest blah40 4 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah18 0None
+Priest blah18 0 damages Priest blah16 0 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah32 2None
+Priest blah32 2 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah32 4None
+Priest blah32 4 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah32 6None
+Priest blah32 6 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah24 4None
+Priest blah24 4 damages Priest blah16 6 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah32 8None
+Priest blah32 8 damages Priest blah32 8 for -20with type:heal :<tactics.Player.HumanPlayer object at 0x020190B0>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah36 2None
+Priest blah36 2 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah14 0None
+Priest blah14 0 damages Priest blah16 0 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah24 2None
+Priest blah24 2 damages Priest blah16 2 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah28 2None
+Priest blah28 2 damages Priest blah32 8 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah12 2None
+Priest blah12 2 damages Priest blah16 2 for -20with type:heal :<tactics.Player.HumanPlayer object at 0x020190B0>,<tactics.Player.HumanPlayer object at 0x020190B0>None
+Priest blah8 4None
+Priest blah8 4 damages Priest blah8 2 for 10with type:bludgeon :<tactics.Player.ComputerPlayer object at 0x02019430>,<tactics.Player.HumanPlayer object at 0x020190B0>None

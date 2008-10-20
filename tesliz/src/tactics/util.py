@@ -4,7 +4,9 @@ import ogre.renderer.OGRE as Ogre
 from mental.mind import *
 from mental.background import *
 from tactics.Unit import *
+from mental.combat import *
 import data.unittypes
+import mental.combat as combat
 s = Singleton()
 
 def buildUnit(unit,unittype,race,level,playername):
@@ -94,11 +96,13 @@ def setupExtra(unit, mental = None):
         pass
     if s.fog and player.name == "Computer1":
         unit.setVisible(False)
+    
     if not mental:
-        mental = Mind()
-        mental.map={"combat":Combat(unit,action.Attack)}
+        mental = Mind([Combat(unit,action.Attack,combat.getClose)])    
         #mental.state = {"angry":0,"happy":0}
-    unit.mental = mental
+    has = hasattr(unit,"mental")
+    if has and not unit.mental or not has:
+        unit.mental = mental
     return unit
 def createUnit(position,player,unittype,race,level=1,material = "Examples/RustySteel" ,mesh = 'cylinder.mesh' ,name = None,mental = None):
     if not name:

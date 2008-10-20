@@ -12,7 +12,10 @@ class Mind:
     
         
     state = {"angry":0, "happy":0}
-    map = None
+    
+    def __init__(self,list = None,map = None):
+        self.map = map
+        self.list = list
 #    def __init__(self,minds = []):
 #        self.minds = minds
 #    
@@ -33,13 +36,14 @@ class Mind:
     def getMentalCommands(self):
         
         list = []
-        for x in self.map.values():
-            try:
-                y = x.getMentalCommands()
-                if y:
-                    list = list + y
-            except:
-                pass
+        if self.map:
+            for x in self.map.values():
+                try:
+                    y = x.getMentalCommands()
+                    if y:
+                        list = list + y
+                except:
+                    pass
         return list
 
 class Fighter(Mind):

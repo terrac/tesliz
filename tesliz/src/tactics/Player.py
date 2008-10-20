@@ -55,9 +55,10 @@ class HumanPlayer(object):
            self.interface.displayActions()
        else:
            if unit.mental:
-               for x in unit.mental.map.values():
+               for x in unit.mental.list:
                    if x.running:
-                       x.execute(0)
+                       if x.execute(0):
+                           break;
                    
        
            
@@ -83,9 +84,10 @@ class ComputerPlayer(object):
     s = Singleton()
     def startTurn(self,unit):
         if unit.mental:        
-            for x in unit.mental.map.values():
+            for x in unit.mental.list:
                 if x.running:
-                    x.execute(0)
+                    if x.execute(0):
+                        break;
         #unit.mental.map["combat"].execute(0)
         s.turn.pause = False    
         

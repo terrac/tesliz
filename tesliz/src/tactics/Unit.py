@@ -7,6 +7,7 @@ s = Singleton()
 
 class Attributes(object):
     def __init__(self):
+        self.maxhitpoints = 5
         self.hitpoints = 5
         self.speed = 5
         self.curMovement = 0
@@ -70,11 +71,13 @@ class Unit(object):
         if self.attributes.resistance.has_key(type):
             number = (1-self.attributes.resistance[type]) * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type)
+        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :"+str(eunit.player)+","+str(self.player))
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)
             print self
+        if self.attributes.hitpoints > self.attributes.maxhitpoints:
+            self.attributes.hitpoints = self.attributes.maxhitpoints
             #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
     def getWantedRange(self):

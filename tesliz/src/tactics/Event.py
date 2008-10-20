@@ -47,8 +47,8 @@ class Event:
                     player = playerlist[0]
                     level = random.randint(1,3)
                     unit = createUnit(position,player,unittype,racetype,level,unittype+"/SOLID")
-                    unit.mental = Mind()
-                    unit.mental.map  ={"combat":Combat(unit,action.Attack),"follower":Follower(unit)}
+                    unit.mental = Mind([Combat(unit,action.Attack)])
+                    unit.mental.map  ={"follower":Follower(unit)}
                     
                     
                     s.log(str(position) +str(unittype) +str(player),self)

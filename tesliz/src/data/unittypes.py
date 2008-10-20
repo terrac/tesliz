@@ -11,6 +11,7 @@ import ogre.renderer.OGRE as ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.actionlist import *
+import mental.combat as combat
 s = Singleton()
 
 
@@ -26,6 +27,7 @@ def setupBasic(unit, level):
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed 
     unit.attributes.hitpoints = hitpoints * level
+    unit.attributes.maxhitpoints =unit.attributes.hitpoints
     unit.attributes.strength = strength * level
     unit.attributes.dexterity = dexterity * level
     unit.attributes.intelligence = intelligence * level
@@ -129,11 +131,17 @@ class Unittypes(object):
         setupStats(unit, level, 5, 30, 5,5,20)
         
         
-        trait1 = GridTargeting(GridTargeting.offset2,[Particle("WhiteTorch"),DamageMagic(-20,"heal")],"Heal")
+        trait1 = GridTargeting(GridTargeting.offset1,[Particle("WhiteTorch"),DamageMagic(-20,"heal")],"Heal","healing")
+        trait1.value = -10
         #add a damage reduction effect that adds a damage reduce of 10 to all for this
         #trait2 = GridTargeting(GridTargeting.offset2,[Particle("WhiteTorch"),Do(Affects(DamageAffect({"all":10}),"speed"))],"protect")
         range = NumberedTraits([trait1],[5,5])
         unit.traits["Priest"] = range
+        
+        mental = Mind([Combat(unit,action.Healing,combat.getCloseHurt),Combat(unit,action.Attack,combat.getClose)])
+        
+        #mental.state = {"angry":0,"happy":0}
+        unit.mental = mental
         
     def TimeMage(self,unit,level):
         setupBasic(unit, level)

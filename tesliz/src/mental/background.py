@@ -62,75 +62,73 @@ class Response:
 
         
 
-class Combat(object):
-    
-    
-    def __init__(self,unit,getBest):
-        self.unit =unit
-        self.getBest = getBest
-        self.running = True
-        self.battlecry = RandomUtterance(unit,"battlecry")
-        self.battlecry.called = False
-        
-
-    def getMentalCommands(self):
-        pass
-
-
-    def execute(self,timer):
-        #aoeu
-        unit = self.unit
-        
-        lodis = 999
-        lounit = None
-        for eunit in s.unitmap.values():            
-            if not eunit.player ==unit.player:
-                dis = distance(eunit.node.getPosition(),unit.node.getPosition())
-                if dis < lodis:
-                    lodis =dis
-                    lounit = eunit
-        if not lounit:                
-            unit.mental.state["angry"] = 0
-            return False
-        
-        
-        if not s.framelistener.isActive(self.unit):
-            if not self.battlecry.called:
-                self.battlecry.execute(timer)
-                self.battlecry.called = True
-                
-        s.framelistener.clearActions(self.unit)
-            
-        eunit = lounit
-        bool =False
-        
-        try:            
-            while not bool:
-                abil = self.getBest(unit)
-                
-                
-                if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
-                    move = Move()
-                    setStart(move,unit,None,eunit.node.getPosition())
-                    s.framelistener.addToQueue(unit,move)
-                    
-                setStart(abil,unit,eunit)
-                s.framelistener.addToQueue(unit,copy.copy(abil))
-  #              print unit
-
- #               print unit.actionqueue
-                bool =abil.action
-        except Exception,e:
-            pass
-            #s.log( e,self.unit)
-            
-        
-        
-        unit.mental.state["angry"] = 50#     
-        return True
-    
-
-
+#class Combat(object):
+#    
+#    
+#    def __init__(self,unit,getBest):
+#        self.unit =unit
+#        self.getBest = getBest
+#        self.running = True
+#        self.battlecry = RandomUtterance(unit,"battlecry")
+#        self.battlecry.called = False
+#        
+#
+#    def getMentalCommands(self):
+#        pass
+#
+#
+#    def execute(self,timer):
+#        #aoeu
+#        unit = self.unit
+#        
+#        lodis = 999
+#        lounit = None
+#        for eunit in s.unitmap.values():            
+#            if not eunit.player ==unit.player:
+#                dis = distance(eunit.node.getPosition(),unit.node.getPosition())
+#                if dis < lodis:
+#                    lodis =dis
+#                    lounit = eunit
+#        if not lounit:                
+#            unit.mental.state["angry"] = 0
+#            return False
+#        
+#        
+#        if not s.framelistener.isActive(self.unit):
+#            if not self.battlecry.called:
+#                self.battlecry.execute(timer)
+#                self.battlecry.called = True
+#                
+#        s.framelistener.clearActions(self.unit)
+#            
+#        eunit = lounit
+#        bool =False
+#        
+#        try:            
+#            while not bool:
+#                abil = self.getBest(unit)
+#                
+#                
+#                if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
+#                    move = Move()
+#                    setStart(move,unit,None,eunit.node.getPosition())
+#                    s.framelistener.addToQueue(unit,move)
+#                    
+#                setStart(abil,unit,eunit)
+#                s.framelistener.addToQueue(unit,copy.copy(abil))
+#  #              print unit
+#
+# #               print unit.actionqueue
+#                bool =abil.action
+#        except Exception,e:
+#            pass
+#            #s.log( e,self.unit)
+#            
+#        
+#        
+#        unit.mental.state["angry"] = 50#     
+#        return True
+#    
 
 class Leader(object):
     
