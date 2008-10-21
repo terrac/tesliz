@@ -138,10 +138,10 @@ class Unittypes(object):
         range = NumberedTraits([trait1],[5,5])
         unit.traits["Priest"] = range
         
-        mental = Mind([Combat(unit,action.Healing,combat.getCloseHurt),Combat(unit,action.Attack,combat.getClose)])
+        unit.mental = Mind([Combat(unit,action.Healing,combat.isWantedHurt),Combat(unit,action.Attack,combat.isWanted)])
         
         #mental.state = {"angry":0,"happy":0}
-        unit.mental = mental
+        
         
     def TimeMage(self,unit,level):
         setupBasic(unit, level)
@@ -153,6 +153,9 @@ class Unittypes(object):
         trait2 = GridTargeting(GridTargeting.offset2,[Particle("GreenTorch"),AffectOther(Affects(StatAffect({"speed":-3}),"speed"))],"slow")
         range = NumberedTraits([trait1,trait2],[5,5])
         unit.traits["TimeMagic"] = range
+        isBoosted = lambda unit2,unit1: unit2.affect.has("speed")
+        haste = lambda abil: abil.type == "haste"
+        unit.mental = Mind([Combat(unit,haste,isBoosted),Combat(unit,action.Attack,combat.isWanted)])
         
     def Ninja(self,unit,level):
         setupBasic(unit, level)
@@ -166,4 +169,16 @@ class Unittypes(object):
         
         setupStats(unit, level, 4, 50, 10,5,5)
                 
-                
+    def Squire(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 4, 35, 5,5,5)          
+    
+    
+    def Chemist(self,unit,level):
+        setupBasic(unit, level)
+        
+        setupStats(unit, level, 5, 30, 5,5,5)
+        
+        
+    

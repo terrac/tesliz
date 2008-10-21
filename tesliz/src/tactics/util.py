@@ -98,7 +98,7 @@ def setupExtra(unit, mental = None):
         unit.setVisible(False)
     
     if not mental:
-        mental = Mind([Combat(unit,action.Attack,combat.getClose)])    
+        mental = Mind([Combat(unit,action.Attack,combat.isWanted)])    
         #mental.state = {"angry":0,"happy":0}
     has = hasattr(unit,"mental")
     if has and not unit.mental or not has:

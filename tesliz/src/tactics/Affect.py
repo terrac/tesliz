@@ -46,7 +46,8 @@ class AffectHolder():
         am =self.itemmap[type]
         am.teardown(self.unit)
         del self.itemmap[type]
-    
+    def has(self,type):
+        return self.itemmap.has_key(type)
         
 class StatAffect:
     def __init__(self,statsup , color = None):

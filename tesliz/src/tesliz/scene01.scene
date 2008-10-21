@@ -1,25 +1,11 @@
 
 <scene formatVersion="1.0.0">
   <nodes>
-    <node name="lina">
+    <node name="Terra">
       <position x="4.441185" y="-20.466457" z="-2.703125"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".03" y=".03" z=".03"/>
-      <entity name="lina" meshFile="cylinder.mesh"/>
-    </node>
-
-       <node name="bandit2">
-      <position x="9.110566" y="-20.735053" z="4.570840"/>
-      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".3" y=".3" z=".3"/>
-      <entity name="bandit2" meshFile="cylinder.mesh"/>
-    </node>
-
-       <node name="bandit1">
-      <position x="6.110566" y="-20.735053" z="4.570840"/>
-      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x=".3" y=".3" z=".3"/>
-      <entity name="bandit1" meshFile="cylinder.mesh"/>
+      <entity name="Terra" meshFile="cylinder.mesh"/>
     </node>
 
     <node name="Lamp">

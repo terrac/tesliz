@@ -71,7 +71,7 @@ class Unit(object):
         if self.attributes.resistance.has_key(type):
             number = (1-self.attributes.resistance[type]) * number
         self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :"+str(eunit.player)+","+str(self.player))
+        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :")
         #s.app.bodies.index(self.body)
         if self.attributes.hitpoints < 0:
             s.removeUnit(self)

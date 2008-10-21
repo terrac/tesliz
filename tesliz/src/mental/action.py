@@ -1,3 +1,4 @@
+
 def Attack(unit1):    
         det = lambda abil: True
         return getBest(unit1,det)
@@ -15,15 +16,6 @@ def Healing(unit1):
         det = lambda abil: abil.type == "healing"
         return getBest(unit1,det)
 
-def getBest(unit,isValid):
-    best = None
-    for trait in unit.traits.values():
-       for ability in trait.getClassList():
-           if isValid(ability):
-               if not best:
-                   best = ability                
-               elif best.value <ability.value:
-                   best = ability
-                   
-    return best
+
+
 

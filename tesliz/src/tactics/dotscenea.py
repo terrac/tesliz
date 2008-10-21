@@ -301,13 +301,9 @@ class Dotscene(object):
             attachMe.setNormaliseNormals(True)
             unit = Unit()
             unit.node = scene_node
-            module = __import__("data.maps."+self.filename)
-            module = getattr(module,'maps')
-           
-            #eval(str("from data."+self.filename+" import *"))
-            map = getattr(module,self.filename).Unitdata()
-            map.setupEvents()
-            getattr(map, name)(unit)
+            
+        
+            getattr(self.map, name)(unit)
             
 
             
@@ -328,12 +324,22 @@ class Dotscene(object):
         '''
         # TODO: check DTD to make sure you get all nodes/attributes
         # TODO: Use the userData for sound/physics
+        
+        module = __import__("data.maps."+self.filename)
+        module = getattr(module,'maps')
+        self.map = getattr(module,self.filename).Unitdata()
+        
         xml_node_list = xml.getElementsByTagName('node')
         for xml_node in xml_node_list:
             if xml_node.nodeType == Node.ELEMENT_NODE and xml_node.nodeName == 'node': 
                 camera = parse_camera(sceneManager, xml_node)
                 light = parse_light(sceneManager, xml_node)
                 entity = self.parse_entity(sceneManager, xml_node)
+                
+        
+        self.map.setupEvents()       
+        
+                
         return sceneManager 
     
     app = None

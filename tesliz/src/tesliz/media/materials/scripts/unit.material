@@ -162,3 +162,31 @@ material Knight/SOLID
 		}
 	}
 }
+
+material Chemist/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture blue.JPG
+			}
+		}
+	}
+}
+
+material Squire/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture kat.JPG
+			}
+		}
+	}
+}
