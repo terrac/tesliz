@@ -53,10 +53,11 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
-            s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.damage,attack.type,attack.unit1)
+            #s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.damage,attack.type,attack.unit1)
+            attack.onContact(object.getOgreNode().getName())
             
-            #unit1body.setVelocity(Ogre.Vector3(0,0,0))
-            #object.setVelocity(Ogre.Vector3(0,0,0))
+            unit1body.setVelocity(Ogre.Vector3(0,0,0))
+            object.setVelocity(Ogre.Vector3(0,0,0))
             
         ## okay, found the unit1body... let's adjust the collision based on this.
         #thedir = unit1body.getGlobalDir()
@@ -82,11 +83,11 @@ class ProjectileAttack(object):
         self.needsasecondclick = True
         self.sound = "fireball.wav"
    
-    def ready(self):
-        dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
-        if dis > self.range:
-            return False
-        return True
+#    def ready(self):
+#        dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
+#        if dis > self.range:
+#            return False
+#        return True
    
     def execute(self,timer):
         print str(self.unit1) + "a"
@@ -94,9 +95,9 @@ class ProjectileAttack(object):
     	if not self.unit1 or  not self.unit1.body or  not self.endPos:
     		return
         
-        if distance(self.endPos, self.unit1.body.getOgreNode().getPosition()) > self.range:
-            s.log(str(self.unit1)+" Attack failed")
-            return
+#        if distance(self.endPos, self.unit1.body.getOgreNode().getPosition()) > self.range:
+#            s.log(str(self.unit1)+" Attack failed")
+#            return
         vector1 = self.unit1.body.getOgreNode().getPosition()
         if self.unit2 and self.unit2.body:
             vector2 = self.unit2.body.getOgreNode().getPosition()
@@ -259,16 +260,7 @@ class Attack(object):
     def getDamage(self):
         return self.unit1.attributes.strength
     
-    def ready(self):
-        try:
-            if not self.unit2:
-                return False
-        except:
-            return False
-        dis = distance(self.unit2.body.getOgreNode().getPosition(), self.unit1.body.getOgreNode().getPosition())
-        if dis > self.range:
-            return False
-        return True
+
     def execute(self,timer):
         
      

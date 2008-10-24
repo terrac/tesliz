@@ -8,12 +8,25 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 s = Singleton()
+
+class ItemHolder():
+    def __init__(self):
+        self.map = dict()
+    def addItem(self,itemname):
+        if self.map.has_key(itemname):
+            self.map[itemname] += 1
+        self.map[itemname] = 1
+    
+    def removeItem(self,itemname):
+        if self.map.has_key(itemname):
+            self.map[itemname] -= 1
+           
 class HumanPlayer(object):
 
     def __init__(self,name):
         self.name = name
         self.interface = HumanInterface(self)
-
+        self.items =ItemHolder()
         
     def endTurn(self):
         s.turn.pause = False
@@ -78,8 +91,8 @@ class ComputerPlayer(object):
     def __init__(self,name):
         self.name = name    
         self.unitlist = []
-
-  
+        self.itemlist = []
+        self.items =ItemHolder()
 
     s = Singleton()
     def startTurn(self,unit):

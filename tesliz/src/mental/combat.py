@@ -61,30 +61,30 @@ class Combat(object):
         
     
         s.framelistener.clearActions(self.unit)
-            
+        
         
         bool =False
         
-        try:            
-            while not bool:
-                abil = getBest(unit,self.isValid)
-                
-                
-                if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
-                    move = Move()
-                    setStart(move,unit,None,eunit.node.getPosition())
-                    s.framelistener.addToQueue(unit,move)
-                    
-                setStart(abil,unit,eunit)
-                s.framelistener.addToQueue(unit,copy.copy(abil))
-  #              print unit
-
- #               print unit.actionqueue
-                bool =abil.action
-        except Exception,e:
-            pass
-            #s.log( e,self.unit)
+        
+        while not bool:
+            abil = getBest(unit,self.isValid)
+            if not abil:
+                aoeu
             
+            if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
+                move = Move()
+                setStart(move,unit,None,eunit.node.getPosition())
+                s.framelistener.addToQueue(unit,move)
+                
+            if not setStart(abil,unit,eunit):
+                break # wasnt in range, maybe look for other abilites later 
+            s.framelistener.addToQueue(unit,copy.copy(abil))
+
+            try:
+                bool =abil.action
+            except Exception,e:                
+                s.log( e,self.unit)
+                break;
         
         
         unit.mental.state["angry"] = 50#     

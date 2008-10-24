@@ -18,6 +18,20 @@ class Attributes(object):
         self.dexterity = 5
         self.resistance = dict()
 
+    def getHitpoints(self):
+        return self.__hitpoints
+
+
+    def setHitpoints(self, value):
+        if value > self.maxhitpoints:
+            value = self.maxhitpoints
+        self.__hitpoints = value
+
+
+    def delHitpoints(self):
+        del self.__hitpoints
+
+
 
 
     def increment(self):
@@ -29,6 +43,8 @@ class Attributes(object):
         return True     
     def __str__( self ):
         return str(self.hitpoints)
+
+    hitpoints = property(getHitpoints, setHitpoints, delHitpoints, "Hitpoints's Docstring")
     
 class Unit(object):
    
@@ -67,17 +83,17 @@ class Unit(object):
         s.framelistener.showAttributesCurrent(self.getName())
         self.player.startTurn(self)
         
-    def damageHitpoints(self,number,type = None,eunit=None):
-        if self.attributes.resistance.has_key(type):
-            number = (1-self.attributes.resistance[type]) * number
-        self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :")
-        #s.app.bodies.index(self.body)
-        if self.attributes.hitpoints < 0:
-            s.removeUnit(self)
-            print self
-        if self.attributes.hitpoints > self.attributes.maxhitpoints:
-            self.attributes.hitpoints = self.attributes.maxhitpoints
+#    def damageHitpoints(self,number,type = None,eunit=None):
+#        if self.attributes.resistance.has_key(type):
+#            number = (1-self.attributes.resistance[type]) * number
+#        self.attributes.hitpoints = self.attributes.hitpoints - number
+#        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :")
+#        #s.app.bodies.index(self.body)
+#        if self.attributes.hitpoints < 0:
+#            s.removeUnit(self)
+#            print self
+#        if self.attributes.hitpoints > self.attributes.maxhitpoints:
+#            self.attributes.hitpoints = self.attributes.maxhitpoints
             #s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
                                       
     def getWantedRange(self):

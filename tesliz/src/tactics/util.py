@@ -13,7 +13,7 @@ def buildUnit(unit,unittype,race,level,playername):
     s.unitmap[unit.getName()]=unit
     
     unit.type = unittype
-    getattr(data.unittypes.Unittypes(), unittype)(unit,level)
+    
     
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
@@ -22,6 +22,9 @@ def buildUnit(unit,unittype,race,level,playername):
         
     else:
         s.playermap[unit.getName()] = player
+        
+    getattr(data.unittypes.Unittypes(), unittype)(unit,level)
+    
     unit.node.setScale(s.racemap[race].scale)
     buildPhysics(unit,"Ellipsoid",s.racemap[race].scale)
 

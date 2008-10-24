@@ -101,3 +101,6 @@ class Move(object):
 
     endPos = property(getEndPos, setEndPos, delEndPos, "EndPos's Docstring")
 
+class FFTMove():
+    def __init__(self):
+        pass

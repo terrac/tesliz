@@ -42,6 +42,8 @@ class AffectHolder():
             self.itemmap[item.type].teardown(self.unit)
         self.itemmap[item.type] = item
         self.itemmap[item.type].setup(self.unit)
+    def do(self,item):
+        item.setup(self.unit)
     def remove(self,type):
         am =self.itemmap[type]
         am.teardown(self.unit)

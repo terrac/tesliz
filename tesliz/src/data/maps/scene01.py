@@ -7,7 +7,7 @@ from tactics.CreateRandom import *
 class Unitdata(object):
 
     def Terra(self,unit):
-        buildUnit(unit,"Squire","Human",5,"Player1")
+        buildUnit(unit,"Chemist","Human",5,"Player1")
 
 
         setupExtra(unit)
@@ -22,5 +22,6 @@ class Unitdata(object):
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):
-        CreateRandom(Ogre.Vector3(9,-20,4))
-        
+        ulist = ["Chemist"]
+        CreateRandom(ulist,"Player1",Ogre.Vector3(9,-20,4))
+        CreateRandom(ulist,"Computer1",Ogre.Vector3(20,-20,4))

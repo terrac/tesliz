@@ -28,4 +28,10 @@ def setStart(obj,unit1,unit2=None,position=None):
         return obj.ready()
     except:
         pass
+    try :
+        dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
+        if dis > self.range:
+            return False
+    except:
+        pass
     return True

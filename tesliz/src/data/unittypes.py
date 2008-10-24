@@ -11,6 +11,7 @@ import ogre.renderer.OGRE as ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.actionlist import *
+from data.items import *
 import mental.combat as combat
 s = Singleton()
 
@@ -25,9 +26,10 @@ def setupBasic(unit, level):
     #unit.attributes.damage = 50 * level
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
-    unit.attributes.speed = speed 
+    unit.attributes.speed = speed
+    unit.attributes.maxhitpoints =hitpoints * level 
     unit.attributes.hitpoints = hitpoints * level
-    unit.attributes.maxhitpoints =unit.attributes.hitpoints
+    
     unit.attributes.strength = strength * level
     unit.attributes.dexterity = dexterity * level
     unit.attributes.intelligence = intelligence * level
@@ -171,14 +173,24 @@ class Unittypes(object):
                 
     def Squire(self,unit,level):
         setupBasic(unit, level)
+        throw = Throw()
+        trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
+        throw.do = lambda self,unit2: unit2.damageHitpoints(1,"physical",self.unit1)
+        trait1.range = 50
         
+        unit.traits["Squire"] =Traits([trait1])
         setupStats(unit, level, 4, 35, 5,5,5)          
     
+    def healing(self,abil):
+        return abil.type == "healing"
     
     def Chemist(self,unit,level):
         setupBasic(unit, level)
         
         setupStats(unit, level, 5, 30, 5,5,5)
-        
-        
+        trait1 = GridTargeting(GridTargeting.offset1,[Throw(Potion()),RemoveItem("Potion")],"Potion","healing",)
+        trait1.range = 50
+        unit.player.items.addItem("Potion")
+        unit.traits["Chemist"] =Traits([trait1])
+        unit.mental = Mind([Combat(unit,self.healing,combat.isWantedHurt),Combat(unit,action.Attack,combat.isWanted)])
     
