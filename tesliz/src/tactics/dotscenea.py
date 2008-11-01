@@ -336,7 +336,7 @@ class Dotscene(object):
                 light = parse_light(sceneManager, xml_node)
                 entity = self.parse_entity(sceneManager, xml_node)
                 
-        data.buildscene.setup()
+        
         self.map.setupEvents()       
         
                 
