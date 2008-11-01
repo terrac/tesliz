@@ -1,3 +1,4 @@
+import data.util 
 def setStart(obj,unit1,unit2=None,position=None):  
     
 
@@ -29,9 +30,9 @@ def setStart(obj,unit1,unit2=None,position=None):
     except:
         pass
     try :
-        dis = distance(self.endPos, self.unit1.body.getOgreNode().getPosition())
-        if dis > self.range:
+        if data.util.withinRange(self.endPos, self.unit1.body.getOgreNode().getPosition(),self.range):
             return False
+
     except:
         pass
     return True

@@ -73,4 +73,3 @@ class CreateRandom():
                 x.body.freeze()   
                 
 
-    

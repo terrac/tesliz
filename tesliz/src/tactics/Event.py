@@ -64,6 +64,6 @@ class EventPositions:
     def update(self,pos):
         for x in self.map.keys():
             #print distance(x,pos)
-            if distance(x,pos) < 10:
+            if data.util.getDistance(x,pos) < 10:
                 self.map[x].execute()
                 del self.map[x]

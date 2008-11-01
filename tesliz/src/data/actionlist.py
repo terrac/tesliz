@@ -229,4 +229,4 @@ class RemoveItem():
         self.itemname = itemname
     def execute(self,unit1,unit,endpos):
         unit1.player.items.removeItem(self.itemname)    
-        s.screenshot()
+       # s.screenshot()

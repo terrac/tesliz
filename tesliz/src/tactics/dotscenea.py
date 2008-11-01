@@ -15,7 +15,7 @@ import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
 from tactics.Unit import *
-
+import data.buildscene
 
 
 '''
@@ -336,7 +336,7 @@ class Dotscene(object):
                 light = parse_light(sceneManager, xml_node)
                 entity = self.parse_entity(sceneManager, xml_node)
                 
-        
+        data.buildscene.setup()
         self.map.setupEvents()       
         
                 

@@ -1,5 +1,6 @@
 from utilities.physics import *
 from tactics.Singleton import *
+import data.util 
 s = Singleton()
 #from math import *
 #def distance(v1,v2):
@@ -40,7 +41,7 @@ class Move(object):
         scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
         size = self.unit1.attributes.moves
         size = size * .60
-        scene_node.scale = Ogre.Vector3(size,size,size)
+        scene_node.scale = Ogre.Vector3(size,1,size)
         
         scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
         attachMe = s.app.sceneManager.createEntity(name,mesh)
@@ -86,9 +87,11 @@ class Move(object):
         self.unit1.body.setVelocity(direction*5)
         finishedMoving = False
         if s.turnbased:
-            finishedMoving =distance(self.startPos, position) > self.unit1.attributes.moves
+            finishedMoving = not data.util.withinRange(self.startPos, position, self.unit1.attributes.moves)
+            #distance(self.startPos, position) > self.unit1.attributes.moves
         if not finishedMoving:
-            finishedMoving =distance(self.endPos, position) < 2
+            finishedMoving = data.util.withinRange(self.startPos, position, 2)
+            #finishedMoving =distance(self.endPos, position) < 2
         #   self.unit1.body.setVelocity(direction*1)
         #    self.unit1.body.freeze()
             
@@ -101,6 +104,71 @@ class Move(object):
 
     endPos = property(getEndPos, setEndPos, delEndPos, "EndPos's Docstring")
 
+
+def markmove(pos):
+            
+    
+    name = s.app.getUniqueName()
+    mesh = "cylinder.mesh"
+    scene_node = s.app.sceneManager.rootSceneNode.createChildSceneNode(name)
+    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+    #size = self.unit1.attributes.moves
+    #size = size * .60
+    #scene_node.scale = Ogre.Vector3(size,1,size)
+    
+    #scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    attachMe = s.app.sceneManager.createEntity(name,mesh)
+    
+    scene_node.attachObject(attachMe)
+    #TODO: for later 
+  #  attachMe.setMaterialName( "Examples/RustySteel" )
+    attachMe.setNormaliseNormals(True)
 class FFTMove():
+    type = "move"
+    value = -1
     def __init__(self):
+        self.list = None
+        
         pass
+    def choiceStart(self):
+        #create a mark that creates a small block
+        data.util.markValid(vec1, range, mark)
+        
+
+    def execute(self,timer):
+        s.playsound("walk.wav")
+        if not self.list:
+            vec1 = self.unit1.body.getOgreNode().getPosition()
+            vec2 = self.endPos
+            self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            self.cur = 0
+            return True
+        if len(self.list) == self.cur:
+            return False
+        vec1 = self.list[self.cur]
+        vec2 = self.list[self.cur +1]
+        direction = vec2-vec1
+        direction.normalise()
+        self.unit1.body.setVelocity(direction*5)
+        #finishedMoving = False
+#        if s.turnbased:
+#            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
+            #distance(self.startPos, position) > self.unit1.attributes.moves
+        if distance(vec1, vec2) < 1:
+            self.cur += 1
+        return True
+            #finishedMoving =distance(self.endPos, position) < 2
+        #   self.unit1.body.setVelocity(direction*1)
+        #    self.unit1.body.freeze()
+            
+
+#        if finishedMoving:
+#            for x in s.unitmap.values():
+#                x.body.freeze()    
+        
+#        return not finishedMoving
+
+        
+        
+    def choiceEnd(self):        
+        s.app.sceneManager.rootSceneNode.removeChild("circle")

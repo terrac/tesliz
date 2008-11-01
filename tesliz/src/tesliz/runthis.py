@@ -144,7 +144,7 @@ class OgreNewtonApplication (sf.Application):
         self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
         self.root.addFrameListener(self.frameListener)
         Singleton().framelistener = self.frameListener
-        self.frameListener.showDebugOverlay(False)
+        #self.frameListener.showDebugOverlay(False)
         
     def _configure(self):
         
@@ -307,7 +307,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 
                 bool = False
                 for unit in s.playermap["Player1"].unitlist:
-                    if distance(eunit.node.getPosition(),unit.node.getPosition()) < unit.attributes.sight:
+                    if data.util.withinRange(eunit.node.getPosition(),unit.node.getPosition(),unit.attributes.sight):
                         
                         bool = True
                         break

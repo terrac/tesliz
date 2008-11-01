@@ -23,5 +23,6 @@ class Unitdata(object):
         buildImmoblePhysics(unit)  
     def setupEvents(self):
         ulist = ["Chemist"]
-        CreateRandom(ulist,"Player1",Ogre.Vector3(9,-20,4))
-        CreateRandom(ulist,"Computer1",Ogre.Vector3(20,-20,4))
+
+        CreateRandom(ulist,"Player1",s.gridmap.getOff(0,0).pos)
+        CreateRandom(ulist,"Computer1",s.gridmap.getOff(1,0).pos)

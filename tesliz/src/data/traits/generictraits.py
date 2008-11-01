@@ -6,6 +6,7 @@ from tactics.Singleton import *
 import ogre.renderer.OGRE as ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
+from data.util import *
 s = Singleton()
 
 def show(unit):
@@ -284,8 +285,9 @@ class Attack(object):
            
         s.playsound(self.sound)    
         #self.unit2.body.setVelocity(direction )        
-        s.unitmap[self.unit2.body.getOgreNode().getName()].damageHitpoints(self.getDamage(),self.type,self.unit1)
-        
+        unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
+    
+        damageHitpoints(self.getDamage(), self.type, unittobehit, self.unit1)
 #        print self.unit1
 #        print self.unit2
 #        print self.unit2.attributes.hitpoints

@@ -12,7 +12,7 @@ class Attributes(object):
         self.speed = 5
         self.curMovement = 0
         self.moves = 25
-        self.sight = 100
+        self.sight = 100,100
         self.strength = 5
         self.intelligence = 5
         self.dexterity = 5

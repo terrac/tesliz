@@ -15,15 +15,22 @@ from data.items import *
 import mental.combat as combat
 s = Singleton()
 
-
+class Evade():
+    classevade = 0
+    shieldevade = 0
+    accessoryevade = 0
 def setupBasic(unit, level):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-    move = Traits([Move()])
+    move = Traits([FFTMove()])
     unit.traits["Move"] = move
     attack = Traits([Attack()])
     unit.traits["Attack"] = attack
     #unit.attributes.hitpoints = 500 * level
     #unit.attributes.damage = 50 * level
+    unit.attributes.magical = Evade()
+    unit.attributes.physical = Evade()
+    unit.attributes.faith = 50
+    unit.attributes.bravery = 50
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed
@@ -175,7 +182,7 @@ class Unittypes(object):
         setupBasic(unit, level)
         throw = Throw()
         trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
-        throw.do = lambda self,unit2: unit2.damageHitpoints(1,"physical",self.unit1)
+        throw.do = lambda self,unit2: damageHitpoints(1,"physical",self.unit1,unit2)
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])

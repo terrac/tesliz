@@ -16,7 +16,9 @@ def getClose(unit,isWanted):
     lounit = None
     for eunit in s.unitmap.values():            
         if isWanted(eunit,unit):
-            dis = distance(eunit.node.getPosition(),unit.node.getPosition())
+            
+            
+            dis =distance(eunit.node.getPosition(),unit.node.getPosition())
             if dis < lodis:
                 lodis =dis
                 lounit = eunit
@@ -71,7 +73,7 @@ class Combat(object):
             if not abil:
                 aoeu
             
-            if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
+            if not data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), abil.range):
                 move = Move()
                 setStart(move,unit,None,eunit.node.getPosition())
                 s.framelistener.addToQueue(unit,move)
