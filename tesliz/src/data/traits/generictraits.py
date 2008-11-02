@@ -253,11 +253,12 @@ class Attack(object):
     name = "Attack"
     value= 5     
     timeleft = 3
-    range=50
+    range=1
     animation = "LOOP"
     type = "bludgeon"
     sound = "sword.wav"
     needsasecondclick = True
+    needsasecondunit = True
     def getDamage(self):
         return self.unit1.attributes.strength
     

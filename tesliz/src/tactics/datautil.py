@@ -7,10 +7,11 @@ def setStart(obj,unit1,unit2=None,position=None):
     
     if unit1:
         obj.unit1 = unit1
+        
         try:
             obj.choiceStart()
-        except:
-            pass        
+        except AttributeError, e:
+            print e        
     if unit2:
         obj.unit2 = unit2
             
@@ -22,8 +23,8 @@ def setStart(obj,unit1,unit2=None,position=None):
     try:
         if obj.endPos:        
             obj.choiceEnd()
-    except:
-        pass    
+    except AttributeError, e:
+        print e            
         
     try :
         return obj.ready()
@@ -35,4 +36,11 @@ def setStart(obj,unit1,unit2=None,position=None):
 
     except:
         pass
+    try:
+        if obj.needsasecondunit:
+            if not( hasattr(obj, "unit2") and  obj.unit2):
+                return False
+    except AttributeError, e:
+        pass
+        
     return True

@@ -72,9 +72,11 @@ class Combat(object):
             abil = getBest(unit,self.isValid)
             if not abil:
                 aoeu
-            
+            unit.traits
             if not data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), abil.range):
-                move = Move()
+                #should this be copied?
+                move = unit.traits["Move"].getClassList()[0]
+                
                 setStart(move,unit,None,eunit.node.getPosition())
                 s.framelistener.addToQueue(unit,move)
                 

@@ -15,7 +15,7 @@ import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
 from tactics.Unit import *
-import data.buildscene
+
 
 
 '''

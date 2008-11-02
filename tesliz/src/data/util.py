@@ -5,7 +5,49 @@ import ogre.physics.OgreNewt as OgreNewt
 import utilities.physics
 
 from tactics.Singleton import *
+
+
+
 s = Singleton()
+
+class VectorMap(dict):
+    
+   
+    def __getitem__(self, key):
+        key = str(key)
+        return dict.__getitem__(self,key)
+        
+    def __setitem__(self, key, value):
+        key = str(key)
+        dict.__setitem__(self,key, value)
+    
+    def __delitem__(self, key):      
+        key = str(key)  
+        dict.__delitem__(key)
+    def has_key(self,key):
+        key = str(key)
+        return dict.has_key(self,key)
+
+def show(pos):
+    
+    sceneManager = s.app.sceneManager        
+    name = s.app.getUniqueName()
+    mesh = "cylinder.mesh"
+    if not sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        attachMe = s.app.sceneManager.createEntity(name,mesh)            
+        scene_node.attachObject(attachMe)
+        attachMe.setNormaliseNormals(True)
+    else:
+        scene_node = sceneManager.getSceneNode(name)
+    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+    
+    size = .3
+    scene_node.scale = Ogre.Vector3(size,size,size)
+    
+    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    return name
+
 
 def damageHitpoints(number,type,unit1,unit2):
     #determine resistance
@@ -136,16 +178,16 @@ def getChanceToHitAndDamage(number,type,unit1,unit2):
 #def getDamage(number,type):
 #for say a spell you would give a high jump
 def withinRange(vec1,vec2,range):
-    #return False
     if hasattr(range,'__iter__'):
         moves,jump = range
     else:
         moves = range
         jump = 50
-    list =getValid(vec1, jump)
+    list =getClosestValid(vec1,vec2, jump)
     moves -=1
     range = moves,jump
-    
+    print utilities.physics.distance(vec1, vec2)
+    print moves
     if utilities.physics.distance(vec1, vec2) < 2:
         return True
     if moves < 0:
@@ -158,17 +200,26 @@ def withinRange(vec1,vec2,range):
 
     return False
 
-def markValid(vec1,range,mark):
+def markValid(vec1,range,mark,names = set(), prevfound=VectorMap()):
     moves,jump = range
-    list =getValid(vec1, jump)
+    xlist = [0,0,1,-1]
+    zlist = [-1,1,0,0]
+    list =getValid(vec1, jump,xlist,zlist)
+    for x in list:
+        if prevfound.has_key(x):
+            list.remove(x)
     moves -=1
     range = moves,jump
     if moves < 0:
         return
+    print list
     for x in list:
-        mark(x)
-        markValid(x, range,mark)
         
+        names.add(mark(x))
+        prevfound[x] = True
+        markValid(x, range,mark,names,prevfound)
+    return names
+
 #def getDistance(vec1,vec2,height=55, distance = 0):
 #    list =getValid(vec1, height)
 #    
@@ -180,13 +231,24 @@ def markValid(vec1,range,mark):
 #
 #            
 
-def getValid(vec,height):
-    info = s.gridmap[vec]
-    valid = []
-    for x in info.infos:
-        if x.height - info.height > height:
-            valid.append(x.pos)
-    return valid
+#def getValid(vec,height):
+#    xlist = [0,0,1,-1]
+#    zlist = [-1,1,0,0]
+#    validpos = []
+#    for a in range(0,3):
+#        x = xlist[a]
+#        z = zlist[a]
+#        start = Ogre.Vector3(vec.x+x,vec.y+height,vec.z+z)
+#        end = Ogre.Vector3(vec.x+x,vec.y-height,vec.z+z)
+#        ray = OgreNewt.BasicRaycast( s.app.World, start,end )
+#        info = ray.getFirstHit()# will need to do multiple hits eventually 
+#        
+#        if (info.mBody):
+#            dira = (end - start)
+#            dira.normalise()        
+#            position = start + ( dira* ( (end - start).length() * info.mDistance ));
+#            validpos.append(position)
+#    return validpos
     
 def getShortest(vec1,vec2,range):
     if hasattr(range,'__iter__'):
@@ -194,24 +256,58 @@ def getShortest(vec1,vec2,range):
     else:
         moves = range
         jump = 50
-    list =getValid(vec1, jump)
+    list =getClosestValid(vec1,vec2, jump)
     moves -=1
     range = moves,jump
     
-    if moves < 0:
-        return False
     if utilities.physics.distance(vec1, vec2) < 2:
         return [vec1]
-    returned = []
+    if moves < 0:
+        return [vec1]
+    
     if list:
         for x in list:
             y = getShortest(x, vec2, range)
             if y:
-                y.append(vec1)
-            returned.append(y)
-        shortest = 999
-        for x in returned:
-            if x < shortest:
-                shortest = x
-        return shortest
+                y.insert(0,vec1)
+                return y
+
     return False
+
+def getClosestValid(pos,pos2,height):        
+    xlist = []
+    zlist = []
+    if pos.x < pos2.x:  
+        xlist.append(1)
+    else:
+        xlist.append(-1)
+    zlist.append(0)
+    if pos.z < pos2.z:
+        zlist.append(1)
+    else:
+        zlist.append(-1)
+    
+    validpos = getValid(pos,height,xlist, zlist)
+    
+    
+        
+    return validpos
+
+
+def getValid(vec,height,xlist, zlist):
+    validpos = []
+    for a in range(0, len(xlist)):
+        x = xlist[a]
+        z = zlist[a]
+        start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
+        end = Ogre.Vector3(vec.x + x, vec.y - height, vec.z + z)
+        ray = OgreNewt.BasicRaycast(s.app.World, start, end)
+        info = ray.getFirstHit() # will need to do multiple hits eventually
+        if (info.mBody):
+            dira = (end - start)
+            dira.normalise()
+            position = start + (dira * ((end - start).length() * info.mDistance))
+            validpos.append(position)
+        
+    
+    return validpos

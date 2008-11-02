@@ -1,2 +1,3 @@
 turnbased = TrueNone
-Chemist unique20None
+Squire unique10None
+Squire unique10 damages Chemist unique17 for 10with type:bludgeon :None

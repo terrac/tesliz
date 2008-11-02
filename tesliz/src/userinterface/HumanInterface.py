@@ -108,7 +108,8 @@ class HumanInterface:
         if self.iexecute:
             unit = None
             if s.unitmap.has_key(name):
-                unit = s.unitmap[name]           
+                unit = s.unitmap[name]  
+                     
             if not setStart(self.iexecute,None,unit,position):
                 sf.Application.debugText = "Action failed"
                 s.playsound()

@@ -16,7 +16,8 @@ class Settings(object):
         
         
         s.app.setTurnbased(True)
-        s.AIon = True
+        #s.AIon = True
+        s.AIon = False
         s.fog = False
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))

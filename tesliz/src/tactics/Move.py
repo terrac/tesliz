@@ -126,35 +126,57 @@ def markmove(pos):
 class FFTMove():
     type = "move"
     value = -1
-    def __init__(self):
+    name = "move"
+    
+    def __init__(self,unit):
+        self.range = unit.attributes.moves
         self.list = None
         
         pass
+
+    needsasecondclick = True
     def choiceStart(self):
         #create a mark that creates a small block
-        data.util.markValid(vec1, range, mark)
+        self.toremove =data.util.markValid(self.unit1.node.getPosition(), self.range, data.util.show)
+        
+    def choiceEnd(self):
+        for x in self.toremove:        
+            s.app.sceneManager.rootSceneNode.removeChild(x)
         
 
     def execute(self,timer):
-        s.playsound("walk.wav")
+        #s.playsound("walk.wav")
         if not self.list:
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos
             self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            self.endPos = self.list[len(self.list)-1]
             self.cur = 0
+            for x in self.list:
+                x.y +=1# don't know why buh will probably need to standardize sizes or offset by size
+                #x.x -=10
             return True
         if len(self.list) == self.cur:
             return False
-        vec1 = self.list[self.cur]
-        vec2 = self.list[self.cur +1]
+        vec1 = self.unit1.node.getPosition()
+        vec2 = self.list[self.cur ]
+        
         direction = vec2-vec1
-        direction.normalise()
-        self.unit1.body.setVelocity(direction*5)
+        direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
+        self.unit1.body.unFreeze()    
+        self.unit1.body.setVelocity(direction )
         #finishedMoving = False
 #        if s.turnbased:
 #            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
             #distance(self.startPos, position) > self.unit1.attributes.moves
-        if distance(vec1, vec2) < 1:
+        print self.unit1.body.getVelocity()
+        
+        print vec1
+        print vec2
+        print self.cur
+        print distance(self.unit1.node.getPosition(), vec2)
+        if distance(self.unit1.node.getPosition(), vec2) < .5:
+            self.unit1.body.freeze()    
             self.cur += 1
         return True
             #finishedMoving =distance(self.endPos, position) < 2
@@ -169,6 +191,5 @@ class FFTMove():
 #        return not finishedMoving
 
         
-        
-    def choiceEnd(self):        
-        s.app.sceneManager.rootSceneNode.removeChild("circle")
+
+

@@ -21,7 +21,8 @@ class Evade():
     accessoryevade = 0
 def setupBasic(unit, level):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-    move = Traits([FFTMove()])
+    unit.attributes.moves = 5,5
+    move = Traits([FFTMove(unit)])
     unit.traits["Move"] = move
     attack = Traits([Attack()])
     unit.traits["Attack"] = attack
@@ -31,6 +32,7 @@ def setupBasic(unit, level):
     unit.attributes.physical = Evade()
     unit.attributes.faith = 50
     unit.attributes.bravery = 50
+    
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed
