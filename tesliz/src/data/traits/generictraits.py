@@ -400,5 +400,6 @@ class GridTargeting(object):
             else:
                 unit = None
             for to in self.todo:
-                to.execute(self.unit1,unit,Ogre.Vector3(x,y,z))
+                if not to.execute(self.unit1,unit,Ogre.Vector3(x,y,z)):
+                    break
        

@@ -20,6 +20,7 @@ class ItemHolder():
     def removeItem(self,itemname):
         if self.map.has_key(itemname):
             self.map[itemname] -= 1
+            return True
            
 class HumanPlayer(object):
 

@@ -182,9 +182,9 @@ class Unittypes(object):
                 
     def Squire(self,unit,level):
         setupBasic(unit, level)
-        throw = Throw()
+        throw = Throw("cylinder.mesh")
         trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
-        throw.do = lambda self,unit2: damageHitpoints(1,"physical",self.unit1,unit2)
+        throw.do = lambda self,unit2: damageHitpoints(9999,"physical",unit2,self.unit1)
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])
@@ -197,7 +197,7 @@ class Unittypes(object):
         setupBasic(unit, level)
         
         setupStats(unit, level, 5, 30, 5,5,5)
-        trait1 = GridTargeting(GridTargeting.offset1,[Throw(Potion()),RemoveItem("Potion")],"Potion","healing",)
+        trait1 = GridTargeting(GridTargeting.offset1,[RemoveItem("Potion"),Throw(Potion())],"Potion","healing",)
         trait1.range = 50
         unit.player.items.addItem("Potion")
         unit.traits["Chemist"] =Traits([trait1])

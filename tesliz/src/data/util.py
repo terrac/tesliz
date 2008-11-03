@@ -46,10 +46,27 @@ def show(pos):
     scene_node.scale = Ogre.Vector3(size,size,size)
     
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    #print "aoue"+name
     return name
 
+def createEntity(mesh,node):    
+    sceneManager = s.app.sceneManager
+    name = s.app.getUniqueName()         
+    attachMe = s.app.sceneManager.createEntity(name,mesh)            
+    node.attachObject(attachMe)
+    attachMe.setNormaliseNormals(True)
+
+   
 
 def damageHitpoints(number,type,unit1,unit2):
+    unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
+    
+    s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
+    #s.app.bodies.index(unit1.body)
+    if unit1.attributes.hitpoints < 1:
+        s.removeUnit(unit1)
+        print unit1
+    return
     #determine resistance
 #    if unit1.attributes.resistance.has_key(type):
 #        number = (1-unit1.attributes.resistance[type]) * number
@@ -200,7 +217,9 @@ def withinRange(vec1,vec2,range):
 
     return False
 
-def markValid(vec1,range,mark,names = set(), prevfound=VectorMap()):
+def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
+    if not names:
+        names = set()
     moves,jump = range
     xlist = [0,0,1,-1]
     zlist = [-1,1,0,0]

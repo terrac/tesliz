@@ -42,7 +42,7 @@ class Attributes(object):
             self.curMovement = 0        
         return True     
     def __str__( self ):
-        return str(self.hitpoints)
+        return str(self.hitpoints)+"/"+str(self.maxhitpoints)
 
     hitpoints = property(getHitpoints, setHitpoints, delHitpoints, "Hitpoints's Docstring")
     

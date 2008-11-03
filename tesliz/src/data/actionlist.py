@@ -1,6 +1,7 @@
 from tactics.Singleton import *
 import ogre.renderer.OGRE as ogre
 from data.traits.generictraits import *
+import data.util
 s = Singleton()
 import copy
 class Particle():
@@ -23,10 +24,14 @@ class Throw():
     def __init__(self, item = None):
         self.run = False
         self.item = item
-        pass
+        if isinstance(item, str):
+            self.mesh = item
+        else:
+            self.mesh = item.mesh
+        self.do = lambda self,unit2: unit2.items.do(self.item.affects)
+        
     
-    def do(self,unit2):
-        unit2.items.do(self.item.affects)
+    
         
     def onContact(self,contactname):
         if not self.run:
@@ -35,7 +40,7 @@ class Throw():
         
         s.app.sceneManager.getRootSceneNode().removeChild(self.node)
         
-        self.do(unit)
+        self.do(self,unit)
         
         self.run=False
         return 0
@@ -51,6 +56,7 @@ class Throw():
             vector2 = endPos    
         World = s.app.World
         sceneManager = s.app.sceneManager
+        #vector1.y += 5
         direction = vector2 - vector1
         direction.normalise()
         vector1 = vector1 +direction * 2
@@ -59,6 +65,8 @@ class Throw():
         
         node = sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
                         
+        data.util.createEntity(self.mesh,node)
+
         node.setPosition(0.0, 0.0, 0.0)      
         col = OgreNewt.Cylinder(World, .5, .5)
         body = OgreNewt.Body( World, col)
@@ -72,7 +80,7 @@ class Throw():
         body.attachToNode( node )
         body.setStandardForceCallback()
         body.setPositionOrientation( vector1, unit1.body.getOgreNode().getOrientation() )
-        body.setVelocity( (direction * 5.0) )
+        body.setVelocity( (direction * 55.0) )
         s.framelistener.addTimed(5,node,body,self)
         s.framelistener.timer = 2
         self.node = node
@@ -83,7 +91,7 @@ class RemoveItem():
         self.potionname = potionname
         
     def execute(self,unit1,unit,endpos):
-        unit1.player.items.removeItem(self.potionname)
+        return unit1.player.items.removeItem(self.potionname)
                     
 class RibbonTrail1():
     def __init__(self, name):
@@ -228,5 +236,5 @@ class RemoveItem():
     def __init__(self,itemname):            
         self.itemname = itemname
     def execute(self,unit1,unit,endpos):
-        unit1.player.items.removeItem(self.itemname)    
+        return unit1.player.items.removeItem(self.itemname)    
        # s.screenshot()

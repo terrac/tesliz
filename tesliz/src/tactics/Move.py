@@ -140,8 +140,11 @@ class FFTMove():
         self.toremove =data.util.markValid(self.unit1.node.getPosition(), self.range, data.util.show)
         
     def choiceEnd(self):
-        for x in self.toremove:        
+        
+        for x in self.toremove:
+                    
             s.app.sceneManager.rootSceneNode.removeChild(x)
+        self.toremove = None
         
 
     def execute(self,timer):
@@ -164,17 +167,17 @@ class FFTMove():
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
         self.unit1.body.unFreeze()    
-        self.unit1.body.setVelocity(direction )
+        self.unit1.body.setVelocity(direction *5)
         #finishedMoving = False
 #        if s.turnbased:
 #            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
             #distance(self.startPos, position) > self.unit1.attributes.moves
-        print self.unit1.body.getVelocity()
+        #print self.unit1.body.getVelocity()
         
-        print vec1
-        print vec2
-        print self.cur
-        print distance(self.unit1.node.getPosition(), vec2)
+        #print vec1
+        #print vec2
+        #print self.cur
+        #print distance(self.unit1.node.getPosition(), vec2)
         if distance(self.unit1.node.getPosition(), vec2) < .5:
             self.unit1.body.freeze()    
             self.cur += 1

@@ -1,3 +1,16 @@
 turnbased = TrueNone
-Squire unique10None
-Squire unique10 damages Chemist unique17 for 10with type:bludgeon :None
+Chemist unique20None
+'Attack' object has no attribute 'action'Chemist unique20
+Chemist unique17None
+'Attack' object has no attribute 'action'Chemist unique17
+Chemist unique16None
+'Attack' object has no attribute 'action'Chemist unique16
+Chemist unique10None
+Chemist unique10 damages Chemist unique17 for 10with type:bludgeon :None
+Chemist unique13None
+None damages Chemist unique1 for 50with type:darkness :None
+None damages Chemist unique1 for 50with type:darkness :None
+Chemist unique1 destroyed.  Unitlist4Chemist unique4Chemist unique7Chemist unique10Chemist unique13None
+None damages Chemist unique16 for 50with type:darkness :None
+None damages Chemist unique16 for 50with type:darkness :None
+Chemist unique16 destroyed.  Unitlist4Chemist unique17Chemist unique18Chemist unique19Chemist unique20None
