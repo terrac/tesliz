@@ -3,14 +3,13 @@ class Click(object):
         
     unitlist
     hookid
-    def resetHooks(self):
+    def resetHooks(self): pass
     
-    def addEndTurnHook(self):
+    def addEndTurnHook(self): pass
         
-    def setUnitList(self,unitlist): 
+    def setUnitList(self,unitlist): pass
     
-    def addClickToMoveHook(self):
+    def addClickToMoveHook(self): pass
     
-    def addClickToAttackHook(self):            
-        
+    def addClickToAttackHook(self): pass
         
