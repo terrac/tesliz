@@ -55,6 +55,7 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         if s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
             #s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.damage,attack.type,attack.unit1)
+            #s.screenshot()
             attack.onContact(object.getOgreNode().getName())
             
             unit1body.setVelocity(Ogre.Vector3(0,0,0))
@@ -91,7 +92,7 @@ class ProjectileAttack(object):
 #        return True
    
     def execute(self,timer):
-        print str(self.unit1) + "a"
+        
         
     	if not self.unit1 or  not self.unit1.body or  not self.endPos:
     		return
@@ -266,10 +267,9 @@ class Attack(object):
     def execute(self,timer):
         
      
-        #print self.unit1
+   
         if not self.unit1.body or not self.unit2.body:
-            #print self.unit2.attributes.hitpoints
-            #print "aoeu"
+
             return
         
         show (self.unit1)
@@ -289,9 +289,7 @@ class Attack(object):
         unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
     
         damageHitpoints(self.getDamage(), self.type, unittobehit, self.unit1)
-#        print self.unit1
-#        print self.unit2
-#        print self.unit2.attributes.hitpoints
+
         return False
 class DoubleAttack(Attack):
     def __init__(self):
@@ -375,7 +373,6 @@ class GridTargeting(object):
         e = 0,0,-1
         return [a,b,c,d,e]
     def execute(self,timer):
-        print str(self.unit1) + "a"
         
         if not self.unit1 or  not self.unit1.body or  not self.endPos:
             return

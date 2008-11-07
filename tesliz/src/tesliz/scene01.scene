@@ -1,9 +1,23 @@
 
 <scene formatVersion="1.0.0">
   <nodes>
+       <node name="Terra">
+      <position x="6.110566" y="0.735053" z="0.570840"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".03" y=".03" z=".03"/>
+      <entity name="Terra" meshFile="zombie.mesh"/>
+    </node>
+       <node name="Fiore">
+      <position x="17.110566" y="5.735053" z="15.570840"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".03" y=".03" z=".03"/>
+      <entity name="Fiore" meshFile="zombie.mesh"/>
+    </node>
+
+
 
     <node name="Lamp">
-      <position x="4.076245" y="1.005454" z="5.903862"/>
+      <position x="4.076245" y="20.005454" z="5.903862"/>
       <quaternion x="0.169076" y="0.272171" z="0.755880" w="0.570948"/>
       <scale x="1.000000" y="1.000000" z="1.000000"/>
       <light name="Spot" type="point">
@@ -13,7 +27,7 @@
       </light>
     </node>
     <node name="Camera">
-      <position x="6.481132" y="-20.507640" z="20.343665"/>
+      <position x="6.481132" y="5.507640" z="20.343665"/>
       <quaternion x="0.481707" y="0.212922" z="0.334251" w="0.781600"/>
       <scale x="1.000000" y="1.000000" z="1.000000"/>
       <camera name="Camera" fov="37.849289" projectionType="perspective">
@@ -22,10 +36,10 @@
     </node>
     <node name="floormap">
       <shape type="TreeCollision" />      
-      <position x="10.000000" y="-25.000000" z="5.000000"/>
+      <position x="0.000000" y="0.000000" z="000000"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
-      <scale x="20" y="1" z="20"/>
-      <entity name="floormap" meshFile="plane.mesh"/>
+      <scale x="20" y="10" z="20"/>
+      <entity name="floormap" meshFile="firstbandits.mesh"/>
     </node>
 
     

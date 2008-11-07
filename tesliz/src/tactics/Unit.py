@@ -65,6 +65,7 @@ class Unit(object):
         self.visible = True
         self.mental = None
         self.knowledgelist = ["general"]
+        self.turncount = 0
     
     def getVisible(self):
         return self.visible
@@ -81,6 +82,8 @@ class Unit(object):
      
     def startTurn(self):
         s.framelistener.showAttributesCurrent(self.getName())
+        self.turncount += 1
+        s.event.turnStarted(self)
         self.player.startTurn(self)
         
     def damageHitpoints(self,number,type = None,eunit=None):

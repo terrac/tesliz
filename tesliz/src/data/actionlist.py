@@ -52,8 +52,8 @@ class Throw():
         if unit2 and unit2.body:
             vector2 = unit2.body.getOgreNode().getPosition()
         else:
-            endPos.y = vector1.y
-            vector2 = endPos    
+            endpos.y = vector1.y
+            vector2 = endpos    
         World = s.app.World
         sceneManager = s.app.sceneManager
         #vector1.y += 5

@@ -67,7 +67,7 @@ class Move(object):
         self.unit1.body.unFreeze()	
         position = self.unit1.body.getOgreNode().getPosition()
         if s.event:
-            s.event.update(position)
+            s.event.updateMove(position)
         if not self.startPos:
             
             self.startPos =position  
@@ -149,16 +149,31 @@ class FFTMove():
 
     def execute(self,timer):
         #s.playsound("walk.wav")
+        entity = self.unit1.node.getAttachedObject(0)
         if not self.list:
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos
             self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            if not self.list:
+                s.log("cant move",self)
+                return False
             self.endPos = self.list[len(self.list)-1]
             self.cur = 0
             for x in self.list:
+                print x
+            for x in self.list:
                 x.y +=1# don't know why buh will probably need to standardize sizes or offset by size
                 #x.x -=10
+            if entity.hasSkeleton():
+                self.animationState = entity.getAnimationState("LOOP")
+                self.animationState.setLoop(True)
+                self.animationState.setEnabled(True)
             return True
+            
+
+        
+        if entity.hasSkeleton():        
+            self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
             return False
         vec1 = self.unit1.node.getPosition()
@@ -166,8 +181,11 @@ class FFTMove():
         
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
-        self.unit1.body.unFreeze()    
-        self.unit1.body.setVelocity(direction *5)
+        #self.unit1.body.unFreeze()    
+        #self.unit1.body.setVelocity(direction *5)
+        src =self.unit1.node.getInitialOrientation() * Ogre.Vector3.UNIT_X
+        vec1 = vec1 + (direction * .02)
+        self.unit1.body.setPositionOrientation(vec1,src.getRotationTo(direction) )
         #finishedMoving = False
 #        if s.turnbased:
 #            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
@@ -187,9 +205,9 @@ class FFTMove():
         #    self.unit1.body.freeze()
             
 
-#        if finishedMoving:
-#            for x in s.unitmap.values():
-#                x.body.freeze()    
+        #if finishedMoving:
+        #    for x in s.unitmap.values():
+        #        x.body.freeze()    
         
 #        return not finishedMoving
 

@@ -56,6 +56,7 @@ class Singleton:
                 
         def endGame(self):
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
+            s.event.end()
             winMgr = CEGUI.WindowManager.getSingleton()
             list = winMgr.getWindow("QuitButton")
             #sheet.addChildWindow(list)
@@ -66,6 +67,7 @@ class Singleton:
             list.setPosition(CEGUI.UVector2(cegui_reldim(0.335), cegui_reldim(0.3)))
             list.setSize(CEGUI.UVector2(cegui_reldim(0.3), cegui_reldim(0.1)))
             list.setAlwaysOnTop(True)
+            
             
         def log(self,text,calling = None):
             text = str(text)

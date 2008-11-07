@@ -4,66 +4,61 @@ import ogre.physics.OgreNewt as OgreNewt
 from tactics.Unit import *
 from tactics.util import *
 import random
+
 s = Singleton()
 
+class AddChat:
+    def __init__(self,text):
+        if isinstance(text, list):
+            self.tlist = text
+        else:
+            self.tlist = [(None,text)]
+    def execute(self,unit):
+        for x,y in self.tlist:
+            if not x:
+                x = unit
+            s.chatbox.add(y,x)
 class Event:
-    def __init__(self,umap,level,pos):
-        self.umap = umap
-        self.level = level
-        self.pos = pos
-    
-    def execute(self):
-        umap = self.umap
+    #do the dict param here
+    def __init__(self, positionmap = None, turnmap = None):
+        self.positionmap = positionmap
+        self.turnmap = turnmap
+        for x in turnmap.values():
+            for y in x.keys():
+                if isinstance(x[y],str) or isinstance(x[y], list):
+                    x[y] = AddChat(x[y])
+                
+        self.turncount = dict()
+       
         
-        s.grammar.broadcast("revolution has occurred",None)
-        playerlist = s.playermap.values()
-        
-        for x in range(0,self.level):
-            for z in range(0,self.level):
-                x = x * 1.5
-                z = z * 1.5
-                start = Ogre.Vector3(self.pos.x+x,self.pos.y+50,self.pos.z+z)
-                end = Ogre.Vector3(self.pos.x+x,self.pos.y+-50,self.pos.z+z)
-                self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
-                info = self.ray.getFirstHit()
-                
-                
-                
-                if (info.mBody):
-                    
-                    #bodpos, bodorient = info.mBody.getPositionOrientation()
-                 
-                    dira = (end - start)
-                    dira.normalise()
-                    
-                    position = start + ( dira* ( (end - start).length() * info.mDistance ));
-                    position.y += 1
-                    
-                    rlist = umap.keys()
-                    racetype = rlist[random.randint(1,len(rlist))-1]
-                    ulist = umap[racetype]
-                    unittype = ulist[random.randint(1,len(ulist))-1]
-                    player = playerlist[random.randint(1,len(playerlist))-1]
-                    player = playerlist[0]
-                    level = random.randint(1,3)
-                    unit = createUnit(position,player,unittype,racetype,level,unittype+"/SOLID")
-                    unit.mental = Mind([Combat(unit,action.Attack)])
-                    unit.mental.map  ={"follower":Follower(unit)}
-                    
-                    
-                    s.log(str(position) +str(unittype) +str(player),self)
-                    #getattr(unittypes,(unit,rand)
-                    #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
-                    #self.clickEntity(info.mBody.OgreNode.Name,position)
-        for x in s.unitmap.values():
-                x.body.freeze()   
 
-class EventPositions:
-    def __init__(self,map):
-        self.map = map
-    def update(self,pos):
-        for x in self.map.keys():
+    def updateMove(self,pos):
+        for x in self.positionmap.keys():
             #print distance(x,pos)
             if data.util.getDistance(x,pos) < 10:
-                self.map[x].execute()
-                del self.map[x]
+                self.positionmap[x].execute()
+                del self.positionmap[x]
+    def turnStarted(self,unit):
+        if not self.turnmap.has_key(unit):
+            return
+        if self.turncount.has_key(unit):
+            self.turncount[unit] += 1
+        else : 
+            self.turncount[unit] = 0
+             
+        if self.turnmap[unit].has_key(self.turncount[unit]):
+            exe = self.turnmap[unit][self.turncount[unit]]
+
+            exe.execute(unit)
+    def end(self):
+        for unit in s.unitmap.values():
+            if self.turnmap[unit].has_key("end"):
+                exe = self.turnmap[unit]["end"]
+    
+                exe.execute(unit)
+                
+    def death(self,unit):
+        dkey = "death-"+unit.getName()
+        if self.turnmap.has_key(unit) and self.turnmap[unit].has_key(dkey):
+            exe = self.turnmap[unit][dkey]
+            exe.execute(unit)

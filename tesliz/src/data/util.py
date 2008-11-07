@@ -14,17 +14,29 @@ class VectorMap(dict):
     
    
     def __getitem__(self, key):
+        key.x = int(key.x)
+        key.Y = int(key.y)
+        key.z = int(key.z)
         key = str(key)
         return dict.__getitem__(self,key)
         
     def __setitem__(self, key, value):
+        key.x = int(key.x)
+        key.Y = int(key.y)
+        key.z = int(key.z)
         key = str(key)
         dict.__setitem__(self,key, value)
     
-    def __delitem__(self, key):      
+    def __delitem__(self, key):
+        key.x = int(key.x)
+        key.Y = int(key.y)
+        key.z = int(key.z)      
         key = str(key)  
         dict.__delitem__(key)
     def has_key(self,key):
+        key.x = int(key.x)
+        key.Y = int(key.y)
+        key.z = int(key.z)
         key = str(key)
         return dict.has_key(self,key)
 
@@ -40,13 +52,13 @@ def show(pos):
         attachMe.setNormaliseNormals(True)
     else:
         scene_node = sceneManager.getSceneNode(name)
-    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
+    scene_node.position = Ogre.Vector3(pos.x,pos.y,pos.z)
     
     size = .3
     scene_node.scale = Ogre.Vector3(size,size,size)
     
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
-    #print "aoue"+name
+ 
     return name
 
 def createEntity(mesh,node):    
@@ -64,8 +76,9 @@ def damageHitpoints(number,type,unit1,unit2):
     s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
     #s.app.bodies.index(unit1.body)
     if unit1.attributes.hitpoints < 1:
+        s.event.death(unit1)
         s.removeUnit(unit1)
-        print unit1
+        
     return
     #determine resistance
 #    if unit1.attributes.resistance.has_key(type):
@@ -151,7 +164,6 @@ def damageHitpoints(number,type,unit1,unit2):
     #s.app.bodies.index(unit1.body)
     if unit1.attributes.hitpoints < 1:
         s.removeUnit(unit1)
-        print unit1
     return True
 
 
@@ -203,18 +215,25 @@ def withinRange(vec1,vec2,range):
     list =getClosestValid(vec1,vec2, jump)
     moves -=1
     range = moves,jump
-    print utilities.physics.distance(vec1, vec2)
     print moves
     if utilities.physics.distance(vec1, vec2) < 2:
         return True
     if moves < 0:
         return False
     
+    lowest = 999
+    lvec = None
+    
     if list:
         for x in list:
-            if withinRange(x, vec2, range):
-                return True
-
+            
+            dist = utilities.physics.distance(x, vec2)
+            if dist < lowest:
+                lowest = dist
+                lvec = x 
+    
+    if withinRange(lvec, vec2, range):
+        return True
     return False
 
 def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
@@ -231,7 +250,6 @@ def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
     range = moves,jump
     if moves < 0:
         return
-    print list
     for x in list:
         
         names.add(mark(x))
@@ -269,13 +287,16 @@ def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
 #            validpos.append(position)
 #    return validpos
     
-def getShortest(vec1,vec2,range):
+def getShortest(vec1,vec2,range, prevfound=VectorMap()):
     if hasattr(range,'__iter__'):
         moves,jump = range
     else:
         moves = range
         jump = 50
     list =getClosestValid(vec1,vec2, jump)
+    for x in list:
+        if prevfound.has_key(x):
+            list.remove(x)
     moves -=1
     range = moves,jump
     
@@ -284,31 +305,51 @@ def getShortest(vec1,vec2,range):
     if moves < 0:
         return [vec1]
     
+    lowest = 999
+    lvec = None
+    lvlist = None
     if list:
         for x in list:
-            y = getShortest(x, vec2, range)
-            if y:
-                y.insert(0,vec1)
-                return y
+            prevfound[x] = True
+            dist = utilities.physics.distance(x, vec2)
+            if dist < lowest:
+                lowest = dist
+                lvec = x 
+        print "chosen" + str(lvec)
+        lvlist = getShortest(lvec, vec2, range,prevfound)
+            
+            
+    if lvlist:
+        lvlist.insert(0,vec1)
+        return lvlist
 
-    return False
-
+    #return False
+    return [vec1]
+unitvalue = 1
 def getClosestValid(pos,pos2,height):        
     xlist = []
     zlist = []
     if pos.x < pos2.x:  
-        xlist.append(1)
+        xlist.append(unitvalue)
     else:
-        xlist.append(-1)
+        xlist.append(-unitvalue)
+    
     zlist.append(0)
     if pos.z < pos2.z:
-        zlist.append(1)
+        zlist.append(unitvalue)
     else:
-        zlist.append(-1)
-    
+        zlist.append(-unitvalue)
+    xlist.append(0)
+    print "aoeu"
+    print pos
+    print pos2
+    print "aoeu2"
+    print xlist
+    print zlist
     validpos = getValid(pos,height,xlist, zlist)
-    
-    
+    for x in validpos:
+        print x
+    print "aoeu3"
         
     return validpos
 

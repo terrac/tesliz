@@ -65,7 +65,7 @@ class AIsettings:
         execlist = ExecuteList([BroadcastM("I have been waiting for this","myside"),BroadcastM("your spouse is in danger","self")])
         s.knowledge.addKnowledge(execlist,"revolution","lina")
         
-       # s.knowledge.printMap()
+ 
 #    def broadcast(self,text,name = None):
         
     

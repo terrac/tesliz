@@ -76,15 +76,11 @@ class SetupGrid():
         while True:
             
             list =self.getValid(vec1, jump)
-            
-            #print vec1
+           
             info = s.gridmap[vec1]
-            #print list
+    
             y = ""
-#            for x in list:
-#                y += str(x)
-            #print y
-            #print vec1
+
             onenew = False
             for x in list:
                 if s.gridmap.has_key(x):
@@ -94,7 +90,7 @@ class SetupGrid():
                     info2 = MapInfo(x)
                     extra.append(x)
                     onenew = True
-                    print x
+               
                 s.gridmap.add(info,info2)
                 
                      
@@ -107,7 +103,6 @@ class SetupGrid():
                     break
                 else: 
                     vec1 = extra.pop()
-                   # print info
     
     
     multiple = 4
@@ -124,7 +119,6 @@ class SetupGrid():
             info = ray.getFirstHit()# will need to do multiple hits eventually 
             
             if (info.mBody):
-                #print x,z
                 dira = (end - start)
                 dira.normalise()        
                 position = start + ( dira* ( (end - start).length() * info.mDistance ));
@@ -153,7 +147,5 @@ def setup():
     range = 999,999
     s.gridmap = GridMap(position)
     
-#    print "aou"
-#    print position
     setup = SetupGrid()
     setup.addValid(position,range)

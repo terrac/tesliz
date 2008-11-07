@@ -1,16 +1,33 @@
 turnbased = TrueNone
-Chemist unique20None
-'Attack' object has no attribute 'action'Chemist unique20
-Chemist unique17None
-'Attack' object has no attribute 'action'Chemist unique17
-Chemist unique16None
-'Attack' object has no attribute 'action'Chemist unique16
-Chemist unique10None
-Chemist unique10 damages Chemist unique17 for 10with type:bludgeon :None
-Chemist unique13None
-None damages Chemist unique1 for 50with type:darkness :None
-None damages Chemist unique1 for 50with type:darkness :None
-Chemist unique1 destroyed.  Unitlist4Chemist unique4Chemist unique7Chemist unique10Chemist unique13None
-None damages Chemist unique16 for 50with type:darkness :None
-None damages Chemist unique16 for 50with type:darkness :None
-Chemist unique16 destroyed.  Unitlist4Chemist unique17Chemist unique18Chemist unique19Chemist unique20None
+Squire TerraNone
+Squire unique5None
+'GridTargeting' object has no attribute 'action'Squire unique5
+Squire unique2None
+Squire FioreNone
+'GridTargeting' object has no attribute 'action'Squire Fiore
+Chemist unique6None
+'Attack' object has no attribute 'action'Chemist unique6
+Squire TerraNone
+Squire unique5None
+'GridTargeting' object has no attribute 'action'Squire unique5
+Squire unique2None
+Squire FioreNone
+'GridTargeting' object has no attribute 'action'Squire Fiore
+Squire Fiore damages Squire unique2 for 9999with type:physical :None
+Squire unique2 destroyed.  Unitlist1Squire TerraNone
+Chemist unique6None
+'Attack' object has no attribute 'action'Chemist unique6
+Squire TerraNone
+Squire Terra damages Squire Fiore for 9999with type:physical :None
+Squire Fiore destroyed.  Unitlist2Squire unique5Chemist unique6None
+Squire unique5None
+'GridTargeting' object has no attribute 'action'Squire unique5
+Squire unique5 damages Squire Terra for 9999with type:physical :None
+Squire Terra destroyed.  Unitlist0None
+endgameNone
+Chemist unique6None
+Squire unique5None
+Chemist unique6None
+Squire unique5None
+Chemist unique6None
+Squire unique5None
