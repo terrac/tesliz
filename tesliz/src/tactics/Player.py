@@ -52,7 +52,7 @@ class HumanPlayer(object):
         scene_node.getAttachedObject(0).setMaterialName("LightGreen/SOLID")
                 
         size = .3
-        scene_node.scale = Ogre.Vector3(size,size,size)
+        scene_node.setScale( Ogre.Vector3(size,size,size))
         
     
     #Tells you what the id of the last cegui hooks for the framelistener was    

@@ -21,6 +21,7 @@ class Unitdata(object):
         
     def floormap(self,unit):
         unit.node.getAttachedObject(0).setMaterialName( "LightBlue/SOLID" )
+        #unit.node.setScale(Ogre.Vector3(5,5,5))
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):

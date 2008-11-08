@@ -145,12 +145,13 @@ def parse_scene_node(sceneManager, xml_node):
     '''
     name = str(xml_node.attributes['name'].nodeValue)
     if not sceneManager.hasSceneNode(name):
-        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = parse_floats(xml_node, 'position', 'x', 'y', 'z')
-    scene_node.orientation = ogre.Quaternion(parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z'))
-    scene_node.scale = parse_floats(xml_node, 'scale', 'x', 'y', 'z')
+    #scene_node.orientation = ogre.Quaternion(parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z'))
+    scene_node.setScale(parse_floats(xml_node, 'scale', 'x', 'y', 'z'))
     return scene_node
 
 
@@ -298,7 +299,7 @@ class Dotscene(object):
             scene_node.attachObject(attachMe)
             #TODO: for later 
           #  attachMe.setMaterialName( "Examples/RustySteel" )
-            attachMe.setNormaliseNormals(True)
+            #attachMe.setNormaliseNormals(True)
             unit = Unit()
             unit.node = scene_node
             

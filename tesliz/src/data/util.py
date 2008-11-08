@@ -55,7 +55,7 @@ def show(pos):
     scene_node.position = Ogre.Vector3(pos.x,pos.y,pos.z)
     
     size = .3
-    scene_node.scale = Ogre.Vector3(size,size,size)
+    scene_node.setScale(Ogre.Vector3(size,size,size))
     
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
  
@@ -66,7 +66,7 @@ def createEntity(mesh,node):
     name = s.app.getUniqueName()         
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     node.attachObject(attachMe)
-    attachMe.setNormaliseNormals(True)
+    #attachMe.setNormaliseNormals(True)
 
    
 

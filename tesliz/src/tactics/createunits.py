@@ -105,7 +105,7 @@ class CreateList():
                 sceneManager = s.app.sceneManager
                 name = s.app.getUniqueName()
                 mesh = 'zombie.mesh' 
-                scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+                scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
                 
                 dira = (end - start)
                 dira.normalise()

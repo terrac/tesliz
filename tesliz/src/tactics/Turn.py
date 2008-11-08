@@ -9,16 +9,16 @@ def show(unit):
     name = "turncircle"
     mesh = "cylinder.mesh"
     if not sceneManager.hasSceneNode(name):
-        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
         attachMe = s.app.sceneManager.createEntity(name,mesh)            
         scene_node.attachObject(attachMe)
-        attachMe.setNormaliseNormals(True)
+        #attachMe.setNormaliseNormals(True)
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
     
     size = 1
-    scene_node.scale = Ogre.Vector3(size,size,size)
+    scene_node.setScale(Ogre.Vector3(size,size,size))
     
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
     

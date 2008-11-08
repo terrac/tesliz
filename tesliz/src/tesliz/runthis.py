@@ -388,13 +388,13 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if (self.timer <= 0.0):
 
                 ## we get the position and direction from the camera...
-                camorient = self.msnCam.getWorldOrientation()
+                camorient = self.msnCam.getOrientation()
                 vec = Ogre.Vector3(0,0,-1)
                 direct = camorient * vec
     
                 ## then make the visual object (again a cylinder)
                 #pos = Ogre.Vector3(self.msnCam.getWorldPosition())
-                pos = self.msnCam.getWorldPosition()
+                pos = self.msnCam.getPosition()
     
                 name = "Body"+str( self.count )
                 self.count += 1
