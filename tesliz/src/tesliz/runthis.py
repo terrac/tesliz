@@ -65,6 +65,7 @@ class OgreNewtonApplication (sf.Application):
         
 
         s.app = self
+        s.app.camera.initialOrientation = None
         Settings()
         
 #        if s.turnbased:
@@ -203,6 +204,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.basicframelistener = NewtonListener
         self.Debug = False
         self.ShutdownRequested = False
+        self.paused = False
 
     def addTimed(self, seconds,node,*extra):
         x = Timed(seconds,node,extra)
@@ -299,7 +301,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         
         for x in s.app.animations:
             x.addTime(frameEvent.timeSinceLastFrame)
-            
+         
+        self.Keyboard.capture()    
+        self.Mouse.capture()    
+        if self.paused:
+            return True
             #if not x.hasEnded():
             #    s.app.animations.remove(x)
                 
@@ -362,8 +368,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         
         ##Need to capture/update each device - this will also trigger any listeners
         ## OIS specific !!!!
-        self.Keyboard.capture()    
-        self.Mouse.capture()
+  
 
         ## now lets handle mouse input
         ms = self.Mouse.getMouseState()
@@ -552,7 +557,20 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
             self.clickEntity(info.mBody.OgreNode.Name,position)
 
-        
+    def keyPressed(self, evt):
+       CEGUIFrameListener.keyPressed(self,evt)
+       
+       if OIS.KC_RETURN ==evt.key:               
+           if s.app.camera.initialOrientation:
+               s.app.camera.setOrientation(s.app.camera.initialOrientation)
+           s.app.camera.initialOrientation = None
+           s.framelistener.paused = False
+       return True
+ 
+    def keyReleased(self, evt):
+       CEGUIFrameListener.keyReleased(self,evt)
+       return True
+
 
 if __name__ == '__main__':
     try:

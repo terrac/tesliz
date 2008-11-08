@@ -1,5 +1,5 @@
 from tactics.Singleton import *
-import ogre.renderer.OGRE as ogre
+import ogre.renderer.OGRE as Ogre
 from data.traits.generictraits import *
 import data.util
 s = Singleton()
@@ -13,7 +13,7 @@ class Particle():
         
         node = s.app.sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
         node.setPosition(Ogre.Vector3(endpos))
-        psm = ogre.ParticleSystemManager.getSingleton()
+        psm = Ogre.ParticleSystemManager.getSingleton()
 
         particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)
@@ -99,7 +99,7 @@ class RibbonTrail1():
         
     def execute(self,unit1,unit,endpos):
         
-        pairList = ogre.NameValuePairList()
+        pairList = Ogre.NameValuePairList()
         pairList['numberOfChains'] = '2'
         pairList['maxElements'] = '80'
         sceneManager = s.app.sceneManager
@@ -115,10 +115,10 @@ class RibbonTrail1():
         animNode.setPosition(endpos)
         ani = s.app.getUniqueName()
         anim = sceneManager.createAnimation(ani, 14)
-        anim.setInterpolationMode(ogre.Animation.IM_SPLINE)
+        anim.setInterpolationMode(Ogre.Animation.IM_SPLINE)
         track = anim.createNodeTrack(1, animNode)
         kf = track.createNodeKeyFrame(0)
-        kf.Translate=ogre.Vector3(50,30,0)
+        kf.Translate=Ogre.Vector3(50,30,0)
         kf = track.createNodeKeyFrame(2)
 
         animState = sceneManager.createAnimationState(ani)
@@ -140,7 +140,7 @@ class RibbonTrail():
         
     def execute(self,unit1,unit,endpos):
         
-        pairList = ogre.NameValuePairList()
+        pairList = Ogre.NameValuePairList()
         pairList['numberOfChains'] = '2'
         pairList['maxElements'] = '8'
         sceneManager = s.app.sceneManager
@@ -157,12 +157,12 @@ class RibbonTrail():
         animNode.setPosition(endpos)
         ani = s.app.getUniqueName()
         anim = sceneManager.createAnimation(ani, 14)
-        anim.setInterpolationMode(ogre.Animation.IM_SPLINE)
+        anim.setInterpolationMode(Ogre.Animation.IM_SPLINE)
         track = anim.createNodeTrack(1, animNode)
         kf = track.createNodeKeyFrame(0)
         color = Ogre.ColourValue(0,0,1,1)
         bbs = sceneManager.createBillboardSet(s.app.getUniqueName(), 1)
-        bbs.createBillboard(ogre.Vector3.ZERO, color)
+        bbs.createBillboard(Ogre.Vector3.ZERO, color)
         bbs.MaterialName="Examples/Flare"
         bbs.setDefaultDimensions(1, 1); 
         animNode.attachObject(bbs)
@@ -171,18 +171,18 @@ class RibbonTrail():
         endpos.x += 1
         
         
-        kf.Translate=ogre.Vector3(endpos)
+        kf.Translate=Ogre.Vector3(endpos)
         kf = track.createNodeKeyFrame(2)
         
         endpos.y += 5
         endpos.x += -2
         
-        kf.Translate=ogre.Vector3(endpos)
+        kf.Translate=Ogre.Vector3(endpos)
         kf = track.createNodeKeyFrame(4)
         endpos.y += 5
         endpos.x += -2
         
-        #kf.Translate=ogre.Vector3(endpos)
+        #kf.Translate=Ogre.Vector3(endpos)
         #kf = track.createNodeKeyFrame(6)
 
         animState = sceneManager.createAnimationState(ani)

@@ -8,16 +8,18 @@ import random
 s = Singleton()
 
 class AddChat:
-    def __init__(self,text):
+    def __init__(self,text,unit = None):
         if isinstance(text, list):
             self.tlist = text
         else:
-            self.tlist = [(None,text)]
-    def execute(self,unit):
-        for x,y in self.tlist:
-            if not x:
-                x = unit
-            s.chatbox.add(y,x)
+            self.tlist = [(unit,text)]
+        
+    def execute(self,timer):
+        if not self.tlist:
+            return
+        x,y = self.tlist.pop(0)                 
+        s.chatbox.add(y,x)
+        return True
 class Event:
     #do the dict param here
     def __init__(self, positionmap = None, turnmap = None):
@@ -49,7 +51,7 @@ class Event:
         if self.turnmap[unit].has_key(self.turncount[unit]):
             exe = self.turnmap[unit][self.turncount[unit]]
 
-            exe.execute(unit)
+            s.framelistener.addToQueue(unit,exe)
     def end(self):
         for unit in s.unitmap.values():
             if self.turnmap[unit].has_key("end"):

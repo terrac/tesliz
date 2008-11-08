@@ -41,5 +41,5 @@ class Unitdata(object):
          (terra,"I like my arms!"),
          (fiore,"Its your choice.")
          ]
-        tmap = {0:convo1,"end":"We have won!","death-Fiore":(terra,"I bet you didn't expect that")}
+        tmap = {0:convo1,"end":(terra,"We have won!"),"death-Fiore":(terra,"I bet you didn't expect that")}
         s.event = Event(turnmap = {terra:tmap})

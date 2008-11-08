@@ -9,7 +9,7 @@ cpp:
 http://www.ogre3d.org/wiki/index.php/DotScene_Loader_with_User_Data_Class
 """
 from xml.dom import minidom, Node
-import ogre.renderer.OGRE as ogre
+import ogre.renderer.OGRE as Ogre
 import utilities.ogre_unit
 import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
@@ -20,14 +20,14 @@ from tactics.Unit import *
 
 '''
 Adapted from:
-python / /www.ogre3d.org/phpBB2addons/viewtopic.php?t=1583
+python / /www.Ogre3d.org/phpBB2addons/viewtopic.php?t=1583
 
 Using 'quaternion' and 'qw' as in Blender Scene Exporter.
-https://svn.ogre3d.org/svnroot/ogreaddons/trunk/blendersceneexporter/
+https://svn.Ogre3d.org/svnroot/Ogreaddons/trunk/blendersceneexporter/
 
 Python-Ogre 1.1 dotscene.py demo uses 'rotation' and 'qw' ...'qz' whereas Blender Dot Scene exporter uses 'quaternion' and 'w'...'z'.  Which one is the current 'standard'?  The documentation is conflicting.  It is 'qw' and 'rotation' here:
-http://www.ogre3d.org/wiki/index.php/DotScene
-http://www.ogre3d.org/wiki/index.php/New_DotScene_Loader
+http://www.Ogre3d.org/wiki/index.php/DotScene
+http://www.Ogre3d.org/wiki/index.php/New_DotScene_Loader
 '''
 
 
@@ -135,7 +135,7 @@ def parse_name(xml_node):
 
 def parse_scene_node(sceneManager, xml_node):
     r'''Create and return scene node from DTD attributes.
-    >>> application = ogre_unit.setup_unittest_application()
+    >>> application = Ogre_unit.setup_unittest_application()
     >>> xml = get_test_xml()
     >>> xml_node = xml.getElementsByTagName('node')[0]
     >>> node = parse_scene_node(application.sceneManager, xml_node)
@@ -150,14 +150,14 @@ def parse_scene_node(sceneManager, xml_node):
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = parse_floats(xml_node, 'position', 'x', 'y', 'z')
-    #scene_node.orientation = ogre.Quaternion(parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z'))
+    #scene_node.orientation = Ogre.Quaternion(parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z'))
     scene_node.setScale(parse_floats(xml_node, 'scale', 'x', 'y', 'z'))
     return scene_node
 
 
 def parse_camera(sceneManager, xml_node):
     '''Parse DTD node as camera.  Return camera.
-    >>> application = ogre_unit.setup_unittest_application()
+    >>> application = Ogre_unit.setup_unittest_application()
     >>> xml = get_test_xml()
 
     Gracefully ignore non-camera.
@@ -176,20 +176,20 @@ def parse_camera(sceneManager, xml_node):
     >>> camera = camera_list[0]
 
     Camera is oriented and positioned as specified on node.
-    >>> camera.isVisible(ogre.Vector3(0, 0, 0))
+    >>> camera.isVisible(Ogre.Vector3(0, 0, 0))
     True
-    >>> assert camera.orientation == ogre.Quaternion()
-    >>> assert camera.position == ogre.Vector3.ZERO
+    >>> assert camera.orientation == Ogre.Quaternion()
+    >>> assert camera.position == Ogre.Vector3.ZERO
     >>> node = camera.getParentSceneNode()
     >>> node.name
     'Camera'
-    >>> ogre_util.xyz(camera.position)
+    >>> Ogre_util.xyz(camera.position)
     (0.0, 0.0, 0.0)
-    >>> ogre_util.xyz(camera.orientation)
+    >>> Ogre_util.xyz(camera.orientation)
     (0.0, 0.0, 0.0)
-    >>> ogre_util.xyz(node.position)
+    >>> Ogre_util.xyz(node.position)
     (7.0, 5.0, 6.0)
-    >>> ogre_util.xyz(node.orientation)
+    >>> Ogre_util.xyz(node.orientation)
     (-0.25, 0.375, 0.0625)
     >>> camera.fOVy.valueDegrees()
     38.0
@@ -211,15 +211,15 @@ def parse_camera(sceneManager, xml_node):
             camera = sceneManager.createCamera(name)
         else:
             camera = sceneManager.getCamera(name)
-        camera.position = ogre.Vector3.ZERO
-        camera.orientation = ogre.Quaternion()
+        camera.position = Ogre.Vector3.ZERO
+        camera.orientation = Ogre.Quaternion()
         clippings = find_nodes(camera_xml_node, 'clipping')
         if clippings:
             # Could there be more than one 'clipping'?
             clipping = clippings[0]
             camera.nearClipDistance, camera.farClipDistance = parse_floats(
                     camera_xml_node, 'clipping', 'nearPlaneDist', 'farPlaneDist')
-        camera.FOVy = ogre.Degree(fov)
+        camera.FOVy = Ogre.Degree(fov)
         
         #scene_node.attachObject(camera)
         s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
@@ -241,7 +241,7 @@ def parse_light(sceneManager, xml_node):
         thingy = find_nodes(xml_node, 'light')[0].attributes
         name = str(thingy['name'].nodeValue)
         attachMe = sceneManager.createLight(name)
-        ltypes={'point':ogre.Light.LT_POINT,'directional':ogre.Light.LT_DIRECTIONAL,'spot':ogre.Light.LT_SPOTLIGHT,'radPoint':ogre.Light.LT_POINT}
+        ltypes={'point':Ogre.Light.LT_POINT,'directional':Ogre.Light.LT_DIRECTIONAL,'spot':Ogre.Light.LT_SPOTLIGHT,'radPoint':Ogre.Light.LT_POINT}
         try:
             attachMe.type = ltypes[thingy['type'].nodeValue]
         except IndexError:
@@ -319,7 +319,7 @@ class Dotscene(object):
         
         xml =  minidom.parse(xml+'.scene')
         '''Modify and return reference to sceneManager from elements specified in dotscene XML document. 
-        >>> application = ogre_unit.setup_unittest_application()
+        >>> application = Ogre_unit.setup_unittest_application()
         >>> xml = get_test_xml()
         >>> application.sceneManager = parse_scene(application.sceneManager, xml)
         '''
@@ -346,31 +346,31 @@ class Dotscene(object):
     app = None
     def setup_scene(self,sceneManager, xml,papp):
         '''Create scene from XML file and apply defaults.
-        >>> application = ogre_unit.setup_unittest_application()
+        >>> application = Ogre_unit.setup_unittest_application()
         >>> xml = get_test_xml()
         >>> application.sceneManager = setup_scene(application.sceneManager, xml)
         '''
         self.app = papp
-        sceneManager.setAmbientLight(ogre.ColourValue(0.2,0.2,0.2))
+        sceneManager.setAmbientLight(Ogre.ColourValue(0.2,0.2,0.2))
         sceneManager = self.parse_scene(sceneManager, xml)
         if sceneManager.hasCamera('Camera'):
             camera = sceneManager.getCamera('Camera')
-            camera.lookAt(ogre.Vector3(0, 0, 0))
+            camera.lookAt(Ogre.Vector3(0, 0, 0))
         return sceneManager
     
 
 def setup_test_dotscene_application(setup_function, xml, application = None):
     '''Test dotscene.  Null root for unit-test.
-    >>> application = setup_test_dotscene_application(ogre_unit.setup_unittest, get_test_xml())
+    >>> application = setup_test_dotscene_application(Ogre_unit.setup_unittest, get_test_xml())
     >>> del application
     '''
-    application = ogre_unit.setup_quiet_application(setup_function, application)
+    application = Ogre_unit.setup_quiet_application(setup_function, application)
     application.sceneManager = setup_scene(application.sceneManager, xml)
-    ogre_util.create_grid(application.sceneManager, 1, (-10,-10), (10,10))
+    Ogre_util.create_grid(application.sceneManager, 1, (-10,-10), (10,10))
     return application
 
 
-#class test_dotscene_application_class(ogre_unit.application_class):
+#class test_dotscene_application_class(Ogre_unit.application_class):
     '''Test of dotscene loader for an application.
     >>> application = test_dotscene_application_class()
 
@@ -378,11 +378,11 @@ def setup_test_dotscene_application(setup_function, xml, application = None):
     >>> application.go()
     '''
 #    def __init__(self):
-#        return ogre_unit.application_class.__init__(self)
+#        return Ogre_unit.application_class.__init__(self)
 #    def go(self):
-#        self = ogre_unit.setup_quiet_application(ogre_unit.setup, self)
+#        self = Ogre_unit.setup_quiet_application(Ogre_unit.setup, self)
 #        self.sceneManager = setup_scene(self.sceneManager, minidom.parse('../model/axis.scene'))
-#        ogre_util.create_grid(self.sceneManager, 1, (-10,-10), (10,10))
+#        Ogre_util.create_grid(self.sceneManager, 1, (-10,-10), (10,10))
 #        self.root.startRendering()
 
 

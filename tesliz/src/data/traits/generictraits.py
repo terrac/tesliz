@@ -3,7 +3,7 @@ from tactics.Material import *
 import utilities.SampleFramework as sf
 from math import *
 from tactics.Singleton import *
-import ogre.renderer.OGRE as ogre
+import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.util import *
@@ -122,7 +122,7 @@ class ProjectileAttack(object):
                         
         node.setPosition(0.0, 0.0, 0.0)
         
-        psm = ogre.ParticleSystemManager.getSingleton()
+        psm = Ogre.ParticleSystemManager.getSingleton()
 
         particleSystem2 = sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)

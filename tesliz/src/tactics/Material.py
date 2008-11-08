@@ -1,5 +1,5 @@
 from tactics.Singleton import *
-import ogre.renderer.OGRE as ogre
+import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 s = Singleton()
