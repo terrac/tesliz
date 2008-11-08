@@ -1,4 +1,4 @@
-RedTorch
+particle_system RedTorch
 {
        material      RedFire
        particle_width     2
