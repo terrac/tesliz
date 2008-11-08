@@ -60,7 +60,7 @@ class CreateRandom():
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                     try:
                         s.playermap[player].setVisualMarker(unit)
-                    except:
+                    except NameError, e:
                         pass
                     print scene_node.position
                     print unittype
@@ -129,7 +129,7 @@ class CreateList():
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                 try:
                     s.playermap[player].setVisualMarker(unit)
-                except:
+                except AttributeError, e:
                     pass
                 print scene_node.position
                 print unittype
@@ -138,5 +138,7 @@ class CreateList():
                 #getattr(unittypes,(unit,rand)
                 #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
                 #self.clickEntity(info.mBody.OgreNode.Name,position)
+            else:
+                print v,u +"doesn't have a valid place to put "
         for x in s.unitmap.values():
             x.body.freeze()   

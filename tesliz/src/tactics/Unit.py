@@ -59,6 +59,7 @@ class Unit(object):
         self.body = None
         self.type = None
         self.timeleft = 0
+        self.text = None
         
         
         self.actionqueue = []

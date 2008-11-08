@@ -291,6 +291,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #            return 
 
         for u in s.unitmap.values():
+            if u.text:
+                u.text.update()
+        for u in s.unitmap.values():
             if u.node.getPosition().y < -50:
                 u.damageHitpoints(50,"darkness")
         

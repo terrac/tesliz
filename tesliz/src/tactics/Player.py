@@ -46,7 +46,7 @@ class HumanPlayer(object):
         scene_node = unit.node.createChildSceneNode(name)
         attachMe = s.app.sceneManager.createEntity(name,mesh)            
         scene_node.attachObject(attachMe)
-        attachMe.setNormaliseNormals(True)
+        #attachMe.setNormaliseNormals(True)
     
         scene_node.position = Ogre.Vector3(0,2,0)
         scene_node.getAttachedObject(0).setMaterialName("LightGreen/SOLID")

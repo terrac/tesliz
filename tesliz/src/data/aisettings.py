@@ -3,6 +3,7 @@ from mental.timer import *
 #from mental.mi
 from mental.grammar import *
 from tactics.Singleton import *
+import utilities.OgreText 
  
 s = Singleton()
 
@@ -13,7 +14,11 @@ class Chatbox:
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
         
-        self.list.addItem(item)         
+        self.list.addItem(item)
+        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+        ogretext.enable(True)
+        unit.text =ogretext
+                 
     def __init__(self):
         sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
         winMgr = CEGUI.WindowManager.getSingleton()
