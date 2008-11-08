@@ -212,7 +212,11 @@ def withinRange(vec1,vec2,range):
     else:
         moves = range
         jump = 50
-    list =getClosestValid(vec1,vec2, jump)
+    if vec1 is None:
+        return False
+    if vec2 is None:
+        return False
+    list = getClosestValid(vec1,vec2, jump)
     moves -=1
     range = moves,jump
     print moves
