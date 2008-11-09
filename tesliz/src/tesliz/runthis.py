@@ -21,7 +21,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
-
+ 
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
     
@@ -269,7 +269,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             #print iexecute
             #print unit.timeleft
             if not boo:
-                unit.actionqueue.pop()
+                print unit.actionqueue
+                print unit.actionqueue.pop(0)
                 try:
                     unit.timeleft = iexecute.timeleft
                     unit.timeleft += random.random()*.1
@@ -296,8 +297,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if u.text:
                 u.text.update()
         for u in s.unitmap.values():
-            if u.node.getPosition().y < -50:
-                u.damageHitpoints(50,"darkness")
+            if u.node.getPosition().y < -10:
+                u.damageHitpoints(50000,"darkness")
         
         for x in s.app.animations:
             x.addTime(frameEvent.timeSinceLastFrame)
@@ -348,12 +349,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             
             if x.seconds < 0:        
                         
-                try:
-                    
+                
+                s.app.timedbodies.remove(x)
+                if isinstance(x.node, Ogre.SceneNode):
                     s.app.sceneManager.getRootSceneNode().removeChild(x.node)
-                    s.app.timedbodies.remove(x)
-                except Exception, e:
-                    print e
+                if hasattr(x.node, "destroy"):
+                    getattr(x.node,"destroy")()
+                
+                
                        
      
                    
@@ -565,6 +568,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                s.app.camera.setOrientation(s.app.camera.initialOrientation)
            s.app.camera.initialOrientation = None
            s.framelistener.paused = False
+       if OIS.KC_NUMPAD5 == evt.key:
+           s.screenshot()
        return True
  
     def keyReleased(self, evt):
