@@ -101,7 +101,7 @@ class HumanInterface:
     def clickEntity(self,name,position):
         if not s.turnbased and s.unitmap.has_key(name):
             if s.unitmap[name] in self.player.unitlist:
-                #self.endTurn()
+            
                 self.cunit = s.unitmap[name] 
                 #s.unitmap[name].startTurn() 
                 self.displayActions()

@@ -53,7 +53,8 @@ class Turn(object):
         self.pause = False
         self.nextUnitTurn()    
     def nextUnitTurn(self):
-        if not s.framelistener.getActiveQueue() == 0:        
+        
+        if s.framelistener.getActiveQueue():        
             return
         if (s.framelistener.timer > 0.0) or s.ended or self.pause and not s.AIon:
             return
@@ -65,6 +66,7 @@ class Turn(object):
         self.pause = True
         s.framelistener.timer = 1
         unit =self.turnlist.pop()
+       
         if unit.attributes.hitpoints <1:
             self.pause  = False
             return

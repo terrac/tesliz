@@ -36,6 +36,19 @@ def getBest(unit,isValid):
                    best = ability
                    
     return best
+
+def getWithinRange(unit,eunit,isValid):
+    best = None
+    for trait in unit.traits.values():
+       for ability in trait.getClassList():
+           if isValid(ability):
+               if not best:
+                   best = ability                
+               elif best.value <ability.value and data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), ability.range):
+                   best = ability
+                   
+    return best
+
 class Combat(object):
     
     
@@ -62,7 +75,7 @@ class Combat(object):
         
         
     
-        s.framelistener.clearActions(self.unit)
+        #s.framelistener.clearActions(self.unit)
         
         
         bool =False
@@ -72,22 +85,23 @@ class Combat(object):
             abil = getBest(unit,self.isValid)
             if not abil:
                 aoeu
-            unit.traits
+            #unit.traits
             if not data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), abil.range):
                 #should this be copied?
                 move = unit.traits["Move"].getClassList()[0]
                 
                 setStart(move,unit,None,eunit.node.getPosition())
                 s.framelistener.addToQueue(unit,move)
+                abil = getWithinRange(unit, eunit, self.isValid)
                 
             if not setStart(abil,unit,eunit):
                 break # wasnt in range, maybe look for other abilites later 
             s.framelistener.addToQueue(unit,copy.copy(abil))
-
+         
             try:
                 bool =abil.action
-            except Exception,e:                
-                s.log( e,self.unit)
+            except AttributeError,e:                
+                s.log( str(abil)+" has no action attribute",self.unit)
                 break;
         
         

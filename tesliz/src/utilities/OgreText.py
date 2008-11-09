@@ -1,4 +1,5 @@
 import ogre.renderer.OGRE as ogre
+from tactics.Singleton import *
 
 NEXTID = 1
 
@@ -39,6 +40,9 @@ class OgreText(object):
 
     def destroy(self):
         if hasattr(self, 'dead'): return
+        if s.unitmap.has_key(self.movable.getName()):
+            s.unitmap[self.movable.getName()].text = None
+        
         self.dead = True
         self.overlay.hide()
         ovm = ogre.OverlayManager.getSingleton()
@@ -47,6 +51,7 @@ class OgreText(object):
         ovm.destroyOverlayElement(self.textArea.name)
         ovm.destroyOverlayElement(self.container.name)
         ovm.destroy(self.overlay.name)
+    
 
     def enable(self, f):
         self.enabled = f

@@ -16,8 +16,9 @@ class Chatbox:
         ori = s.app.camera.getOrientation()
         if not s.app.camera.initialOrientation:
             s.app.camera.initialOrientation = ori
-        s.app.camera.lookAt(unit.node.getPosition())
-        s.framelistener.paused = True
+        if s.eventpausing:
+            s.app.camera.lookAt(unit.node.getPosition())        
+            s.framelistener.paused = True
         
                  
     def __init__(self):

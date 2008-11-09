@@ -49,12 +49,16 @@ class Singleton:
             for e in unit.player.unitlist:
                 a += str(e)
             self.log(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
-            if len(unit.player.unitlist) == 0:
+            if not unit.player.unitlist:
                 self.log("endgame")
-                #self.endGame()
+                self.endGame()
+            
+            unit.destroy()    
             del unit    
+            
                 
         def endGame(self):
+          
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
             s.event.end()
             winMgr = CEGUI.WindowManager.getSingleton()

@@ -3,7 +3,7 @@ import math
 import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.physics
-
+import utilities.OgreText 
 from tactics.Singleton import *
 
 
@@ -69,17 +69,24 @@ def createEntity(mesh,node):
     #attachMe.setNormaliseNormals(True)
 
    
-
-def damageHitpoints(number,type,unit1,unit2):
-    unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
+missed = "LOOP"
+blocked = "LOOP"
+def update(text,unit):
+    ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+    ogretext.enable(True)
+    s.framelistener.addTimed(1,ogretext)
+    unit.text = ogretext
+def damageHitpoints(getDamage,unit1,unit2):
+    number,type = getDamage(unit1)
+    #unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
     
-    s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
+    #s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
     #s.app.bodies.index(unit1.body)
-    if unit1.attributes.hitpoints < 1:
-        s.event.death(unit1)
-        s.removeUnit(unit1)
+    #if unit1.attributes.hitpoints < 1:
+    #    s.event.death(unit1)
+    #    s.removeUnit(unit1)
         
-    return
+    #return
     #determine resistance
 #    if unit1.attributes.resistance.has_key(type):
 #        number = (1-unit1.attributes.resistance[type]) * number
@@ -103,63 +110,64 @@ def damageHitpoints(number,type,unit1,unit2):
 #    dir1 = unit1.getDirection()
 #    dir2 = unit2.getDirection()
     
-        
+    
     #determine chance to hit
     if type == "physical":
         
         
-        if random.randint(0,100) < unit1.attributes.physical.tohit: #blindness would have a low to hit for example
-            unit2.animate("missed")
+        if random.randint(0,100) > unit1.attributes.physical.tohit: #blindness would have a low to hit for example
+            unit2.animate(missed)
+            update("missed", unit2)
             return False 
     #    if both pointing in same direction then 100% as one is behind the other
     #might need to update degree
         if vec1 == vec2 and deg1 == deg2:
             if random.randint(0,100) < unit1.attributes.physical.accessoryevade: #missed
-                unit2.animate("missed")
+                unit2.animate(missed)
+                update("blocked", unit2)
                 return False
         # if both are absolutely pointing the the same direction then they are facing each other
         elif vec1 == vec2:
             if random.randint(0,100) < unit1.attributes.physical.classevade: #missed
-                unit2.animate("missed")
+                unit2.animate(missed)
+                update("missed", unit2)
                 return False  
             if random.randint(0,100) < unit1.attributes.physical.shieldevade: #missed
-                unit2.animate("blocked")
+                unit2.animate(blocked)
+                update("blocked", unit2)
                 return False
             if random.randint(0,100) < unit1.attributes.physical.accessoryevade: #missed
-                unit2.animate("missed")
+                unit2.animate(missed)
+                update("blocked", unit2)
                 return False
         else: #on the side
             if random.randint(0,100) < unit1.attributes.physical.shieldevade: #missed
-                unit2.animate("blocked")
+                unit2.animate(blocked)
+                update("blocked", unit2)
                 return False
             if random.randint(0,100) < unit1.attributes.physical.accessoryevade: #missed
-                unit2.animate("missed")
+                unit2.animate(missed)
+                update("blocked", unit2)
                 return False
-            
-        brav1 = unit1.attributes.bravery
-        brav2 = unit2.attributes.bravery    
-        #a higher bravery than opponent adds damage
-        number += ((brav1 - brav2) / 100) * number 
+             
     else: #magical
         if random.randint(0,100) < unit1.attributes.magical.classevade: #missed
-            unit2.animate("missed")
+            unit2.animate(missed)
             return False  
         if random.randint(0,100) < unit1.attributes.magical.shieldevade: #missed
-            unit2.animate("blocked")
+            unit2.animate(blocked)
             return False
         if random.randint(0,100) < unit1.attributes.magical.accessoryevade: #missed
-            unit2.animate("missed")
-            return False
-        faith1 = unit1.attributes.faith
-        faith2 = unit2.attributes.faith    
+            unit2.animate(missed)
+            return False    
         #high faith adds damage, but opponents lower faith reduces total damage so a faith of 0 cannot recieve magical damage or healing
-        number += ((faith1  / 100) * number) * (faith2  / 100) 
-    rand =random.randint(0,100)    
+         
+        
     
     #    if they are s
     
     unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
-    
+    update(str(number), unit2)
     s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
     #s.app.bodies.index(unit1.body)
     if unit1.attributes.hitpoints < 1:
@@ -212,14 +220,12 @@ def withinRange(vec1,vec2,range):
     else:
         moves = range
         jump = 50
-    if vec1 is None:
-        return False
-    if vec2 is None:
-        return False
-    list = getClosestValid(vec1,vec2, jump)
+    if not vec1 or not vec2:
+        return
+    list =getClosestValid(vec1,vec2, jump)
     moves -=1
     range = moves,jump
-    print moves
+    
     if utilities.physics.distance(vec1, vec2) < 2:
         return True
     if moves < 0:
@@ -319,7 +325,7 @@ def getShortest(vec1,vec2,range, prevfound=VectorMap()):
             if dist < lowest:
                 lowest = dist
                 lvec = x 
-        print "chosen" + str(lvec)
+        
         lvlist = getShortest(lvec, vec2, range,prevfound)
             
             
@@ -344,16 +350,8 @@ def getClosestValid(pos,pos2,height):
     else:
         zlist.append(-unitvalue)
     xlist.append(0)
-    print "aoeu"
-    print pos
-    print pos2
-    print "aoeu2"
-    print xlist
-    print zlist
+    
     validpos = getValid(pos,height,xlist, zlist)
-    for x in validpos:
-        print x
-    print "aoeu3"
         
     return validpos
 

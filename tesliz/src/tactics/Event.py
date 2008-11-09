@@ -53,8 +53,8 @@ class Event:
 
             s.framelistener.addToQueue(unit,exe)
     def end(self):
-        for unit in s.unitmap.values():
-            if self.turnmap[unit].has_key("end"):
+        for unit in s.unitmap.values():            
+            if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
                 exe = self.turnmap[unit]["end"]
     
                 exe.execute(unit)

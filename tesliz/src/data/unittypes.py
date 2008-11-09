@@ -12,13 +12,17 @@ import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.actionlist import *
 from data.items import *
+import damage
 import mental.combat as combat
 s = Singleton()
 
-class Evade():
+class Fstats():
     classevade = 0
     shieldevade = 0
-    accessoryevade = 0
+    accessoryevade = 50
+    power = 3
+    belief = 50
+    tohit = 100
 def setupBasic(unit, level):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
     unit.attributes.moves = 5,5
@@ -28,10 +32,10 @@ def setupBasic(unit, level):
     unit.traits["Attack"] = attack
     #unit.attributes.hitpoints = 500 * level
     #unit.attributes.damage = 50 * level
-    unit.attributes.magical = Evade()
-    unit.attributes.physical = Evade()
-    unit.attributes.faith = 50
-    unit.attributes.bravery = 50
+    unit.attributes.magical = Fstats()
+    unit.attributes.physical = Fstats()
+    #unit.attributes.faith = 50
+    #unit.attributes.bravery = 50
     
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
@@ -39,9 +43,9 @@ def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,int
     unit.attributes.maxhitpoints =hitpoints * level 
     unit.attributes.hitpoints = hitpoints * level
     
-    unit.attributes.strength = strength * level
-    unit.attributes.dexterity = dexterity * level
-    unit.attributes.intelligence = intelligence * level
+    unit.attributes.physical.power = strength * level
+    #unit.attributes.dexterity = dexterity * level
+    unit.attributes.magical.power = intelligence * level
     
         
 
@@ -184,7 +188,7 @@ class Unittypes(object):
         setupBasic(unit, level)
         throw = Throw("cylinder.mesh")
         trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
-        throw.do = lambda self,unit2: damageHitpoints(9999,"physical",unit2,self.unit1)
+        throw.do = lambda self,unit2: damageHitpoints(damage.basicPhysical,self.unit1,unit2)
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])

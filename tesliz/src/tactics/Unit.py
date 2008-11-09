@@ -50,7 +50,9 @@ class Unit(object):
    
     def __str__( self ):
         return self.type+" "+self.getName()
-
+    def destroy(self):
+        if self.text:
+            self.text.destroy()
     def __init__(self):
         self.attributes = Attributes()
         self.traits = dict()
@@ -68,6 +70,16 @@ class Unit(object):
         self.knowledgelist = ["general"]
         self.turncount = 0
     
+    def animate(self,text):
+        entity = self.node.getAttachedObject(0)
+        print "animated"
+        print self
+        if entity.hasSkeleton():
+            animationState = entity.getAnimationState(text)
+            animationState.setLoop(False)
+            animationState.setEnabled(True)
+            s.app.animations.append(animationState)
+            
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):

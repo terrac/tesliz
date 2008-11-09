@@ -102,7 +102,7 @@ class ComputerPlayer(object):
                 if x.running:
                     if x.execute(0):
                         break;
-        #unit.mental.map["combat"].execute(0)
+        
         s.turn.pause = False    
         
         s.turn.nextUnitTurnUnpause()

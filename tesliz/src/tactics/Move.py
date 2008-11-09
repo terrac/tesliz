@@ -149,7 +149,11 @@ class FFTMove():
 
     def execute(self,timer):
         #s.playsound("walk.wav")
+        if not self.unit1.body:
+            return
+        
         entity = self.unit1.node.getAttachedObject(0)
+        
         if not self.list:
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos

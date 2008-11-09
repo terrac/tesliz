@@ -177,7 +177,6 @@ class ProjectileAttack(object):
         
    
         s.framelistener.timer = 2
-        #self.unit1.player.endTurn()
         s.playsound(self.sound)
         return False
              
@@ -254,14 +253,14 @@ class Attack(object):
     name = "Attack"
     value= 5     
     timeleft = 3
-    range=1
+    range=5
     animation = "LOOP"
     type = "bludgeon"
     sound = "sword.wav"
     needsasecondclick = True
     needsasecondunit = True
-    def getDamage(self):
-        return self.unit1.attributes.strength
+    def getDamage(self,unit):
+        return unit.attributes.physical.power,"physical"
     
 
     def execute(self,timer):
@@ -288,7 +287,7 @@ class Attack(object):
         #self.unit2.body.setVelocity(direction )        
         unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
     
-        damageHitpoints(self.getDamage(), self.type, unittobehit, self.unit1)
+        damageHitpoints(self.getDamage, unittobehit, self.unit1)
 
         return False
 class DoubleAttack(Attack):
@@ -353,7 +352,7 @@ class GridTargeting(object):
         self.relativePos = relativePos(self)
         self.particlename = 'RedTorch'
         self.name=name
-        self.value=10     
+        self.value=4     
         self.range = 10
         self.type = type
         self.unit2 = None
@@ -373,7 +372,7 @@ class GridTargeting(object):
         e = 0,0,-1
         return [a,b,c,d,e]
     def execute(self,timer):
-        
+        print self
         if not self.unit1 or  not self.unit1.body or  not self.endPos:
             return
         unitlist = []
@@ -399,4 +398,5 @@ class GridTargeting(object):
             for to in self.todo:
                 if not to.execute(self.unit1,unit,Ogre.Vector3(x,y,z)):
                     break
-       
+    def __str__( self ):
+        return "GridTargeting"+self.name
