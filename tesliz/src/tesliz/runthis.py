@@ -21,7 +21,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
- 
+
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
     
