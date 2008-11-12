@@ -40,7 +40,7 @@ class OgreText(object):
 
     def destroy(self):
         if hasattr(self, 'dead'): return
-        if s.unitmap.has_key(self.movable.getName()):
+        if s.unitmap.has_key(self.movable.getName()) and s.unitmap[self.movable.getName()].text == self:
             s.unitmap[self.movable.getName()].text = None
         
         self.dead = True

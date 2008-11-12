@@ -4,6 +4,8 @@ log = logging.getLogger('')
 s = Singleton()
 
 def show(unit):
+    if  not unit.body:
+        return 
     pos = unit.body.getOgreNode().getPosition()
     sceneManager = s.app.sceneManager        
     name = "turncircle"
@@ -67,7 +69,7 @@ class Turn(object):
         s.framelistener.timer = 1
         unit =self.turnlist.pop()
        
-        if unit.attributes.hitpoints <1:
+        if unit.attributes.physical.points <1:
             self.pause  = False
             return
             

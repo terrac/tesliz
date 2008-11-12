@@ -284,20 +284,16 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         unit.actionqueue.append(action)
         if not unit in self.unitqueues:
             self.unitqueues.append(unit)
-    def addToBackground(self,obj,action):
-        obj.bqueue.append(action)
-        self.backgroundqueue.append(obj)
+
          
     unitqueues = []   
-    backgroundqueue = []
     def getActiveQueue(self):
         return len(self.unitqueues)
 
     def clearActions(self,unit):
-        try:
+        if self.unitqueues.contains(unit):
             self.unitqueues.remove(unit)
-        except:
-            pass
+        
         unit.actionqueue = []
         
             
@@ -312,41 +308,32 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     def runQueue(self,timer):
         self.a += timer
         for unit in self.unitqueues:
-            #print unit.timeleft
-            #print unit
+            
+            
             if unit.timeleft > 0:
                 unit.timeleft -= timer
-                #print timer
-                #print unit.timeleft
-                #print unit
-                #print unit.timeleft
                 continue
            
             
-            #print str(self.a) +" "+ str(unit)+" "+str(len(unit.actionqueue))
-            #print unit.actionqueue
-#            for x in self.unitqueues:
-#                print x
             if len(unit.actionqueue) == 0:
                 self.unitqueues.remove(unit)
                 continue
             iexecute = unit.actionqueue[0]
             boo = False
+           
             boo = iexecute.execute(timer)
-            #print iexecute
-            #print unit.timeleft
+            
             if not boo:
-                print unit.actionqueue
-                print unit.actionqueue.pop(0)
-                try:
+                unit.actionqueue.pop(0)
+                if hasattr(iexecute, "timeleft"):
+                    
                     unit.timeleft = iexecute.timeleft
                     unit.timeleft += random.random()*.1
                     
-                except:
-                    pass
+               
                 
                     
-                    #print "removed"+str(iexecute)
+                    
                 
             
             if s.turnbased :   
@@ -365,7 +352,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 u.text.update()
         for u in s.unitmap.values():
             if u.node.getPosition().y < -10:
-                u.damageHitpoints(50000,"darkness")
+                s.removeUnit(u)
         
         for x in s.app.animations:
             x.addTime(frameEvent.timeSinceLastFrame)
@@ -533,16 +520,6 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
         s.turn.doTurn()        
         self.runQueue(frameEvent.timeSinceLastFrame)
-#        for bg in self.backgroundqueue:
-#            #print self.backgroundqueue
-#            if len(bg.bqueue) == 0:
-#                self.backgroundqueue.remove(bg)
-#            for iexecute in bg.bqueue:    
-#                boo = iexecute.execute(frameEvent.timeSinceLastFrame)
-#                if not boo:
-#                    bg.bqueue.remove(iexecute)
-#                if s.turnbased:
-#                    break
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False
@@ -572,7 +549,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         else:
             btn = winMgr.getWindow("attributes")
         text = "\n"+str(unit.attributes)
-        text += "\n"+str(unit.node.getPosition())    
+        #text += "\n"+str(unit.node.getPosition())    
         btn.setText(str(unit)+text)
         #btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.6)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))
@@ -588,7 +565,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         else:
             btn = winMgr.getWindow("attributes")
         text = "\n"+str(unit.attributes)
-        text += "\n"+str(unit.node.getPosition())    
+        #text += "\n"+str(unit.node.getPosition())    
         btn.setText(str(unit)+text)
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.2)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))        

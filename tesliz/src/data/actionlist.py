@@ -86,12 +86,13 @@ class Throw():
         self.node = node
         return False
 
-class RemoveItem():
-    def __init__(self,potionname):
-        self.potionname = potionname
+#it should be used not removed
+#class RemoveItem():
+#    def __init__(self,potionname):
+#        self.potionname = potionname
         
-    def execute(self,unit1,unit,endpos):
-        return unit1.player.items.removeItem(self.potionname)
+#    def execute(self,unit1,unit,endpos):
+#        return unit1.player.items.removeItem(self.potionname)
                     
 class RibbonTrail1():
     def __init__(self, name):

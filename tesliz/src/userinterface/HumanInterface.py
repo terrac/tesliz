@@ -66,37 +66,7 @@ class HumanInterface:
                 self.additem(list,x.name) 
             list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleMental")   
     listholder = []
-    
-    def handleMental(self, e):
-        #aoeu dir(e.window.getFirstSelectedItem().getText())
-        text = None
-        if isinstance(e,str):
-            text = e
-        else:
-            try:    
-                text = e.window.getFirstSelectedItem().getText()
-            except:
-                return
         
-        for x in  self.cunit.mental.getMentalCommands():
-            if x.name == text:
-                toexecute = x
-        #try:
-        toexecute.clicked()
-        #except:
-        #    pass
-        try:
-            setStart(toexecute,self.cunit)
-            if toexecute.needsasecondclick:
-                self.iexecute = copy.copy(toexecute)
-            
-        except Exception, ex:
-            print repr(ex)
-        s.log(text)
-        self.removeFrom = None
-        #CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")    
-
-    
 
     def clickEntity(self,name,position):
         if not s.turnbased and s.unitmap.has_key(name):
@@ -117,6 +87,27 @@ class HumanInterface:
             sf.Application.debugText = "Action Succeeded"
             if self.removeFrom:
                 self.removeFrom.removeItem(self.toRemove)
+                
+                
+            wind = CEGUI.WindowManager.getSingleton().getWindow("actionlist")
+            isaction = True
+            if hasattr(self.currentTrait,"action") and not self.currentTrait.action:
+                isaction = False
+            toremovelist = []
+            for x in range(0,wind.getItemCount()):
+                item = wind.getListboxItemFromIndex(x)
+                key = str(item.getText())
+                if not self.cunit.traits.has_key(key):
+                    continue
+                trait =self.cunit.traits[key]
+                cisaction = True
+                if hasattr(trait,"action") and not trait.action:
+                    cisaction = False
+
+                if isaction and cisaction:
+                    toremovelist.append(item) 
+            for x in toremovelist:
+                wind.removeItem(x)
             self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
             self.actionSelected = False
             s.framelistener.addToQueue(self.cunit,self.iexecute)
@@ -134,11 +125,11 @@ class HumanInterface:
         item =e.window.getFirstSelectedItem()
         print text
         if text == "Cancel":
-            try:
+            if CEGUI.WindowManager.getSingleton().isWindowPresent("abilitylist"):
                 CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
+            if hasattr(self.iexecute, "choiceEnd"):
                 self.iexecute.choiceEnd()
-            except:
-                pass  
+              
             item.setText(self.choosing)
             self.iexecute = None
             self.actionSelected = False
@@ -149,11 +140,11 @@ class HumanInterface:
         if not isinstance(e.window,CEGUI.ListboxTextItem):    
             self.choosing = item.getText()
             self.toRemove = item
-            if s.turnbased:
-                self.removeFrom = e.window
-                item.setText("Cancel")
-            else:
-                self.removeFrom = None
+#            if s.turnbased:
+            self.removeFrom = e.window
+            item.setText("Cancel")
+#            else:
+#                self.removeFrom = None
             
             self.actionSelected = item 
            
@@ -162,7 +153,8 @@ class HumanInterface:
             self.endTurn()            
             return        
         self.currentTrait = text
-        list = self.cunit.traits[text].getAbilities()
+        self.abilmap =self.cunit.traits[text].getAbilities()
+        list = self.abilmap.keys()
         print self.cunit
         if len(list) ==1:
             self.handleAbility(list[0])
@@ -192,19 +184,19 @@ class HumanInterface:
         else:    
             text = e.window.getFirstSelectedItem().getText()
             item = e.window.getFirstSelectedItem()
-        toexecute = self.cunit.traits[self.currentTrait].getAbility(text)
-        self.abilityused = text
-        try:
-            setStart(toexecute,self.cunit)
-            if toexecute.needsasecondclick:
-                self.iexecute = copy.copy(toexecute)
-            else:
-                self.actionSelected.setText(self.choosing)
-                self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
-                self.actionSelected = False
-                s.framelistener.addToQueue(self.cunit,copy.copy(toexecute))
-        except Exception, ex:
-            print repr(ex)
+        toexecute = self.abilmap[text]
+        
+        self.abilityused = self.abilmap[text]
+        
+        setStart(toexecute,self.cunit)
+        if toexecute.needsasecondclick:
+            self.iexecute = copy.copy(toexecute)
+        else:
+            self.actionSelected.setText(self.choosing)
+            self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
+            self.actionSelected = False
+            s.framelistener.addToQueue(self.cunit,copy.copy(toexecute))
+
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
             
         

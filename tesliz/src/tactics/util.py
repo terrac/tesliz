@@ -44,8 +44,10 @@ def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):
     ## something new: moment of inertia for the body.  this describes how much the body "resists"
     ## rotation on each axis.  realistic values here make for MUCH more realistic results.  luckily
     ## OgreNewt has some helper functions for calculating these values for many primitive shapes!
-    inertia = OgreNewt.CalcSphereSolid( 10.0, scale.y )
-    body.setMassMatrix( 10.0, inertia )
+    
+    #removed because its not really necessary for fft
+    #inertia = OgreNewt.CalcSphereSolid( 10.0, scale.y )
+    #body.setMassMatrix( 10.0, inertia )
 
     #node.setPosition(0.0, 0.0, 0.0)
     ## attach to the scene node.
@@ -93,10 +95,9 @@ def buildImmoblePhysics(unit):
 
 def setupExtra(unit, mental = None):
     player = unit.player
-    try:
+    if hasattr( player, "setVisualMarker"):
         player.setVisualMarker(unit)
-    except:
-        pass
+   
     if s.fog and player.name == "Computer1":
         unit.setVisible(False)
     

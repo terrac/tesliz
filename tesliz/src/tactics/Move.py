@@ -122,7 +122,7 @@ def markmove(pos):
     scene_node.attachObject(attachMe)
     #TODO: for later 
   #  attachMe.setMaterialName( "Examples/RustySteel" )
-    attachMe.setNormaliseNormals(True)
+    #attachMe.setNormaliseNormals(True)
 class FFTMove():
     type = "move"
     value = -1
@@ -143,7 +143,7 @@ class FFTMove():
         
         for x in self.toremove:
                     
-            s.app.sceneManager.rootSceneNode.removeChild(x)
+            s.app.sceneManager.getRootSceneNode().removeChild(x)
         self.toremove = None
         
 
@@ -151,8 +151,9 @@ class FFTMove():
         #s.playsound("walk.wav")
         if not self.unit1.body:
             return
-        
-        entity = self.unit1.node.getAttachedObject(0)
+        entity = None
+        iter = self.unit1.node.getAttachedObjectIterator()
+
         
         if not self.list:
             vec1 = self.unit1.body.getOgreNode().getPosition()
@@ -168,7 +169,7 @@ class FFTMove():
             for x in self.list:
                 x.y +=1# don't know why buh will probably need to standardize sizes or offset by size
                 #x.x -=10
-            if entity.hasSkeleton():
+            if entity:
                 self.animationState = entity.getAnimationState("LOOP")
                 self.animationState.setLoop(True)
                 self.animationState.setEnabled(True)
@@ -176,7 +177,7 @@ class FFTMove():
             
 
         
-        if entity.hasSkeleton():        
+        if entity:        
             self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
             return False

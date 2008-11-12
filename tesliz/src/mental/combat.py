@@ -5,7 +5,7 @@ s = Singleton()
 
 
 def isWantedHurt(eunit,unit):
-    return eunit.player ==unit.player and eunit.attributes.hitpoints < eunit.attributes.maxhitpoints
+    return eunit.player ==unit.player and eunit.attributes.physical.points < eunit.attributes.physical.maxpoints
 
 def isWanted(eunit,unit):
     return eunit.player !=unit.player 
@@ -15,7 +15,7 @@ def getClose(unit,isWanted):
     lodis = 999
     lounit = None
     for eunit in s.unitmap.values():            
-        if isWanted(eunit,unit):
+        if isWanted(eunit,unit) and not eunit.getDeath(): #will probably need to meove this once raise
             
             
             dis =distance(eunit.node.getPosition(),unit.node.getPosition())
@@ -28,7 +28,7 @@ def getClose(unit,isWanted):
 def getBest(unit,isValid):
     best = None
     for trait in unit.traits.values():
-       for ability in trait.getClassList():
+       for ability in trait.getAbilities().values():
            if isValid(ability):
                if not best:
                    best = ability                
@@ -98,9 +98,9 @@ class Combat(object):
                 break # wasnt in range, maybe look for other abilites later 
             s.framelistener.addToQueue(unit,copy.copy(abil))
          
-            try:
+            if hasattr(abil, "action"):
                 bool =abil.action
-            except AttributeError,e:                
+            else:               
                 s.log( str(abil)+" has no action attribute",self.unit)
                 break;
         

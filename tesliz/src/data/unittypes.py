@@ -1,7 +1,7 @@
 from data.traits.generictraits import *
 
 #import data.traits.Generictraits as GT
-from userinterface.Numberedtraits import *
+from userinterface.traits import *
 
 from tactics.Move import *
 #from data.traits.GenericTrait import Move
@@ -12,36 +12,35 @@ import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.actionlist import *
 from data.items import *
+import data.jobs
 import damage
 import mental.combat as combat
 s = Singleton()
 
-class Fstats():
-    classevade = 0
-    shieldevade = 0
-    accessoryevade = 50
-    power = 3
-    belief = 50
-    tohit = 100
+
+ 
+
+    
 def setupBasic(unit, level):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
     unit.attributes.moves = 5,5
     move = Traits([FFTMove(unit)])
+    move.action = False
     unit.traits["Move"] = move
     attack = Traits([Attack()])
     unit.traits["Attack"] = attack
     #unit.attributes.hitpoints = 500 * level
     #unit.attributes.damage = 50 * level
-    unit.attributes.magical = Fstats()
-    unit.attributes.physical = Fstats()
+    #unit.attributes.magical = Fstats()
+    #unit.attributes.physical = Fstats()
     #unit.attributes.faith = 50
     #unit.attributes.bravery = 50
     
 
 def setupStats(unit, level,speed = 5,hitpoints= 50,strength= 5,dexterity = 5,intelligence =5):
     unit.attributes.speed = speed
-    unit.attributes.maxhitpoints =hitpoints * level 
-    unit.attributes.hitpoints = hitpoints * level
+    unit.attributes.physical.maxpoints =hitpoints * level 
+    unit.attributes.physical.points = hitpoints * level
     
     unit.attributes.physical.power = strength * level
     #unit.attributes.dexterity = dexterity * level
@@ -186,24 +185,22 @@ class Unittypes(object):
                 
     def Squire(self,unit,level):
         setupBasic(unit, level)
-        throw = Throw("cylinder.mesh")
-        trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
-        throw.do = lambda self,unit2: damageHitpoints(damage.basicPhysical,self.unit1,unit2)
-        trait1.range = 50
-        
-        unit.traits["Squire"] =Traits([trait1])
-        setupStats(unit, level, 4, 35, 5,5,5)          
+        unit.job = data.jobs.Squire()
+        data.util.resetAttributes(unit)
+        unit.items.add(LeatherArmor())
+        unit.items.add(ClothCap())
+        unit.items.add(Broadsword())
+        data.util.resetAttributes(unit)
+            
     
-    def healing(self,abil):
-        return abil.type == "healing"
     
     def Chemist(self,unit,level):
         setupBasic(unit, level)
+        unit.job = data.jobs.Chemist()
+        data.util.resetAttributes(unit)
+        unit.items.add(LeatherArmor())
+        unit.items.add(ClothCap())
+        unit.items.add(Broadsword())
+        data.util.resetAttributes(unit)
         
-        setupStats(unit, level, 5, 30, 5,5,5)
-        trait1 = GridTargeting(GridTargeting.offset1,[RemoveItem("Potion"),Throw(Potion())],"Potion","healing",)
-        trait1.range = 50
-        unit.player.items.addItem("Potion")
-        unit.traits["Chemist"] =Traits([trait1])
-        unit.mental = Mind([Combat(unit,self.healing,combat.isWantedHurt),Combat(unit,action.Attack,combat.isWanted)])
-    
+           

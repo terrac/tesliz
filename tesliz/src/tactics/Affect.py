@@ -1,8 +1,22 @@
 from tactics.Singleton import *
 
 s = Singleton()
-
 class Affects:
+    def __init__(self,obj,type):
+        if isinstance(obj,list):
+            self.alist = obj
+        else:
+            self.alist = [obj]
+    def setup(self,unit):
+        for x in self.alist:
+            
+            x.setup(unit)
+    def teardown(self,unit):
+            
+        for x in self.alist:
+            x.teardown(unit)
+            
+class AffectsLight:
     def __init__(self,obj,type):
         if isinstance(obj,list):
             self.alist = obj
@@ -50,22 +64,30 @@ class AffectHolder():
         del self.itemmap[type]
     def has(self,type):
         return self.itemmap.has_key(type)
-        
+    def setupAll(self):
+        for item in self.itemmap.values():
+            item.setup(self.unit)
+    def get(self,type):
+        if self.itemmap.has_key(type):
+            return self.itemmap[type]
 class StatAffect:
-    def __init__(self,statsup , color = None):
+    def __init__(self,statsup,amount , color = None):
         self.color = color
         if not self.color:
             self.color = 255,0,0 
         self.statsup = statsup
+        self.amount = amount
         
     def setup(self,unit):
         
-        for x in self.statsup.keys():
-            y = getattr(unit.attributes,x)
-            z =self.statsup[x]
-            y += z
-            
-            setattr(unit.attributes,x,y)
+        obj = unit.attributes
+        for x in self.statsup:
+            val = getattr(obj,x)
+            if isinstance(val, int):        
+                y =val + self.amount                            
+                setattr(obj,x,y)
+            else:
+                obj = val
             
 
         

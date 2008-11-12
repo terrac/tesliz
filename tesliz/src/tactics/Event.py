@@ -11,8 +11,10 @@ class AddChat:
     def __init__(self,text,unit = None):
         if isinstance(text, list):
             self.tlist = text
-        else:
+        elif isinstance(text, str):
             self.tlist = [(unit,text)]
+        else:#tuple
+            self.tlist = [text]
         
     def execute(self,timer):
         if not self.tlist:
@@ -27,7 +29,7 @@ class Event:
         self.turnmap = turnmap
         for x in turnmap.values():
             for y in x.keys():
-                if isinstance(x[y],str) or isinstance(x[y], list):
+                if not hasattr(y, "execute"):
                     x[y] = AddChat(x[y])
                 
         self.turncount = dict()
@@ -57,10 +59,11 @@ class Event:
             if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
                 exe = self.turnmap[unit]["end"]
     
-                exe.execute(unit)
+                s.framelistener.addToQueue(unit,exe)
                 
     def death(self,unit):
         dkey = "death-"+unit.getName()
         if self.turnmap.has_key(unit) and self.turnmap[unit].has_key(dkey):
             exe = self.turnmap[unit][dkey]
-            exe.execute(unit)
+            unit, blah = exe.tlist[0]
+            s.framelistener.addToQueue(unit,exe)

@@ -46,10 +46,10 @@ def show(pos):
     name = s.app.getUniqueName()
     mesh = "cylinder.mesh"
     if not sceneManager.hasSceneNode(name):
-        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
         attachMe = s.app.sceneManager.createEntity(name,mesh)            
         scene_node.attachObject(attachMe)
-        attachMe.setNormaliseNormals(True)
+        #attachMe.setNormaliseNormals(True)
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = Ogre.Vector3(pos.x,pos.y,pos.z)
@@ -78,27 +78,21 @@ def update(text,unit):
     unit.text = ogretext
 def damageHitpoints(getDamage,unit1,unit2):
     number,type = getDamage(unit1)
-    #unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
-    
-    #s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
-    #s.app.bodies.index(unit1.body)
-    #if unit1.attributes.hitpoints < 1:
-    #    s.event.death(unit1)
-    #    s.removeUnit(unit1)
+
         
     #return
     #determine resistance
 #    if unit1.attributes.resistance.has_key(type):
 #        number = (1-unit1.attributes.resistance[type]) * number
-    degree1 =Ogre.Degree(0, 0)
+    deg1 =Ogre.Degree(0, 0)
     vec1 = Ogre.Vector3(0,0,0)
-    degree2 =Ogre.Degree(0, 0)
+    deg2 =Ogre.Degree(0, 0)
     vec2 = Ogre.Vector3(0,0,0)
     #unit1.node.getOrientation().ToAngleAxis(degree,vec)
     quat1 =unit1.node.getOrientation()
-    quat1.ToAngleAxis(degree1,vec1)
+    quat1.ToAngleAxis(deg1,vec1)
     quat2 =unit2.node.getOrientation()
-    quat2.ToAngleAxis(degree2,vec2)
+    quat2.ToAngleAxis(deg2,vec2)
     #quat.getYaw().valueDegrees()
     #quat.FromAxes(vec)
     #Ogre.Quaternion(Ogre.Degree(180), Ogre.Vector3.UNIT_X).ToAngleAxis(degree,vec)
@@ -166,12 +160,13 @@ def damageHitpoints(getDamage,unit1,unit2):
     
     #    if they are s
     
-    unit1.attributes.hitpoints = unit1.attributes.hitpoints - number 
+    unit2.attributes.physical.points = unit2.attributes.physical.points - number 
     update(str(number), unit2)
+    experienceAccrued(unit1, unit2)
     s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
     #s.app.bodies.index(unit1.body)
-    if unit1.attributes.hitpoints < 1:
-        s.removeUnit(unit1)
+    if unit2.attributes.physical.points < 1:
+        unit2.setDeath(True)
     return True
 
 
@@ -214,6 +209,19 @@ def getChanceToHitAndDamage(number,type,unit1,unit2):
     return returned,number 
 #def getDamage(number,type):
 #for say a spell you would give a high jump
+
+def experienceAccrued(unit1,unit2):
+    exp = unit2.attributes.level - unit1.attributes.level + 10
+    jp = 10 +unit1.job.level * 3
+    
+    unit1.attributes.exp += exp
+    if unit1.attributes.exp > 100:
+        unit1.attributes.exp = 0
+    unit1.job.exp  += jp
+    if not unit1.expaccrued:
+        unit1.expaccrued = True
+        update(str(exp)+" exp "+str(jp)+" jp",unit1)
+        
 def withinRange(vec1,vec2,range):
     if hasattr(range,'__iter__'):
         moves,jump = range
@@ -246,9 +254,12 @@ def withinRange(vec1,vec2,range):
         return True
     return False
 
-def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
+def markValid(vec1,range,mark,names = None, prevfound=None):
     if not names:
         names = set()
+    if not prevfound:
+        prevfound = VectorMap()
+    
     moves,jump = range
     xlist = [0,0,1,-1]
     zlist = [-1,1,0,0]
@@ -267,36 +278,7 @@ def markValid(vec1,range,mark,names = None, prevfound=VectorMap()):
         markValid(x, range,mark,names,prevfound)
     return names
 
-#def getDistance(vec1,vec2,height=55, distance = 0):
-#    list =getValid(vec1, height)
-#    
-#    if utilities.physics.distance(vec1,vec2) < 2:
-#        return distance
-#    for x in list:
-#        y =getDistance(x,vec2,distance)
-#        
-#
-#            
 
-#def getValid(vec,height):
-#    xlist = [0,0,1,-1]
-#    zlist = [-1,1,0,0]
-#    validpos = []
-#    for a in range(0,3):
-#        x = xlist[a]
-#        z = zlist[a]
-#        start = Ogre.Vector3(vec.x+x,vec.y+height,vec.z+z)
-#        end = Ogre.Vector3(vec.x+x,vec.y-height,vec.z+z)
-#        ray = OgreNewt.BasicRaycast( s.app.World, start,end )
-#        info = ray.getFirstHit()# will need to do multiple hits eventually 
-#        
-#        if (info.mBody):
-#            dira = (end - start)
-#            dira.normalise()        
-#            position = start + ( dira* ( (end - start).length() * info.mDistance ));
-#            validpos.append(position)
-#    return validpos
-    
 def getShortest(vec1,vec2,range, prevfound=VectorMap()):
     if hasattr(range,'__iter__'):
         moves,jump = range
@@ -373,3 +355,10 @@ def getValid(vec,height,xlist, zlist):
         
     
     return validpos
+def resetAttributes(unit):        
+    unit.job.changeTo(unit)
+    unit.items.setupAll()
+    unit.affect.setupAll()
+    unit.attributes.physical.points = unit.attributes.physical.maxpoints
+    unit.attributes.magical.points = unit.attributes.magical.maxpoints 
+    

@@ -9,7 +9,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 s = Singleton()
 
-class ItemHolder():
+class PlayerItemHolder():
     def __init__(self):
         self.map = dict()
     def addItem(self,itemname):
@@ -21,13 +21,17 @@ class ItemHolder():
         if self.map.has_key(itemname):
             self.map[itemname] -= 1
             return True
-           
+    def itemNum(self,itemname):
+        if self.map.has_key(itemname):
+            return self.map[itemname]
+        return 0
+    
 class HumanPlayer(object):
 
     def __init__(self,name):
         self.name = name
         self.interface = HumanInterface(self)
-        self.items =ItemHolder()
+        self.items =PlayerItemHolder()
         
     def endTurn(self):
         s.turn.pause = False
@@ -93,7 +97,7 @@ class ComputerPlayer(object):
         self.name = name    
         self.unitlist = []
         self.itemlist = []
-        self.items =ItemHolder()
+        self.items =PlayerItemHolder()
 
     s = Singleton()
     def startTurn(self,unit):

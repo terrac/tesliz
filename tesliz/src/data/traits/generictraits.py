@@ -7,6 +7,7 @@ import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 from utilities.physics import *
 from data.util import *
+import data.damage 
 s = Singleton()
 
 def show(unit):
@@ -54,12 +55,13 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
         
         if s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
-            #s.unitmap[object.getOgreNode().getName()].damageHitpoints(attack.damage,attack.type,attack.unit1)
-            #s.screenshot()
+             #s.screenshot()
             attack.onContact(object.getOgreNode().getName())
             
             unit1body.setVelocity(Ogre.Vector3(0,0,0))
             object.setVelocity(Ogre.Vector3(0,0,0))
+            unit1body.freeze()
+            object.freeze()
             
         ## okay, found the unit1body... let's adjust the collision based on this.
         #thedir = unit1body.getGlobalDir()
@@ -260,7 +262,7 @@ class Attack(object):
     needsasecondclick = True
     needsasecondunit = True
     def getDamage(self,unit):
-        return unit.attributes.physical.power,"physical"
+        return data.damage.weaponPhysical(unit)
     
 
     def execute(self,timer):
@@ -276,18 +278,13 @@ class Attack(object):
         
         direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
         
-        entity = self.unit1.node.getAttachedObject(0)
-        if entity.hasSkeleton():
-            animationState = entity.getAnimationState(self.animation)
-            animationState.setLoop(False)
-            animationState.setEnabled(True)
-            s.app.animations.append(animationState)
+        self.unit1.animate(self.animation)
            
         s.playsound(self.sound)    
         #self.unit2.body.setVelocity(direction )        
         unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
-    
-        damageHitpoints(self.getDamage, unittobehit, self.unit1)
+    #lambda self,unit2: damageHitpoints(damage.basicPhysical,self.unit1,unit2)
+        damageHitpoints(self.getDamage, self.unit1, unittobehit)
 
         return False
 class DoubleAttack(Attack):
@@ -396,7 +393,7 @@ class GridTargeting(object):
             else:
                 unit = None
             for to in self.todo:
-                if not to.execute(self.unit1,unit,Ogre.Vector3(x,y,z)):
-                    break
+                to.execute(self.unit1,unit,Ogre.Vector3(x,y,z))
+                
     def __str__( self ):
         return "GridTargeting"+self.name

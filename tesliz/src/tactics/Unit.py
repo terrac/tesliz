@@ -1,50 +1,57 @@
 from tactics.Singleton import *
 from tactics.Affect import *
 s = Singleton()
+import ogre.physics.OgreNewt as OgreNewt
+import utilities.OgreText 
 
-
+class ManageDeath():
+    def __init__(self):
+        self.count = 3
+    def execute(self,unit):
+        text = str(self.count)
+        print text
+        print "aoeu"
+        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+        ogretext.enable(True)
+        unit.text =ogretext
+        if self.count == 0:
+            s.removeUnit(unit)
+        self.count -= 1
         
-
+          
 class Attributes(object):
     def __init__(self):
-        self.maxhitpoints = 5
-        self.hitpoints = 5
+ 
         self.speed = 5
         self.curMovement = 0
         self.moves = 25
-        self.sight = 100,100
-        self.strength = 5
-        self.intelligence = 5
-        self.dexterity = 5
-        self.resistance = dict()
+        self.level = 1
+        self.exp = 0
+      #  self.sight = 100,100
+      #  self.strength = 5
+      #  self.intelligence = 5
+      #  self.dexterity = 5
+      #  self.resistance = dict()
 
-    def getHitpoints(self):
-        return self.__hitpoints
-
-
-    def setHitpoints(self, value):
-        if value > self.maxhitpoints:
-            value = self.maxhitpoints
-        self.__hitpoints = value
-
-
-    def delHitpoints(self):
-        del self.__hitpoints
 
 
 
 
     def increment(self):
-        if self.curMovement < self.speed:
-            self.curMovement += 1
+        if self.curMovement < 100:
+            self.curMovement += self.speed
             return False
         else:
             self.curMovement = 0        
         return True     
     def __str__( self ):
-        return str(self.hitpoints)+"/"+str(self.maxhitpoints)
+        return ("hp: "+str(self.physical.points)+"/"+str(self.physical.maxpoints)+
+                "\nmp: "+str(self.magical.points)+"/"+str(self.magical.maxpoints)+
+                "\nct: "+str(self.curMovement)+"/100"+
+                "\nlevel:"+str(self.level)+ 
+                "\nexp: "+str(self.exp)+""
+                )
 
-    hitpoints = property(getHitpoints, setHitpoints, delHitpoints, "Hitpoints's Docstring")
     
 class Unit(object):
    
@@ -69,12 +76,18 @@ class Unit(object):
         self.mental = None
         self.knowledgelist = ["general"]
         self.turncount = 0
+        self.death = False
     
     def animate(self,text):
-        entity = self.node.getAttachedObject(0)
-        print "animated"
-        print self
-        if entity.hasSkeleton():
+        entity = None
+        iter = self.node.getAttachedObjectIterator()
+        while iter.hasMoreElements():
+            x = iter.getNext()
+            if hasattr(x, "hasSkeleton") and x.hasSkeleton():
+                entity = x
+                break;
+
+        if entity:
             animationState = entity.getAnimationState(text)
             animationState.setLoop(False)
             animationState.setEnabled(True)
@@ -94,34 +107,28 @@ class Unit(object):
     
      
     def startTurn(self):
+        if self.getDeath():
+            self.getDeath().execute(self)
+            return
         s.framelistener.showAttributesCurrent(self.getName())
         self.turncount += 1
         s.event.turnStarted(self)
         self.player.startTurn(self)
+        self.expaccrued = False
         
-    def damageHitpoints(self,number,type = None,eunit=None):
-        if self.attributes.resistance.has_key(type):
-            number = (1-self.attributes.resistance[type]) * number
-        self.attributes.hitpoints = self.attributes.hitpoints - number
-        s.log(str(eunit)+" damages "+str(self)+" for "+ str(number)+"with type:"+type+" :")
-        #s.app.bodies.index(self.body)
-        if self.attributes.hitpoints < 0:
-            s.removeUnit(self)
-            print self
-        if self.attributes.hitpoints > self.attributes.maxhitpoints:
-            self.attributes.hitpoints = self.attributes.maxhitpoints
-            s.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
-                                      
-    def getWantedRange(self):
-        hv = 0
-        ha = None
-        for trait in self.traits.values():
-            for action in trait.getClassList():
-                if action.value > hv:
-                    hv = action.value
-                    ha = action
-        try:
-            return action.range -2
-        except:
-            return 2
+    def setDeath(self,bool):
+        
+        if bool and not self.death:
+            self.death = ManageDeath()
+            s.event.death(self)
+            self.death.execute(self)
+            inertia = OgreNewt.CalcSphereSolid( 0, 1 )
+            self.body.setMassMatrix( 0.0, inertia )
+        else:
+            self.death = False
+        
+        
+            
+    def getDeath(self):
+        return self.death
                     

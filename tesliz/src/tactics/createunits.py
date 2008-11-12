@@ -58,10 +58,9 @@ class CreateRandom():
                     setupExtra(unit)
                     unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-                    try:
+                    if hasattr( s.playermap[player], "setVisualMarker"):
                         s.playermap[player].setVisualMarker(unit)
-                    except NameError, e:
-                        pass
+                    
                     print scene_node.position
                     print unittype
                     print player
@@ -127,10 +126,9 @@ class CreateList():
                 setupExtra(unit)
                 unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-                try:
+                if hasattr( s.playermap[player], "setVisualMarker"):
                     s.playermap[player].setVisualMarker(unit)
-                except AttributeError, e:
-                    pass
+               
                 print scene_node.position
                 print unittype
                 print player

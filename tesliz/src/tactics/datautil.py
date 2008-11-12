@@ -1,46 +1,40 @@
 import data.util 
-def setStart(obj,unit1,unit2=None,position=None):  
+def setStart(ability,unit1,unit2=None,position=None):  
     
 
         
 
     
     if unit1:
-        obj.unit1 = unit1
+        ability.unit1 = unit1
         
-        try:
-            obj.choiceStart()
-        except AttributeError, e:
-            print e        
+        if hasattr(ability, "choiceStart"):
+            ability.choiceStart()
+              
     if unit2:
-        obj.unit2 = unit2
+        ability.unit2 = unit2
             
     if unit2:
-        obj.endPos = unit2.node.getPosition()
+        ability.endPos = unit2.node.getPosition()
         
     if position:            
-        obj.endPos = position
-    try:
-        if obj.endPos:        
-            obj.choiceEnd()
-    except AttributeError, e:
-        print e            
+        ability.endPos = position
+    if hasattr(ability, "endPos"):
+        if ability.endPos and hasattr(ability, "choiceEnd"):        
+            ability.choiceEnd()
+    
         
-    try :
-        return obj.ready()
-    except:
-        pass
-    try :
-        if data.util.withinRange(self.endPos, self.unit1.body.getOgreNode().getPosition(),self.range):
-            return False
+    if hasattr(ability, "ready"):
+        return ability.ready()
+    
+    
+    if hasattr(ability, "unit1") and hasattr(ability, "endPos") and not data.util.withinRange(ability.endPos, ability.unit1.body.getOgreNode().getPosition(),ability.range):
+        return False
 
-    except:
-        pass
-    try:
-        if obj.needsasecondunit:
-            if not( hasattr(obj, "unit2") and  obj.unit2):
+    if hasattr(ability, "needsasecondunit"):
+        if ability.needsasecondunit:
+            if not( hasattr(ability, "unit2") and  ability.unit2):
                 return False
-    except AttributeError, e:
-        pass
+ 
         
     return True
