@@ -29,8 +29,12 @@ class CEGUIFrameListener(sf.FrameListener, OIS.MouseListener, OIS.KeyListener):
         self.Mouse.capture()
         return self.cont and not self.Keyboard.isKeyDown(OIS.KC_ESCAPE)
  
+    def requestShutdown( self ):
+        self.cont = False
+
     def quit(self, evt):
         self.cont = False
+#        sf.FrameListener.windowClosed()
         return True
  
     # MouseListener

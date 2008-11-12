@@ -9,6 +9,8 @@ from utilities.CEGUIFrameListener import *
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
+import tesliz.runthisStripped
+
 
 class MainMenuGUI (sf.Application):
     
@@ -100,6 +102,9 @@ class MainMenuGUI (sf.Application):
         return True
 
     def handleStart(self, e):
+        del self.renderWindow
+        application = tesliz.runthisStripped.OgreNewtonApplication()
+        application.go()
         return
 
     

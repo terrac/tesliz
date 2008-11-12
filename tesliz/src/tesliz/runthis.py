@@ -55,24 +55,61 @@ class OgreNewtonApplication (sf.Application):
     
     def _createScene ( self ):
         
+        # Create all the CEGUI stuff
+        self.initCEGUIStuff()
         
-        # Play Windows exit sound.
-        #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
-        
-        # Probably play Windows default sound, if any is registered (because
-        # "*" probably isn't the registered name of any sound).
-    
+        # Create the Main Window
+        self.startMenu()
         
 
-        s.app = self
-        s.app.camera.initialOrientation = None
-        Settings()
         
-#        if s.turnbased:
-#            Turn()
-#        else:
-#            RealTimeTurn()
-        
+
+
+    def startMenu(self):
+        sheet = CEGUI.System.getSingleton().getGUISheet()
+        winMgr = CEGUI.WindowManager.getSingleton()
+        mainMenuBackground = winMgr.createWindow("TaharezLook/FrameWindow", "Tesliz/MainMenuBackground")
+        sheet.addChildWindow(mainMenuBackground)
+        mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.5, 0), CEGUI.UDim(0.5, 0)))
+        mainMenuBackground.setXPosition(CEGUI.UDim(0.25, 0))
+        mainMenuBackground.setYPosition(CEGUI.UDim(0.25, 0))
+#        mainMenuBackground.setCloseButtonEnabled(false)
+        mainMenuBackground.setText("Tesliz Menu Frame")
+
+
+        startButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/StartButton")
+        mainMenuBackground.addChildWindow(startButton)
+        startButton.setText("Start Game")
+        startButton.setXPosition(CEGUI.UDim(0.375, 0))
+        startButton.setYPosition(CEGUI.UDim(0.3, 0))
+        startButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
+        startButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleStartGameFromMenu")
+        startButton.setAlwaysOnTop(True)
+
+#        jobButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/JobButton")
+#        mainMenuBackground.addChildWindow(jobButton)
+#        jobButton.setText("Jobs")
+#        jobButton.setXPosition(CEGUI.UDim(0.375, 0))
+#        jobButton.setYPosition(CEGUI.UDim(0.5, 0))
+#        jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
+#        jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleJobs")
+#        jobButton.setAlwaysOnTop(True)
+
+        quitButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/QuitButton")
+        mainMenuBackground.addChildWindow(quitButton)
+        quitButton.setText("Quit")
+        quitButton.setXPosition(CEGUI.UDim(0.375, 0))
+        quitButton.setYPosition(CEGUI.UDim(0.7, 0))
+#        quitButton.setPosition(CEGUI.UVector2(cegui_reldim(0.035), cegui_reldim( 0.0)))
+        quitButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
+        quitButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuitGameFromMenu")
+        quitButton.setAlwaysOnTop(True)
+
+    def deleteStartMenu(self):
+        winMgr = CEGUI.WindowManager.getSingleton()
+        winMgr.destroyWindow("Tesliz/MainMenuBackground")
+
+    def initCEGUIStuff(self):
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
                 Ogre.RENDER_QUEUE_OVERLAY, False, 3000, self.sceneManager )
         self.GUIsystem = CEGUI.System( self.GUIRenderer )
@@ -83,17 +120,35 @@ class OgreNewtonApplication (sf.Application):
 #         self.GUIsystem.setDefaultFont("Commonwealth-10")
         CEGUI.SchemeManager.getSingleton().loadScheme("TaharezLookSkin.scheme") 
         self.GUIsystem.setDefaultMouseCursor("TaharezLook",  "MouseArrow") 
-        self.GUIsystem.setDefaultFont( "BlueHighway-12") 
+        self.GUIsystem.setDefaultFont( "BlueHighway-12")
         
         sheet = CEGUI.WindowManager.getSingleton().createWindow( "DefaultWindow", "root_wnd" )
         CEGUI.System.getSingleton().setGUISheet( sheet )
+
+
+    def loadScene(self):
+        # Play Windows exit sound.
+        #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
+        
+        # Probably play Windows default sound, if any is registered (because
+        # "*" probably isn't the registered name of any sound).
+
+#        if s.turnbased:
+#            Turn()
+#        else:
+#            RealTimeTurn()
+
+        s.app = self
+        s.app.camera.initialOrientation = None
+        Settings()
+        
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = AIsettings()
         
         self.parseSceneFile()
         
-        
+        sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton() 
         btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
         sheet.addChildWindow(btn)
@@ -124,13 +179,13 @@ class OgreNewtonApplication (sf.Application):
         ## the "primitives" directory to make this simple... all of them have a basic size of "1" so that they
         ## can easily be scaled to fit any size primitive.
         
-    
-        
 #        for unit in s.unitmap.values():
 #            self.camera.lookAt(unit.node.getPosition())
-        
-        
-
+        self.root.removeFrameListener(self.frameListener)
+        del self.frameListener
+        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
+        self.root.addFrameListener(self.frameListener)
+        Singleton().framelistener = self.frameListener
 
     def _createFrameListener(self):
         
@@ -139,12 +194,15 @@ class OgreNewtonApplication (sf.Application):
         ## works for simple demos like this.  feel free to look at the source to see how it works.
         self.NewtonListener = BasicFrameListener( self.renderWindow, self.sceneManager, self.World, 60 )
         self.root.addFrameListener(self.NewtonListener)
-        
+
+        self.frameListener = CEGUIFrameListener(self.renderWindow, self.camera)
+        self.root.addFrameListener(self.frameListener)
+        self.frameListener.showDebugOverlay(False)
         ## this is our custom frame listener for this app, that lets us shoot cylinders with the space bar, move
         ## the camera, etc.
-        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
-        self.root.addFrameListener(self.frameListener)
-        Singleton().framelistener = self.frameListener
+#        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
+#        self.root.addFrameListener(self.frameListener)
+#        Singleton().framelistener = self.frameListener
         #self.frameListener.showDebugOverlay(False)
         
     def _configure(self):
@@ -159,8 +217,17 @@ class OgreNewtonApplication (sf.Application):
         
                 
         return cur
+    
+    def handleStartGameFromMenu(self, e):
+        # Remove the menu
+        self.deleteStartMenu()
+        self.loadScene()
+        
+    def handleQuitGameFromMenu(self, e):
+        self.handleQuit(e)
+        
     def handleQuit(self, e):
-        self.frameListener.requestShutdown() 
+        self.frameListener.requestShutdown()
         return True
     def getUniqueName(self):
         self.count+= 1

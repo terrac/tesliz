@@ -15,6 +15,7 @@ import utilities.SampleFramework
 
 from utilities.CEGUI_framework import *
 from utilities.CEGUIFrameListener import *
+from tactics.Singleton import *
 
 def createUVector2( x, y):
     return CEGUI.UVector2(CEGUI.UDim(x,0), CEGUI.UDim(y,0))
@@ -29,10 +30,7 @@ def getJobsDict():
 
     return SCHEME_JOBS
 
-
-global MIN_POINT_SIZE
-MIN_POINT_SIZE=6.0
-
+s = Singleton()
 
 class GEUIApplication(SampleFramework.Application):
 
@@ -85,6 +83,17 @@ class GEUIApplication(SampleFramework.Application):
 
         # load some demo windows and attach to the background 'root'
         background.addChildWindow (winMgr.loadWindowLayout ("Jobs.layout", False))
+
+        # Add party list to the partybox
+        lbox = winMgr.getWindow ("FontDemo/PartyList")
+        partyDict = s.unitmap
+        for l in partyDict.keys():
+            item = CEGUI.ListboxTextItem(l)
+            item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
+            # ensure Python is in control of it's "deletion"
+            item.AutoDeleted = False
+            lbox.addItem( item)
+            self.ListItems.append(item)
 
         # Add language list to the listbox
         lbox = winMgr.getWindow ("FontDemo/JobsList")
