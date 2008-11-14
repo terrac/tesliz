@@ -209,6 +209,10 @@ def parse_camera(sceneManager, xml_node):
         scene_node = parse_scene_node(sceneManager, xml_node)
         if not sceneManager.hasCamera(name):
             camera = sceneManager.createCamera(name)
+            s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
+            s.app.msnCam.attachObject( s.app.camera )
+            s.app.camera.setPosition(0.0, 0.0, 0.0)
+            s.app.msnCam.setPosition( scene_node.getPosition())
         else:
             camera = sceneManager.getCamera(name)
         camera.position = Ogre.Vector3.ZERO
@@ -222,10 +226,7 @@ def parse_camera(sceneManager, xml_node):
         camera.FOVy = Ogre.Degree(fov)
         
         #scene_node.attachObject(camera)
-        s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
-        s.app.msnCam.attachObject( s.app.camera )
-        s.app.camera.setPosition(0.0, 0.0, 0.0)
-        s.app.msnCam.setPosition( scene_node.getPosition())
+
         camera_list.append(camera)
     return camera_list
 

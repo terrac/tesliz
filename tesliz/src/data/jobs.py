@@ -3,7 +3,7 @@ from data.actionlist import *
 from data.items import *
 from userinterface.traits import *
 import mental.combat as combat
-
+import copy
 class Fstats():
  
     def __init__(self):
@@ -42,7 +42,20 @@ def set(unit,hp,power,mp,mpower,ce,speed,move):
    
 class Job:
     level = 1
-    exp = 100           
+    exp = 100
+    
+    def incrementLevel(self,cjobs):
+        
+        for job in getJobList():
+            for x in cjobs:
+                if isinstance(job, cjobs.getclass):
+                    continue
+            if requiredJobs(cjobs):
+                cjobs.append(copy.deepcopy(job))
+                
+                
+    def requiredJobs(self,cjobs):
+        return True
 class Squire(Job):
     
     def changeTo(self,unit):
@@ -54,7 +67,9 @@ class Squire(Job):
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])
+    
 class Chemist(Job):
+    acquired = True
     def healing(self,abil):
         return abil.type == "healing"
 
@@ -73,3 +88,10 @@ class Wizard(Job):
         fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireburst")
         range = NumberedTraits([fireball],[5])
         unit.traits["BlackMagic"] = range
+        
+    def requiredJobs(self,cjobs):
+        for job in cjobs:
+            if isinstance(job, Chemist) and job.level > 1:
+                return True
+def getJobList():
+    return [Squire(),Chemist(),Wizard()]

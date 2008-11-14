@@ -21,6 +21,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
+from tactics.PlayerMap import *
  
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
@@ -36,10 +37,11 @@ class OgreNewtonApplication (sf.Application):
         self.animations = []
         self.materialmap=dict()
         sf.Application.debugText = "aeou"
+        s.app = self
 
-    def parseSceneFile(self):
+    def parseSceneFile(self,map):
         dotscene = Dotscene()
-        self.sceneManager = dotscene.setup_scene(self.sceneManager, self.currentmap, self)
+        self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
 
 
     def __del__ (self):
@@ -54,14 +56,20 @@ class OgreNewtonApplication (sf.Application):
 
     
     def _createScene ( self ):
-        
+          
         # Create all the CEGUI stuff
         self.initCEGUIStuff()
         
         # Create the Main Window
         self.startMenu()
         
-
+        #self.loadScene()
+        Settings()
+        
+        ## sky box.
+        self.parseSceneFile('begin')
+        self.playermap = PlayerMap("Terra.player")
+        self.createFrame()
         
 
 
@@ -71,8 +79,8 @@ class OgreNewtonApplication (sf.Application):
         mainMenuBackground = winMgr.createWindow("TaharezLook/FrameWindow", "Tesliz/MainMenuBackground")
         sheet.addChildWindow(mainMenuBackground)
         mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.5, 0), CEGUI.UDim(0.5, 0)))
-        mainMenuBackground.setXPosition(CEGUI.UDim(0.25, 0))
-        mainMenuBackground.setYPosition(CEGUI.UDim(0.25, 0))
+        mainMenuBackground.setXPosition(CEGUI.UDim(0, 0))
+        mainMenuBackground.setYPosition(CEGUI.UDim(0, 0))
 #        mainMenuBackground.setCloseButtonEnabled(false)
         mainMenuBackground.setText("Tesliz Menu Frame")
 
@@ -104,6 +112,8 @@ class OgreNewtonApplication (sf.Application):
         quitButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
         quitButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuitGameFromMenu")
         quitButton.setAlwaysOnTop(True)
+        
+
 
     def deleteStartMenu(self):
         winMgr = CEGUI.WindowManager.getSingleton()
@@ -127,6 +137,7 @@ class OgreNewtonApplication (sf.Application):
 
 
     def loadScene(self):
+        s.app.sceneManager.destroyAllMovableObjects()
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -138,7 +149,8 @@ class OgreNewtonApplication (sf.Application):
 #        else:
 #            RealTimeTurn()
 
-        s.app = self
+       
+        
         s.app.camera.initialOrientation = None
         Settings()
         
@@ -146,7 +158,7 @@ class OgreNewtonApplication (sf.Application):
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = AIsettings()
         
-        self.parseSceneFile()
+        self.parseSceneFile("scene01")
         
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton() 
@@ -181,13 +193,14 @@ class OgreNewtonApplication (sf.Application):
         
 #        for unit in s.unitmap.values():
 #            self.camera.lookAt(unit.node.getPosition())
-        self.root.removeFrameListener(self.frameListener)
-        del self.frameListener
-        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
-        self.root.addFrameListener(self.frameListener)
-        Singleton().framelistener = self.frameListener
+        #self.root.removeFrameListener(self.frameListener)
+        #del self.frameListener
+        #self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
+        #self.root.addFrameListener(self.frameListener)
+        
+        #self.createFrame()
 
-    def _createFrameListener(self):
+    def createFrame(self):
         
         ## this is a basic frame listener included with OgreNewt that does nothing but update the
         ## physics at a set framerate for you.  complex project will want more control, but this
@@ -200,11 +213,13 @@ class OgreNewtonApplication (sf.Application):
         self.frameListener.showDebugOverlay(False)
         ## this is our custom frame listener for this app, that lets us shoot cylinders with the space bar, move
         ## the camera, etc.
-#        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
-#        self.root.addFrameListener(self.frameListener)
-#        Singleton().framelistener = self.frameListener
+        self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
+        self.root.addFrameListener(self.frameListener)
+
         #self.frameListener.showDebugOverlay(False)
+        s.framelistener = self.frameListener
         
+       # self.handleStartGameFromMenu(None)
     def _configure(self):
         
         cur = self.root.restoreConfig();
@@ -227,7 +242,8 @@ class OgreNewtonApplication (sf.Application):
         self.handleQuit(e)
         
     def handleQuit(self, e):
-        self.frameListener.requestShutdown()
+        #self.frameListener.cont = False
+        #self.frameListener.requestShutdown()
         return True
     def getUniqueName(self):
         self.count+= 1
@@ -340,6 +356,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 break    
     #turn = Turn()
     def frameStarted(self, frameEvent):
+    
         ## in this frame listener we control the camera movement, and allow the user to "shoot" cylinders
         ## by pressing the space bar.  first the camera movement...
         #turn.runturns()
@@ -436,7 +453,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
             self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
             CEGUI.MouseCursor.getSingleton().setPosition(mouse)
-            sf.Application.debugText = str(self.msnCam.getPosition())
+            sf.Application.debugText = str(self.msnCam.getPosition()) +"\n"+ str(self.msnCam.getOrientation())
+            #print sf.Application.debugText
         ##and Keyboard
         moveamount = frameEvent.timeSinceLastFrame * 20
         if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
@@ -606,7 +624,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
     def keyPressed(self, evt):
        CEGUIFrameListener.keyPressed(self,evt)
-       
+       #print evt.key
        if OIS.KC_RETURN ==evt.key:               
            if s.app.camera.initialOrientation:
                s.app.camera.setOrientation(s.app.camera.initialOrientation)
@@ -622,11 +640,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
 
 if __name__ == '__main__':
-    try:
-        application = OgreNewtonApplication()
-        application.go()
-    except Ogre.OgreException, e:
-        print e
+#    try:
+    application = OgreNewtonApplication()
+    application.go()
+#    except Ogre.OgreException, e:
+#        print e
+#        dir(e)
 #    except:
 #        import sys
 #        sys.exc_info()

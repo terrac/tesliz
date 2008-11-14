@@ -30,7 +30,7 @@ class AffectsLight:
             light = s.app.sceneManager.createLight( s.app.getUniqueName() )
             self.lights.append(light)
             light.setType( Ogre.Light.LT_POINT )
-            dir(light)
+     
     #        light.setDiffuseColor(255,0,0)
             light.DiffuseColor = self.color
             light.SpecularColor = self.color

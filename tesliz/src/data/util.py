@@ -68,6 +68,24 @@ def createEntity(mesh,node):
     node.attachObject(attachMe)
     #attachMe.setNormaliseNormals(True)
 
+
+
+def createMesh(mesh,pos,size=1):
+    
+    sceneManager = s.app.sceneManager        
+    name = s.app.getUniqueName()
+
+    scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
+    attachMe = s.app.sceneManager.createEntity(name,mesh)            
+    scene_node.attachObject(attachMe)
+    #attachMe.setNormaliseNormals(True)
+
+
+    scene_node.setScale(Ogre.Vector3(size,size,size))
+    
+    scene_node.position = pos
+ 
+    return scene_node
    
 missed = "LOOP"
 blocked = "LOOP"
