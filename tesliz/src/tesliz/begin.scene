@@ -24,7 +24,13 @@
         <clipping nearPlaneDist="0.100000" farPlaneDist="100.000000"/>
       </camera>
     </node>
-
+    <node name="floormap">
+      <shape type="TreeCollision" />      
+      <position x="0.000000" y="5.000000" z="000000"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x="10" y="10" z="10"/>
+      <entity name="floormap" meshFile="Plane.mesh"/>
+    </node>
 
     
   </nodes>

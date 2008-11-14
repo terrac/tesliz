@@ -128,10 +128,13 @@ class FFTMove():
     value = -1
     name = "move"
     
-    def __init__(self,unit):
-        self.range = unit.attributes.moves
+    def __init__(self,unit = None):
+        if unit:
+            self.range = unit.attributes.moves
+        else:
+            self.range = 500,500
         self.list = None
-        
+        self.cur = 0
         pass
 
     needsasecondclick = True

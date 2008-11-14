@@ -70,10 +70,11 @@ def createEntity(mesh,node):
 
 
 
-def createMesh(mesh,pos,size=1):
+def createMesh(mesh,pos,size=1,name = None):
     
-    sceneManager = s.app.sceneManager        
-    name = s.app.getUniqueName()
+    sceneManager = s.app.sceneManager     
+    if not name:   
+        name = s.app.getUniqueName()
 
     scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
@@ -356,7 +357,7 @@ def getClosestValid(pos,pos2,height):
     return validpos
 
 
-def getValid(vec,height,xlist, zlist):
+def getValid(vec,height,xlist , zlist):
     validpos = []
     for a in range(0, len(xlist)):
         x = xlist[a]
@@ -373,6 +374,10 @@ def getValid(vec,height,xlist, zlist):
         
     
     return validpos
+def getValidPos(vec):
+    vlist = getValid(vec, 50, [0], [0])
+    if vlist:
+        return vlist[0]
 def resetAttributes(unit):        
     unit.job.changeTo(unit)
     unit.items.setupAll()

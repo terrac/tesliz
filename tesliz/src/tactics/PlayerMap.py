@@ -2,25 +2,38 @@ import ogre.renderer.OGRE as Ogre
 import os
 import shelve
 import data.util
+import tactics.util
+import tactics.Move
 from tactics.Singleton import *
 from utilities.physics import *
 
 class Position:
     
-    def __init__(self,vec):
+    def __init__(self,vec,name,visited = False):
         self.plist = []
+        #self.dllist = [] do later
         self.position = vec
+        self.node = None
+        self.name = name
+        self.visited = visited
     
-
+    def show(self):
+        self.node =data.util.createMesh("cylinder.mesh",self.position,1,self.name)
+        tactics.util.buildImmoblePhysics(self)
 class PlayerMap:
     
+    timeleft = 0
+    
     def __init__(self,text):
+        self.map = dict()
+        self.actionqueue=[]
         if os.path.exists(text):
             positionmap = shelve.open(text)
             self.root = positionmap["root"]
             positionmap.close()
         else:
             self.setupDefaultPositions()
+            
         #if file text exists then load positions from file
         
         #else setup default positions
@@ -36,7 +49,7 @@ class PlayerMap:
         #s.app.msnCam.setPosition(Ogre.Vector3(0, 10, 0))
         #s.app.camera.lookAt(Ogre.Vector3(0, 5, 0))
         s.app.msnCam.setOrientation(Ogre.Quaternion(0.793987, -0.472373, 0.32888, 0.195663))
-        data.util.createMesh("Plane.mesh",Ogre.Vector3(0,5,0),10)
+        #data.util.createMesh("Plane.mesh",Ogre.Vector3(0,5,0),10)
         
         self.raySceneQuery = s.app.sceneManager.createRayQuery(Ogre.Ray())
 
@@ -48,10 +61,9 @@ class PlayerMap:
         node.attachObject(light)
  
         self.createLocations(self.root)
-       # Find the current position, fire a Ray straight down
-       # in order to determine the distance to the terrain
-       # If we are too close, keep the distance to a certain amount
- 
+        self.unit = tactics.Unit.Unit()
+        self.unit.node = data.util.createMesh("zombie.mesh", self.root.position + Ogre.Vector3(0,5,0))
+        tactics.util.buildPhysics(self.unit)
        
         
         
@@ -61,8 +73,8 @@ class PlayerMap:
             return
         else:
             vmap[root.position] = True
-            data.util.createMesh("cylinder.mesh",root.position)
-            
+            self.map[root.name] = root
+            root.show()
             
             
             for x in root.plist:
@@ -71,8 +83,8 @@ class PlayerMap:
     
     
     def setupDefaultPositions(self):
-        self.root = Position(Ogre.Vector3(0,7,0))
-        self.root.plist.append(Position(Ogre.Vector3(5,7,0)))
+        self.root = Position(Ogre.Vector3(0,7,0),"scene01")
+        self.root.plist.append(Position(Ogre.Vector3(5,7,0),"scene02"))
     
     def addPos(self,pos1,pos2):
         pos1.plist.append(pos2)
@@ -85,17 +97,10 @@ class PlayerMap:
 
         while True:
             vec1 = vec1 + (direction * 1)
+            rvec = data.util.getValidPos(vec1)
             
-            rayvec = vec1+ Ogre.Vector3(0,40,0)
-            updateRay =  Ogre.Ray(rayvec, Ogre.Vector3.NEGATIVE_UNIT_Y)
-            print rayvec
-            self.raySceneQuery.setQueryTypeMask(1)
-            self.raySceneQuery.Ray = updateRay
-            print len(self.raySceneQuery.execute())
-            for queryResult in self.raySceneQuery.execute():
-                if queryResult: 
-                    tcpos = Ogre.Vector3(vec1.x,vec1.y-queryResult.distance + 4,vec1.z)            
-                    data.util.createMesh("cylinder.mesh", vec1, .5)
+            if rvec:                             
+                data.util.createMesh("cylinder.mesh", rvec, .5)
             
             if distance(vec1, vec2) < 2:
                 break;
@@ -104,5 +109,34 @@ class PlayerMap:
         
     def movePlayer(self,pos):
        pass 
+   
+    def clickEntity(self,name,position):
+       if not self.map.has_key(name):
+           return
+       self.cpos = self.map[name]
+       self.move = tactics.Move.FFTMove()
+       self.move.unit1 = self.unit
+       self.move.endPos = position
+       self.move.list = self.getMoveList(self.root,self.cpos)
+       for x in self.move.list:
+           print x
+       print "aoue"
+       s.framelistener.addToQueue(self,self)
+    
+    def execute(self,timer):
+        
+        if not self.move.execute(timer) and not self.cpos.visited:
+            s.app.loadScene(self.cpos.name)
+            return False
+        return True
+    def getMoveList(self,cpos,topos,movedlist =[]):
+        
+        if cpos == topos:
+            return [topos.position]
+        for pos in cpos.plist:
+             rpos =self.getMoveList(pos,topos,movedlist)
+             if rpos:
+                 rpos.insert(0,cpos.position)
+                 return rpos
     
         

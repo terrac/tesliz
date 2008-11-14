@@ -70,7 +70,12 @@ class OgreNewtonApplication (sf.Application):
         self.parseSceneFile('begin')
         self.playermap = PlayerMap("Terra.player")
         self.createFrame()
-        
+        btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "current")
+        CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
+        btn.setText("current")
+        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.6)))
+        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
+        s.framelistener.cplayer = self.playermap
 
 
     def startMenu(self):
@@ -136,7 +141,7 @@ class OgreNewtonApplication (sf.Application):
         CEGUI.System.getSingleton().setGUISheet( sheet )
 
 
-    def loadScene(self):
+    def loadScene(self,scenename):
         s.app.sceneManager.destroyAllMovableObjects()
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
@@ -158,7 +163,7 @@ class OgreNewtonApplication (sf.Application):
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = AIsettings()
         
-        self.parseSceneFile("scene01")
+        self.parseSceneFile(scenename)
         
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton() 
@@ -181,11 +186,7 @@ class OgreNewtonApplication (sf.Application):
         btn.setAlwaysOnTop(True)
         #s.playerlist = [HumanPlayer(),ComputerPlayer()]
         
-        btn = winMgr.createWindow("TaharezLook/Button", "current")
-        sheet.addChildWindow(btn)
-        btn.setText("current")
-        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.6)))
-        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
+
         ## this will be a static object that we can throw objects at.  we'll use a simple cylinder primitive.
         ## first I load the visual mesh that represents it.  I have some simple primitive shaped .mesh files in
         ## the "primitives" directory to make this simple... all of them have a basic size of "1" so that they
@@ -236,7 +237,7 @@ class OgreNewtonApplication (sf.Application):
     def handleStartGameFromMenu(self, e):
         # Remove the menu
         self.deleteStartMenu()
-        self.loadScene()
+        self.loadScene("scene01")
         
     def handleQuitGameFromMenu(self, e):
         self.handleQuit(e)
