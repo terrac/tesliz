@@ -143,7 +143,7 @@ class CreateList():
 class SetupPlayer():
     def __init__(self,player="Player1",plist = [Ogre.Vector3(0,0,0),Ogre.Vector3(5,0,0),Ogre.Vector3(0,0,5)]):
         
-        self.player = player
+        self.player = s.playermap[player]
         self.plist = plist
         
         #self.levels = levels,levele

@@ -21,6 +21,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
+import utilities.Console
 from tactics.OverviewMap import *
  
 s = Singleton()
@@ -207,6 +208,11 @@ class OgreNewtonApplication (sf.Application):
         pass
     def createFrame(self):
         
+        self.Console = utilities.Console.Console(self.root)
+        print "blah"
+        self.Console.addLocals({'root':self.root})
+
+        self.Console.show()
         ## this is a basic frame listener included with OgreNewt that does nothing but update the
         ## physics at a set framerate for you.  complex project will want more control, but this
         ## works for simple demos like this.  feel free to look at the source to see how it works.
@@ -223,6 +229,8 @@ class OgreNewtonApplication (sf.Application):
 
         #self.frameListener.showDebugOverlay(False)
         s.framelistener = self.frameListener
+        
+
         
        # self.handleStartGameFromMenu(None)
     def _configure(self):
@@ -629,9 +637,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
     def keyPressed(self, evt):
        CEGUIFrameListener.keyPressed(self,evt)
+       s.app.Console.keyPressed(evt)
        #print evt.key
        if OIS.KC_RETURN ==evt.key:               
-           if s.app.camera.initialOrientation:
+           if hasattr(s.app.camera,"initialOrientation") and s.app.camera.initialOrientation:
                s.app.camera.setOrientation(s.app.camera.initialOrientation)
            s.app.camera.initialOrientation = None
            s.framelistener.paused = False
