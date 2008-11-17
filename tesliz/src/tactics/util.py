@@ -37,7 +37,7 @@ def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):
     #TODO convex hulls -figure out and do
         col = getattr(OgreNewt, type)(s.app.World,Ogre.Vector3(1,1,1))
     else:    
-        col = OgreNewt.Box(s.app.World, Ogre.Vector3(1,1,1))
+        col = OgreNewt.Ellipsoid(s.app.World, Ogre.Vector3(1,1,1))
     body = OgreNewt.Body( s.app.World, col)
       
 

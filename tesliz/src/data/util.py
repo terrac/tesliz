@@ -90,6 +90,9 @@ def createMesh(mesh,pos,size=1,name = None):
     return scene_node
    
 def clearMeshes():
+    #s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
+    s.app.sceneManager.destroyAllMovableObjects()
+    s.app.World.destroyAllBodies()
     for x in meshlist.values():
         s.app.sceneManager.destroySceneNode(x)
 missed = "LOOP"

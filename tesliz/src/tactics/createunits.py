@@ -140,3 +140,68 @@ class CreateList():
                 print v,u +"doesn't have a valid place to put "
         for x in s.unitmap.values():
             x.body.freeze()   
+class SetupPlayer():
+    def __init__(self,player="Player1",plist = [Ogre.Vector3(0,0,0),Ogre.Vector3(5,0,0),Ogre.Vector3(0,0,5)]):
+        
+        self.player = player
+        self.plist = plist
+        
+        #self.levels = levels,levele
+        
+        
+            
+  
+        
+        
+        
+    
+        for v,unit in zip(self.plist,self.player.unitlist):
+
+            start = Ogre.Vector3(v.x,v.y+50,v.z) 
+            end = Ogre.Vector3(v.x,v.y-50,v.z) 
+           # print start
+            self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
+            info = self.ray.getFirstHit()
+            
+            
+            print start
+            print end
+            if (info.mBody):
+                
+                #bodpos, bodorient = info.mBody.getPositionOrientation()
+                sceneManager = s.app.sceneManager
+                name = s.app.getUniqueName()
+                 
+                scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
+                
+                dira = (end - start)
+                dira.normalise()
+                
+                position = start + ( dira* ( (end - start).length() * info.mDistance ));
+                position.y += 1
+                scene_node.position = position 
+                
+                attachMe = sceneManager.createEntity(name,unit.job.mesh)
+        
+                scene_node.attachObject(attachMe)
+             
+                unit.node = scene_node
+                buildPhysics(unit)
+                
+                
+                
+                #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+                if hasattr( s.playermap[player], "setVisualMarker"):
+                    s.playermap[player].setVisualMarker(unit)
+               
+                print scene_node.position
+                print unittype
+                print player
+    
+                #getattr(unittypes,(unit,rand)
+                #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
+                #self.clickEntity(info.mBody.OgreNode.Name,position)
+            else:
+                print v,u +"doesn't have a valid place to put "
+        for x in s.unitmap.values():
+            x.body.freeze()   

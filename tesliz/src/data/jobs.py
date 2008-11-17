@@ -56,6 +56,7 @@ class Job:
                 
     def requiredJobs(self,cjobs):
         return True
+    mesh = "zombie"
 class Squire(Job):
     
     def changeTo(self,unit):
