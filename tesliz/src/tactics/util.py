@@ -67,13 +67,13 @@ def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):
     body.setAngularDamping(Ogre.Vector3(0,0,0))
     body.setStandardForceCallback()
   
-    OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Y)
+    #OgreNewt.UpVector(s.app.World,body,Ogre.Vector3.UNIT_Y)
   #  OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_Z)
-    OgreNewt.UpVector(s.app.World,body,s.vector.UNIT_X)
+    #OgreNewt.UpVector(s.app.World,body,Ogre.Vector3.UNIT_X)
     #body.setUserData(unit)
     
 
-def buildImmoblePhysics(unit):
+def buildImmoblePhysics(unit,node = None):
     #floor = s.app.sceneManager.createEntity("Floor1", "Cube.mesh" )        
     #floornode = s.app.sceneManager.getRootSceneNode().createChildSceneNode( "FloorNode1" )
     #floornode.attachObject( floor )
@@ -82,14 +82,15 @@ def buildImmoblePhysics(unit):
     #floor.setMaterialName( "LightBlue/SOLID" )
 
     #floor.setCastShadows( False )
-    node = unit.node
+    if not node:
+        node = unit.node
     ##Ogre.Vector3 siz(100.0, 10.0, 100.0)
     col = OgreNewt.TreeCollision( s.app.World, node, True )
     bod = OgreNewt.Body( s.app.World, col )
     
     ##floornode.setScale( siz )
     bod.attachToNode( node )
-    bod.setPositionOrientation( unit.node.getPosition(),unit.node.getOrientation() )
+    bod.setPositionOrientation( node.getPosition(),node.getOrientation() )
     
     s.app.bodies.append ( bod )
 

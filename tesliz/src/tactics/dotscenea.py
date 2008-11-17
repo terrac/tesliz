@@ -207,14 +207,14 @@ def parse_camera(sceneManager, xml_node):
         projectionType= str(thingy['projectionType'].nodeValue)
         # TODO apply general solution to other types.
         scene_node = parse_scene_node(sceneManager, xml_node)
-        if not sceneManager.hasCamera(name):
-            camera = sceneManager.createCamera(name)
-            s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
-            s.app.msnCam.attachObject( s.app.camera )
-            s.app.camera.setPosition(0.0, 0.0, 0.0)
-            s.app.msnCam.setPosition( scene_node.getPosition())
-        else:
-            camera = sceneManager.getCamera(name)
+       # if not sceneManager.hasCamera(name):
+       #     camera = sceneManager.createCamera(name)
+       #     s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
+       #     s.app.msnCam.attachObject( s.app.camera )
+       #     s.app.camera.setPosition(0.0, 0.0, 0.0)
+       #     s.app.msnCam.setPosition( scene_node.getPosition())
+       # else:
+        camera = sceneManager.getCamera(name)
         camera.position = Ogre.Vector3.ZERO
         camera.orientation = Ogre.Quaternion()
         clippings = find_nodes(camera_xml_node, 'clipping')
@@ -225,8 +225,10 @@ def parse_camera(sceneManager, xml_node):
                     camera_xml_node, 'clipping', 'nearPlaneDist', 'farPlaneDist')
         camera.FOVy = Ogre.Degree(fov)
         
+        s.app.msnCam.setPosition(scene_node.getPosition())
+        s.app.msnCam.setOrientation(scene_node.getOrientation())
         #scene_node.attachObject(camera)
-
+        s.app.sceneManager.destroySceneNode(scene_node)
         camera_list.append(camera)
     return camera_list
 

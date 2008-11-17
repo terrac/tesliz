@@ -69,7 +69,7 @@ def createEntity(mesh,node):
     #attachMe.setNormaliseNormals(True)
 
 
-
+meshlist = dict()
 def createMesh(mesh,pos,size=1,name = None):
     
     sceneManager = s.app.sceneManager     
@@ -79,6 +79,7 @@ def createMesh(mesh,pos,size=1,name = None):
     scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     scene_node.attachObject(attachMe)
+    meshlist[name] = scene_node
     #attachMe.setNormaliseNormals(True)
 
 
@@ -88,6 +89,9 @@ def createMesh(mesh,pos,size=1,name = None):
  
     return scene_node
    
+def clearMeshes():
+    for x in meshlist.values():
+        s.app.sceneManager.destroySceneNode(x)
 missed = "LOOP"
 blocked = "LOOP"
 def update(text,unit):
@@ -298,7 +302,9 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     return names
 
 
-def getShortest(vec1,vec2,range, prevfound=VectorMap()):
+def getShortest(vec1,vec2,range, prevfound=None):
+    if not prevfound:
+        prevfound = VectorMap()
     if hasattr(range,'__iter__'):
         moves,jump = range
     else:

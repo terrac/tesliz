@@ -23,20 +23,21 @@ class Singleton:
            hdlr.setFormatter(formatter)
            self.logger.addHandler(hdlr)
            self.logger.setLevel(logging.INFO)
-           
+           self.turn = None
+           self.framelistener = None
+           self.app = None
+           self.turnbased = True
+           self.running = True
+           self.event = None
+           self.reset()
            
         #key = name : value = node
-        unitmap = dict()
-        
-        playermap= dict()
-        actionlist= []
-        turn = None
-        framelistener = None
-        app = None
-        vector = Ogre.Vector3(0,0,0)
-        turnbased = True
-        ended = False
-        event = None
+        def reset(self):
+            self.unitmap = dict()            
+            self.playermap= dict()
+            self.actionlist= []
+            self.cplayer = None
+            
         
         def removeUnit(self,unit):
             
@@ -60,17 +61,31 @@ class Singleton:
         def endGame(self):
           
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
-            s.event.end()
+            if s.event:
+                s.event.end()
             winMgr = CEGUI.WindowManager.getSingleton()
-            list = winMgr.getWindow("QuitButton")
+            winMgr = CEGUI.WindowManager.getSingleton()
+            name = "QuitButton"
+            if winMgr.isWindowPresent(name):            
+                window = winMgr.getWindow(name)
+            else:
+                window = None
             #sheet.addChildWindow(list)
-            for x in self.unitmap.values():                
-                list.setText(x.player.name+" WINNER !!!!!")
+            for x in self.unitmap.values():
+                if window:                
+                    window.setText(x.player.name+" WINNER !!!!!")
+                    window.setPosition(CEGUI.UVector2(cegui_reldim(0.335), cegui_reldim(0.3)))
+                    window.setSize(CEGUI.UVector2(cegui_reldim(0.3), cegui_reldim(0.1)))
+                    window.setAlwaysOnTop(True)
+                #losing should reload from file                
+                
+                
+                
                 break;
-            self.ended = True
-            list.setPosition(CEGUI.UVector2(cegui_reldim(0.335), cegui_reldim(0.3)))
-            list.setSize(CEGUI.UVector2(cegui_reldim(0.3), cegui_reldim(0.1)))
-            list.setAlwaysOnTop(True)
+            self.overviewmap.currentVisited("Player1")
+            self.running = False
+            
+            self.reset()
             
             
         def log(self,text,calling = None):

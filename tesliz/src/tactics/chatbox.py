@@ -24,9 +24,13 @@ class Chatbox:
     def __init__(self):
         sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
         winMgr = CEGUI.WindowManager.getSingleton()
-        self.list = winMgr.createWindow("TaharezLook/Listbox", "chatbox")
-        sheet.addChildWindow(self.list)
-        self.list.setText("actionlist")
-        self.list.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
-        self.list.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
-        self.list.setAlwaysOnTop(True)
+        name ="chatbox" 
+        if winMgr.isWindowPresent(name):            
+            chatbox = winMgr.getWindow(name)
+        else:
+            chatbox = winMgr.createWindow("TaharezLook/Listbox", name)
+        sheet.addChildWindow(chatbox)
+        chatbox.setText("actionlist")
+        chatbox.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
+        chatbox.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
+        chatbox.setAlwaysOnTop(True)

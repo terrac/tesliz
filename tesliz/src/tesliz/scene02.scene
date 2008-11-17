@@ -5,14 +5,14 @@
       <position x="4.441185" y="-20.466457" z="-2.703125"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".03" y=".03" z=".03"/>
-      <entity name="elizabeth" meshFile="robot.mesh"/>
+      <entity name="elizabeth" meshFile="zombie.mesh"/>
     </node>
 
        <node name="terra">
       <position x="9.110566" y="-20.735053" z="4.570840"/>
       <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
       <scale x=".03" y=".03" z=".03"/>
-      <entity name="terra" meshFile="robot.mesh"/>
+      <entity name="terra" meshFile="zombie.mesh"/>
     </node>
 
     <node name="Lamp">

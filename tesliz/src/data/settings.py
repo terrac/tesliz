@@ -13,6 +13,7 @@ class Settings(object):
         racemap = Races().map
         s.playermap = playermap
         s.racemap = racemap
+        s.cplayer = playermap["Player1"]
         
         
         s.app.setTurnbased(True)

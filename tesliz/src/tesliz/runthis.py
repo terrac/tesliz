@@ -21,7 +21,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
-from tactics.PlayerMap import *
+from tactics.OverviewMap import *
  
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
@@ -66,16 +66,27 @@ class OgreNewtonApplication (sf.Application):
         #self.loadScene()
         Settings()
         
+        
+        camera = s.app.sceneManager.createCamera("Camera")
+        s.app.msnCam = s.app.sceneManager.getRootSceneNode().createChildSceneNode()
+        s.app.msnCam.attachObject( s.app.camera )
+        s.app.camera.setPosition(0.0, 0.0, 0.0)
+        s.app.msnCam.setPosition( Ogre.Vector3(0,25,0))
+        
+        s.app.msnCam.setOrientation(Ogre.Quaternion(0.793987, -0.472373, 0.32888, 0.195663))
+      #  "0.481707" y="0.212922" z="0.334251" w="0.781600"/>
         ## sky box.
-        self.parseSceneFile('begin')
-        self.playermap = PlayerMap("Terra.player")
+        
+
         self.createFrame()
+        s.overviewmap =overviewmap = OverviewMap("Terra.player")
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "current")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
         btn.setText("current")
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.6)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
-        s.framelistener.cplayer = self.playermap
+        
+        s.framelistener.cplayer = s.overviewmap
 
 
     def startMenu(self):
@@ -83,7 +94,7 @@ class OgreNewtonApplication (sf.Application):
         winMgr = CEGUI.WindowManager.getSingleton()
         mainMenuBackground = winMgr.createWindow("TaharezLook/FrameWindow", "Tesliz/MainMenuBackground")
         sheet.addChildWindow(mainMenuBackground)
-        mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.5, 0), CEGUI.UDim(0.5, 0)))
+        mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.25, 0), CEGUI.UDim(0.25, 0)))
         mainMenuBackground.setXPosition(CEGUI.UDim(0, 0))
         mainMenuBackground.setYPosition(CEGUI.UDim(0, 0))
 #        mainMenuBackground.setCloseButtonEnabled(false)
@@ -143,6 +154,7 @@ class OgreNewtonApplication (sf.Application):
 
     def loadScene(self,scenename):
         s.app.sceneManager.destroyAllMovableObjects()
+        s.app.World.destroyAllBodies()
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -165,25 +177,25 @@ class OgreNewtonApplication (sf.Application):
         
         self.parseSceneFile(scenename)
         
-        sheet = CEGUI.System.getSingleton().getGUISheet()
-        winMgr = CEGUI.WindowManager.getSingleton() 
-        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
-        sheet.addChildWindow(btn)
-        btn.setText("Quit!")
-        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.035), cegui_reldim( 0.0)))
-        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
+#        sheet = CEGUI.System.getSingleton().getGUISheet()
+#        winMgr = CEGUI.WindowManager.getSingleton() 
+#        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
+#        sheet.addChildWindow(btn)
+#        btn.setText("Quit!")
+#        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.035), cegui_reldim( 0.0)))
+#        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
         
-        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuit")
-        btn.setAlwaysOnTop(True)
+ #       btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuit")
+ #       btn.setAlwaysOnTop(True)
         
-        btn = winMgr.createWindow("TaharezLook/Button", "EndTurn")
-        sheet.addChildWindow(btn)
-        btn.setText("endturn")
-        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.8)))
-        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
+#        btn = winMgr.createWindow("TaharezLook/Button", "EndTurn")
+#        sheet.addChildWindow(btn)
+#        btn.setText("endturn")
+#        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.8)))
+#        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
         
-        btn.subscribeEvent(CEGUI.PushButton.EventClicked, s.turn, "endTurn")
-        btn.setAlwaysOnTop(True)
+#        btn.subscribeEvent(CEGUI.PushButton.EventClicked, s.turn, "endTurn")
+#        btn.setAlwaysOnTop(True)
         #s.playerlist = [HumanPlayer(),ComputerPlayer()]
         
 
@@ -191,16 +203,8 @@ class OgreNewtonApplication (sf.Application):
         ## first I load the visual mesh that represents it.  I have some simple primitive shaped .mesh files in
         ## the "primitives" directory to make this simple... all of them have a basic size of "1" so that they
         ## can easily be scaled to fit any size primitive.
-        
-#        for unit in s.unitmap.values():
-#            self.camera.lookAt(unit.node.getPosition())
-        #self.root.removeFrameListener(self.frameListener)
-        #del self.frameListener
-        #self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
-        #self.root.addFrameListener(self.frameListener)
-        
-        #self.createFrame()
-
+    def _createFrameListener(self):
+        pass
     def createFrame(self):
         
         ## this is a basic frame listener included with OgreNewt that does nothing but update the
@@ -209,9 +213,9 @@ class OgreNewtonApplication (sf.Application):
         self.NewtonListener = BasicFrameListener( self.renderWindow, self.sceneManager, self.World, 60 )
         self.root.addFrameListener(self.NewtonListener)
 
-        self.frameListener = CEGUIFrameListener(self.renderWindow, self.camera)
-        self.root.addFrameListener(self.frameListener)
-        self.frameListener.showDebugOverlay(False)
+#        self.frameListener = CEGUIFrameListener(self.renderWindow, self.camera)
+#        self.root.addFrameListener(self.frameListener)
+        #self.frameListener.showDebugOverlay(False)
         ## this is our custom frame listener for this app, that lets us shoot cylinders with the space bar, move
         ## the camera, etc.
         self.frameListener = OgreNewtonFrameListener( self.renderWindow, self.camera, self.sceneManager, self.World, self.msnCam, self.NewtonListener )
@@ -433,7 +437,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
      
                    
                      
-        quat = self.msnCam.getOrientation()
+        quat = s.app.msnCam.getOrientation()
     
         vec = Ogre.Vector3(0.0,0.0,-0.5)
         trans = quat * vec
@@ -451,11 +455,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         if (self.Keyboard.isKeyDown(OIS.KC_LSHIFT)):        
             rend = CEGUI.System.getSingleton().getRenderer()
             mouse = CEGUI.Point(rend.getWidth() / 2.0, rend.getHeight() / 2.0)
-            self.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
-            self.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
+            s.app.msnCam.pitch( Ogre.Degree(ms.Y.rel * -0.5) )
+            s.app.msnCam.yaw( Ogre.Degree(ms.X.rel * -0.5), Ogre.Node.TS_WORLD )
             CEGUI.MouseCursor.getSingleton().setPosition(mouse)
-            sf.Application.debugText = str(self.msnCam.getPosition()) +"\n"+ str(self.msnCam.getOrientation())
-            #print sf.Application.debugText
+            sf.Application.debugText = str(s.app.msnCam.getPosition()) +"\n"+ str(s.app.msnCam.getOrientation())
+           
         ##and Keyboard
         moveamount = frameEvent.timeSinceLastFrame * 20
         if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
@@ -472,13 +476,13 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if (self.timer <= 0.0):
 
                 ## we get the position and direction from the camera...
-                camorient = self.msnCam.getOrientation()
+                camorient = s.app.msnCam.getOrientation()
                 vec = Ogre.Vector3(0,0,-1)
                 direct = camorient * vec
     
                 ## then make the visual object (again a cylinder)
                 #pos = Ogre.Vector3(self.msnCam.getWorldPosition())
-                pos = self.msnCam.getPosition()
+                pos = s.app.msnCam.getPosition()
     
                 name = "Body"+str( self.count )
                 self.count += 1
@@ -633,6 +637,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
            s.framelistener.paused = False
        if OIS.KC_NUMPAD5 == evt.key:
            s.screenshot()
+       if OIS.KC_NUMPAD6 == evt.key:
+            print sf.Application.debugText
        return True
  
     def keyReleased(self, evt):

@@ -6,23 +6,17 @@ from tactics.Event import *
 class Unitdata(object):
     def terra(self,unit):
         buildUnit(unit,"Spark",3,"Player1")
-        mental = Mind()
-        mental.map={"combat":Combat(unit,action.Attack),"follower":Follower(unit)}
         setupExtra(unit,mental)
         
                        
-    def matt(self,unit):
-        buildUnit(unit,"Ta",3,"Player1")
-        setupExtra(unit)
     
-    def lina(self,unit):
+    def elizabeth(self,unit):
         buildUnit(unit,"ZaiSoldier",3,"Player1")
-        mental = Mind()
-        mental.map={"combat":Combat(unit,action.Attack),"leader":Leader(unit,Ogre.Vector3(50,-20,0)),"conversation":Response(unit)}
+        
         setupExtra(unit,mental)
         unit.node.getAttachedObject(0).setMaterialName( "Spark/SOLID" )
         
-        unit.knowledgelist.insert(0,unit.getName())
+
         #unit.mental = Mind([Leader(unit),Fighter(unit)])
     
         
