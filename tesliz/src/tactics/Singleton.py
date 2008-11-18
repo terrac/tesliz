@@ -27,7 +27,7 @@ class Singleton:
            self.framelistener = None
            self.app = None
            self.turnbased = True
-           self.running = True
+           #self.running = True
            self.event = None
            self.reset()
            
@@ -83,7 +83,7 @@ class Singleton:
                 
                 break;
             self.overviewmap.currentVisited("Player1")
-            self.running = False
+            #self.running = False
             
             self.reset()
             

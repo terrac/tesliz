@@ -58,7 +58,7 @@ class Turn(object):
         
         if s.framelistener.getActiveQueue():        
             return
-        if (s.framelistener.timer > 0.0) or s.running or self.pause and not s.AIon:
+        if (s.framelistener.timer > 0.0)  or self.pause and not s.AIon:
             return
         if len(self.turnlist)== 0:
             return

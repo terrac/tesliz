@@ -1,2 +1,10 @@
 turnbased = TrueNone
 turnbased = TrueNone
+Squire TerraNone
+Chemist unique6 damages Squire Terra for 8with type:physical :None
+Squire FioreNone
+Chemist unique6None
+GridTargetingPotion has no action attributeChemist unique6
+Chemist unique5None
+Squire TerraNone
+Chemist unique6 damages Squire Terra for 8with type:physical :None

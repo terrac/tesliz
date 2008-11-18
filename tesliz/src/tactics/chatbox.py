@@ -9,7 +9,7 @@ class Chatbox:
         item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
         self.listholder.append(item)
         
-        self.list.addItem(item)
+        self.chatbox.addItem(item)
         ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
         ogretext.enable(True)
         unit.text =ogretext
@@ -34,3 +34,4 @@ class Chatbox:
         chatbox.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
         chatbox.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
         chatbox.setAlwaysOnTop(True)
+        self.chatbox = chatbox

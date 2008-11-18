@@ -154,8 +154,8 @@ class OverviewMap:
     #    for x in cpos.plist:
     #        self.addVisits(cpos)
     def setupDefaultPositions(self):
-        self.root =pos = Position((0,7,0),"scene01",True)
-        pos1 = Position((5,7,0),"fillerscene")
+        self.root =pos = Position((0,7,0),"blah",True)
+        pos1 = Position((5,7,0),"scene01")
         pos.next = pos1
         
         
