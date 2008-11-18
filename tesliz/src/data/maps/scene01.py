@@ -6,11 +6,7 @@ from tactics.createunits import *
 
 class Unitdata(object):
 
-    def Terra(self,unit):
-        buildUnit(unit,"Squire","Human",500,"Player1")
-        setupExtra(unit)
-        unit.node.getAttachedObject(0).setMaterialName( "Spark/SOLID" )
-        
+    
     def Fiore(self,unit):
         #head bandit
         buildUnit(unit,"Squire","Human",1,"Computer1")
@@ -29,7 +25,11 @@ class Unitdata(object):
         #CreateRandom(ulist,"Player1",Ogre.Vector3(9,-25,4))
         #CreateRandom(ulist,"Computer1",Ogre.Vector3(20,-25,4))
         #CreateList(["Chemist","Chemist","Chemist"],"Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(2,0,22),Ogre.Vector3(2,0,26)],[1,2,1])
-        CreateList("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(2,0,22),Ogre.Vector3(2,0,26)],[1,2,1])
+        
+        
+        
+        unit =buildUnitNoNode("Terra","Player1", "Squire")
+        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(2,0,22),Ogre.Vector3(2,0,26)])
         
         CreateList(["Chemist","Chemist","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
         terra = s.unitmap["Terra"]

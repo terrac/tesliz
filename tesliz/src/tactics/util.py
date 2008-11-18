@@ -7,12 +7,14 @@ from tactics.Unit import *
 from mental.combat import *
 import data.unittypes
 import mental.combat as combat
+import data.jobs
 s = Singleton()
+
 
 def buildUnit(unit,unittype,race,level,playername):
     s.unitmap[unit.getName()]=unit
     
-    unit.type = unittype
+    #unit.type = unittype
     
     
     if s.playermap.has_key(playername):
@@ -28,7 +30,24 @@ def buildUnit(unit,unittype,race,level,playername):
     unit.node.setScale(s.racemap[race].scale)
     buildPhysics(unit,"Ellipsoid",s.racemap[race].scale)
 
-
+#creates a unit given a specific job
+def buildUnitNoNode(name,playername,unittype,level=1):
+    unit = Unit(name)
+    #data.jobs.changeTo(unit, job)
+    s.unitmap[unit.getName()]=unit
+    getattr(data.unittypes.Unittypes(), unittype)(unit,level)
+    
+    
+    if s.playermap.has_key(playername):
+        player = s.playermap[playername]
+        player.unitlist.append(unit)
+        unit.player = player
+        
+        
+    
+    
+    
+    
 def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):        
     
     col = None

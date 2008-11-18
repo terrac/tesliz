@@ -303,7 +303,7 @@ class Dotscene(object):
             #TODO: for later 
           #  attachMe.setMaterialName( "Examples/RustySteel" )
             #attachMe.setNormaliseNormals(True)
-            unit = Unit()
+            unit = Unit(scene_node.getName())
             unit.node = scene_node
             
         

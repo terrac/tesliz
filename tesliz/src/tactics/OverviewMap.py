@@ -47,7 +47,8 @@ class Position:
     def getVec(self):
         x,y,z = self.position
         return Ogre.Vector3(x,y,z)
-        
+    def __str__( self ):
+        return str(self.getVec())
 class AddPos:
     def __init__(self,cpos,playermap):
         self.actionqueue=[]
@@ -163,6 +164,7 @@ class OverviewMap:
         
     def addPos(self,pos1,pos2):
         pos1.plist.append(pos2)
+        pos2.plist.append(pos1)
         
 
     def movePlayer(self,pos):
@@ -171,11 +173,14 @@ class OverviewMap:
     def clickEntity(self,name,position):
        if not self.map.has_key(name):
            return
-       self.cpos = self.map[name]
+       
+       
+       
        self.move = tactics.Move.FFTMove()
        self.move.unit1 = self.unit
        self.move.endPos = position
-       self.move.list = self.getMoveList(self.root,self.cpos)
+       self.move.list = self.getMoveList(self.cpos,self.map[name])
+       self.cpos = self.map[name]
        for x in self.move.list:
            print x
        print "aoue"
@@ -199,14 +204,18 @@ class OverviewMap:
             AddPos(self.cpos,self)
         
         
-    def getMoveList(self,cpos,topos,movedlist =[]):
-        
+    def getMoveList(self,cpos,topos,movedlist =[],posset = None):
+        if not posset:
+            posset = set()
+        posset.add(cpos)
         if cpos == topos:
             return [topos.getVec()]
         for pos in cpos.plist:
-             rpos =self.getMoveList(pos,topos,movedlist)
-             if rpos:
-                 rpos.insert(0,cpos.getVec())
-                 return rpos
+            if pos in posset:
+                continue
+            rpos =self.getMoveList(pos,topos,movedlist,posset)
+            if rpos:
+                rpos.insert(0,cpos.getVec())
+                return rpos
     
         

@@ -56,7 +56,9 @@ class Job:
                 
     def requiredJobs(self,cjobs):
         return True
-    mesh = "zombie"
+    mesh = "zombie.mesh"
+    def __str__( self ):
+        return self.__class__.__name__
 class Squire(Job):
     
     def changeTo(self,unit):
@@ -94,5 +96,10 @@ class Wizard(Job):
         for job in cjobs:
             if isinstance(job, Chemist) and job.level > 1:
                 return True
+            
+def changeTo(unit,job):
+    unit.job =  job
+    job.changeTo(unit)
+               
 def getJobList():
     return [Squire(),Chemist(),Wizard()]

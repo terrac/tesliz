@@ -117,6 +117,7 @@ class CreateList():
         
                 scene_node.attachObject(attachMe)
                 unit = Unit()
+                unit.name = scene_node.getName()
                 unit.node = scene_node
                 unittype = u
                 player = self.player
@@ -170,7 +171,7 @@ class SetupPlayer():
                 
                 #bodpos, bodorient = info.mBody.getPositionOrientation()
                 sceneManager = s.app.sceneManager
-                name = s.app.getUniqueName()
+                name = unit.name
                  
                 scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
                 
@@ -195,8 +196,7 @@ class SetupPlayer():
                     s.playermap[player].setVisualMarker(unit)
                
                 print scene_node.position
-                print unittype
-                print player
+              
     
                 #getattr(unittypes,(unit,rand)
                 #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)

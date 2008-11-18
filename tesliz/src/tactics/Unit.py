@@ -56,11 +56,11 @@ class Attributes(object):
 class Unit(object):
    
     def __str__( self ):
-        return self.type+" "+self.getName()
+        return str(self.job)+" "+self.getName()
     def destroy(self):
         if self.text:
             self.text.destroy()
-    def __init__(self):
+    def __init__(self,name = "blah"):
         self.attributes = Attributes()
         self.traits = dict()
         self.affect = AffectHolder(self)
@@ -77,6 +77,7 @@ class Unit(object):
         self.knowledgelist = ["general"]
         self.turncount = 0
         self.death = False
+        self.name = name
     
     def animate(self,text):
         entity = None
@@ -100,7 +101,7 @@ class Unit(object):
         self.visible = bool
 
     def getName(self):
-        return self.node.getName()
+        return self.name
     def increment(self):
        # print self.getName()+" "+str(self.attributes.curMovement)        
         return self.attributes.increment()
