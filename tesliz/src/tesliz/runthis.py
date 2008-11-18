@@ -39,6 +39,8 @@ class OgreNewtonApplication (sf.Application):
         self.materialmap=dict()
         sf.Application.debugText = "aeou"
         s.app = self
+        # This is for the job list, temporary until refactored to it's own class
+        self.ListItems = []
 
     def parseSceneFile(self,map):
         dotscene = Dotscene()
@@ -111,14 +113,14 @@ class OgreNewtonApplication (sf.Application):
         startButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleStartGameFromMenu")
         startButton.setAlwaysOnTop(True)
 
-#        jobButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/JobButton")
-#        mainMenuBackground.addChildWindow(jobButton)
-#        jobButton.setText("Jobs")
-#        jobButton.setXPosition(CEGUI.UDim(0.375, 0))
-#        jobButton.setYPosition(CEGUI.UDim(0.5, 0))
-#        jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
-#        jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleJobs")
-#        jobButton.setAlwaysOnTop(True)
+        jobButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/JobButton")
+        mainMenuBackground.addChildWindow(jobButton)
+        jobButton.setText("Jobs")
+        jobButton.setXPosition(CEGUI.UDim(0.375, 0))
+        jobButton.setYPosition(CEGUI.UDim(0.5, 0))
+        jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
+        jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleJobMenuCreation")
+        jobButton.setAlwaysOnTop(True)
 
         quitButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/QuitButton")
         mainMenuBackground.addChildWindow(quitButton)
@@ -135,6 +137,64 @@ class OgreNewtonApplication (sf.Application):
     def deleteStartMenu(self):
         winMgr = CEGUI.WindowManager.getSingleton()
         winMgr.destroyWindow("Tesliz/MainMenuBackground")
+
+    def createJobMenu(self):
+        sheet = CEGUI.System.getSingleton().getGUISheet()
+        winMgr = CEGUI.WindowManager.getSingleton()
+        
+        background = winMgr.createWindow ("TaharezLook/StaticImage")
+        # set area rectangle
+        background.setArea (CEGUI.URect(cegui_reldim (0), cegui_reldim (0),
+                                          cegui_reldim (1), cegui_reldim (1)))
+        # disable frame and standard background
+        background.setProperty ("FrameEnabled", "false")
+        background.setProperty ("BackgroundEnabled", "false")
+        # set the background image
+        background.setProperty ("Image", "set:BackgroundImage image:full_image")
+        # install this as the root GUI sheet
+        sheet.addChildWindow(background)
+
+        #/ set tooltip styles (by default there is none)
+        CEGUI.System.getSingleton().setDefaultTooltip ("TaharezLook/Tooltip")
+
+        # load some demo windows and attach to the background 'root'
+        background.addChildWindow (winMgr.loadWindowLayout ("Jobs.layout", False))
+        
+        # REFACTOR - Set up the callbacks for the buttons loaded by the layout
+        backButton = background.getChild("cmdBackToMenu")
+        backButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleDeleteJobCreateStartMenu")
+        
+        # Add party list to the partybox
+        lbox = winMgr.getWindow ("FontDemo/PartyList")
+        partyDict = s.unitmap
+        for l in partyDict.keys():
+            item = CEGUI.ListboxTextItem(l)
+            item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
+            # ensure Python is in control of it's "deletion"
+            item.AutoDeleted = False
+            lbox.addItem( item)
+            self.ListItems.append(item)
+
+        # Add language list to the listbox
+        lbox = winMgr.getWindow ("FontDemo/JobsList")
+        jobsDict = self.getJobsDict()
+        for l in jobsDict.keys():
+            item = CEGUI.ListboxTextItem(l)
+            item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
+            # ensure Python is in control of it's "deletion"
+            item.AutoDeleted = False
+            lbox.addItem( item)
+            self.ListItems.append(item)
+
+        # set up the language listbox callback
+        lbox.subscribeEvent(
+                    CEGUI.Listbox.EventSelectionChanged, self, "handleJobsSelection")
+        # select the first language
+        lbox.setItemSelectState(0, True)
+
+    def deleteJobMenu(self):
+        winMgr = CEGUI.WindowManager.getSingleton()
+        winMgr.destroyWindow("root")
 
     def initCEGUIStuff(self):
         self.GUIRenderer = CEGUI.OgreCEGUIRenderer( self.renderWindow, 
@@ -245,6 +305,34 @@ class OgreNewtonApplication (sf.Application):
         
                 
         return cur
+    
+    def getJobsDict(self):
+        SCHEME_JOBS = {}
+        SCHEME_JOBS['Squire'] = "Squire"
+        SCHEME_JOBS['Chemist'] = "Chemist"
+        SCHEME_JOBS['Supreme_commander'] = "Supreme commander"
+    
+        return SCHEME_JOBS
+    
+    def handleDeleteJobCreateStartMenu(self, e):
+        self.deleteJobMenu()
+        self.startMenu()
+        
+    def handleJobMenuCreation(self, e):
+        self.deleteStartMenu()
+        self.createJobMenu()
+        
+    def handleJobsSelection(self, e):
+        lbox = e.window
+        if lbox.getFirstSelectedItem():
+            idx = lbox.getItemIndex(lbox.getFirstSelectedItem())
+            winMgr = CEGUI.WindowManager.getSingleton()
+
+            cs = CEGUI.String()
+            cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
+            winMgr.getWindow("FontDemo/FontSample").setText(cs)
+
+        return True
     
     def handleStartGameFromMenu(self, e):
         # Remove the menu
