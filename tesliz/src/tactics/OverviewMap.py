@@ -60,13 +60,14 @@ class AddPos:
             self.cpos = cpos
             self.vec = self.cpos.getVec()
             self.timel = 0
+            playermap.save()
         
     def execute(self,timer):
         self.timel -= timer
         if self.timel < 0:            
             self.vec = addDots(self.vec,self.cpos.next.getVec(), True)
             s.playsound()
-            if not self.vec:
+            if not self.vec and not self.cpos.next.visited:
                 self.cpos.next.show()
                 return False
             self.timel = 1
@@ -77,22 +78,24 @@ class AddPos:
 class OverviewMap:
     
     timeleft = 0
-    newgame = True
+    newgame = False
+    #newgame = True
     def __init__(self,text):
         self.map = dict()
         self.actionqueue=[]
         self.filename = text
         if os.path.exists(text) and not self.newgame:
             positionmap = shelve.open(text)
-            if positionmap.has_key("root"):
-                self.root = positionmap["root"]
-                self.cpos = positionmap["cpos"]
-            else:
-                self.setupDefaultPositions()
-            positionmap.close()
-        else:
-            self.setupDefaultPositions()
+            #self.map = positionmap["map"]
+            self.root,self.cpos = positionmap["mapdata"]
             
+            s.cplayer = positionmap["currentplayer"]
+        
+            positionmap.close()
+           # self.createLocations(self.root)
+        else:
+            self.setupDefaultPositions()            
+            #AddPos(self.root, self)
         #if file text exists then load positions from file
         
         #else setup default positions
@@ -106,7 +109,14 @@ class OverviewMap:
         #camera.orientation = Ogre.Vector3.NEGATIVE_UNIT_Y
         
         self.buildScene()
-        AddPos(self.root, self)
+
+    def save(self):
+        positionmap = shelve.open(self.filename)
+        positionmap["mapdata"] = self.root, self.cpos
+        positionmap["currentplayer"] = s.cplayer
+        #positionmap["map"] = self.map
+        positionmap.close()
+
 
     def buildScene(self):
         s.app.sceneManager.destroyAllMovableObjects()
@@ -154,7 +164,7 @@ class OverviewMap:
     #    for x in cpos.plist:
     #        self.addVisits(cpos)
     def setupDefaultPositions(self):
-        self.root =pos = Position((0,7,0),"blah",True)
+        self.root =pos = Position((0,7,0),"fillerscene",False)
         pos1 = Position((5,7,0),"scene01")
         pos.next = pos1
         
@@ -189,9 +199,7 @@ class OverviewMap:
     def execute(self,timer):
         
         if not self.move.execute(timer) and not self.cpos.visited:
-            positionmap = shelve.open(self.filename)
-            positionmap["root"] = self.root
-            positionmap["cpos"] = self.cpos
+            self.save()
             data.util.clearMeshes()
             s.app.loadScene(self.cpos.name)
             return False

@@ -27,6 +27,10 @@ class Singleton:
            self.framelistener = None
            self.app = None
            self.turnbased = True
+           
+           #current player for functions like changing jobs 
+           self.cplayer = None
+           
            #self.running = True
            self.event = None
            self.reset()
@@ -36,7 +40,7 @@ class Singleton:
             self.unitmap = dict()            
             self.playermap= dict()
             self.actionlist= []
-            self.cplayer = None
+            
             
         
         def removeUnit(self,unit):
