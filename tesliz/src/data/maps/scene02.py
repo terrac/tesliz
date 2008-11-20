@@ -1,34 +1,24 @@
 from tactics.util import *
-from mental.mind import *
-from mental.background import *
-from tactics.Event import *
+from tactics.createunits import *
+from tactics.Singleton import *
 
 class Unitdata(object):
-    def terra(self,unit):
-        buildUnit(unit,"Spark",3,"Player1")
-        setupExtra(unit,mental)
-        
-                       
-    
-    def elizabeth(self,unit):
-        buildUnit(unit,"ZaiSoldier",3,"Player1")
-        
-        setupExtra(unit,mental)
-        unit.node.getAttachedObject(0).setMaterialName( "Spark/SOLID" )
-        
-
-        #unit.mental = Mind([Leader(unit),Fighter(unit)])
-    
         
     def floormap(self,unit):
         unit.node.getAttachedObject(0).setMaterialName( "LightBlue/SOLID" )
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):
-        zai = {"kobold":["Fighter","Leader","GreenMage"]}
-        vec = Ogre.Vector3(10,-20,0)
-        vec2 = Ogre.Vector3(30,-20,0)
-        #vec3 = Ogre.Vector3(-30,-20,0)
-        vec4 = Ogre.Vector3(50,-20,0)
-        s.event = EventPositions({vec:Event(zai,2,vec),vec2:Event(zai,3,vec2),vec4:Event(zai,4,vec4)})
         
+        s.playermap["Player1"].items.addItem("Potion")
+        
+        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(2,0,22),Ogre.Vector3(2,0,26),Ogre.Vector3(5,0,26)])
+        
+        CreateList(["Squire","Chemist","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
+
+
+    def setuptestmap(self):
+        unit =buildUnitNoNode("Alluvia","Player1", "Chemist",2)
+        unit =buildUnitNoNode("Oath","Player1", "Squire",1)
+        unit =buildUnitNoNode("Bahaullah","Player1", "Squire",2)
+        unit =buildUnitNoNode("Boru","Player1", "Squire",1)

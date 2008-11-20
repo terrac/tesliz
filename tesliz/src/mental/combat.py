@@ -83,8 +83,10 @@ class Combat(object):
         
         while not bool:
             abil = getBest(unit,self.isValid)
+            
+            #for example if there are no healing items
             if not abil:
-                aoeu
+                return
             #unit.traits
             if not data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), abil.range):
                 #should this be copied?
@@ -105,6 +107,6 @@ class Combat(object):
                 break;
         
         
-        unit.mental.state["angry"] = 50#     
+        #unit.mental.state["angry"] = 50#     
         return True
     

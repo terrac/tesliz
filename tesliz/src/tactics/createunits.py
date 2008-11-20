@@ -188,8 +188,8 @@ class SetupPlayer():
              
                 unit.node = scene_node
                 buildPhysics(unit)
-                
-                
+                unit.player
+                s.unitmap[unit.getName()]=unit
                 
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                 if hasattr( s.playermap[player], "setVisualMarker"):
@@ -202,6 +202,6 @@ class SetupPlayer():
                 #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
                 #self.clickEntity(info.mBody.OgreNode.Name,position)
             else:
-                print v,u +"doesn't have a valid place to put "
+                print str((v,unit)) +"doesn't have a valid place to put "
         for x in s.unitmap.values():
             x.body.freeze()   

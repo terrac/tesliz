@@ -78,8 +78,8 @@ class AddPos:
 class OverviewMap:
     
     timeleft = 0
-    newgame = False
-    #newgame = True
+#    newgame = False
+    newgame = True
     def __init__(self,text):
         self.map = dict()
         self.actionqueue=[]
@@ -200,7 +200,7 @@ class OverviewMap:
         
         if not self.move.execute(timer) and not self.cpos.visited:
             self.save()
-            data.util.clearMeshes()
+            
             s.app.loadScene(self.cpos.name)
             return False
         return True

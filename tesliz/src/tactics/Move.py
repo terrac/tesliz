@@ -124,6 +124,7 @@ def markmove(pos):
   #  attachMe.setMaterialName( "Examples/RustySteel" )
     #attachMe.setNormaliseNormals(True)
 class FFTMove():
+    action = False
     type = "move"
     value = -1
     name = "move"

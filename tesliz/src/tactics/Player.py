@@ -25,9 +25,13 @@ class PlayerItemHolder():
         if self.map.has_key(itemname):
             return self.map[itemname]
         return 0
+    def __str__( self ):
+        return str(self.map)
     
 class HumanPlayer(object):
 
+    def __str__(self):
+        return self.name + str(self.items)
     def __init__(self,name):
         self.name = name
         self.interface = HumanInterface(self)

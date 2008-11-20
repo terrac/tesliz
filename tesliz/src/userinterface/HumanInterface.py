@@ -91,7 +91,9 @@ class HumanInterface:
                 
             wind = CEGUI.WindowManager.getSingleton().getWindow("actionlist")
             isaction = True
-            if hasattr(self.currentTrait,"action") and not self.currentTrait.action:
+            #the logic is kinda complicated
+            #dir(self.currentTrait)
+            if hasattr(self.abilityused,"action") and not self.abilityused.action:
                 isaction = False
             toremovelist = []
             for x in range(0,wind.getItemCount()):
@@ -154,6 +156,7 @@ class HumanInterface:
             return        
         self.currentTrait = text
         self.abilmap =self.cunit.traits[text].getAbilities()
+        self.cunit.player.items
         list = self.abilmap.keys()
         print self.cunit
         if len(list) ==1:

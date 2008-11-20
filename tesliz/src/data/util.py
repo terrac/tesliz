@@ -189,7 +189,7 @@ def damageHitpoints(getDamage,unit1,unit2):
     unit2.attributes.physical.points = unit2.attributes.physical.points - number 
     update(str(number), unit2)
     experienceAccrued(unit1, unit2)
-    s.log(str(unit2)+" damages "+str(unit1)+" for "+ str(number)+"with type:"+type+" :")
+    s.log(str(unit1)+" damages "+str(unit2)+" for "+ str(number)+"with type:"+type+" :")
     #s.app.bodies.index(unit1.body)
     if unit2.attributes.physical.points < 1:
         unit2.setDeath(True)

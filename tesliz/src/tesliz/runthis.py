@@ -162,6 +162,7 @@ class OgreNewtonApplication (sf.Application):
 
 
     def loadScene(self,scenename):
+        data.util.clearMeshes()
         s.app.sceneManager.destroyAllMovableObjects()
         s.app.World.destroyAllBodies()
         # Play Windows exit sound.
@@ -178,7 +179,7 @@ class OgreNewtonApplication (sf.Application):
        
         
         s.app.camera.initialOrientation = None
-        Settings()
+        #Settings()
         
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
@@ -389,7 +390,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if u.text:
                 u.text.update()
         for u in s.unitmap.values():
-            if u.node.getPosition().y < -10:
+            if u.node and u.node.getPosition().y < -100:
                 s.removeUnit(u)
         
         for x in s.app.animations:

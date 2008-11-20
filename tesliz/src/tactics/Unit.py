@@ -78,6 +78,7 @@ class Unit(object):
         self.turncount = 0
         self.death = False
         self.name = name
+        self.node = None
     
     def animate(self,text):
         entity = None
@@ -113,7 +114,8 @@ class Unit(object):
             return
         s.framelistener.showAttributesCurrent(self.getName())
         self.turncount += 1
-        s.event.turnStarted(self)
+        if s.event:
+            s.event.turnStarted(self)
         self.player.startTurn(self)
         self.expaccrued = False
         

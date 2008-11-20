@@ -81,7 +81,7 @@ class Chemist(Job):
 
         trait1 = GridTargeting(GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
         trait1.range = 50
-        unit.player.items.addItem("Potion")
+        
         unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
         unit.mental = Mind([Combat(unit,self.healing,combat.isWantedHurt),Combat(unit,action.Attack,combat.isWanted)])
 class Wizard(Job):

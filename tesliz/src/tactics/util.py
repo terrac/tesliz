@@ -33,15 +33,17 @@ def buildUnit(unit,unittype,race,level,playername):
 #creates a unit given a specific job
 def buildUnitNoNode(name,playername,unittype,level=1):
     unit = Unit(name)
-    #data.jobs.changeTo(unit, job)
-    s.unitmap[unit.getName()]=unit
-    getattr(data.unittypes.Unittypes(), unittype)(unit,level)
+    
+    #s.unitmap[unit.getName()]=unit
     
     
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
         player.unitlist.append(unit)
         unit.player = player
+    getattr(data.unittypes.Unittypes(), unittype)(unit,level)
+    
+    
         
         
     
