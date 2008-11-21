@@ -385,7 +385,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
               
 #        if s.ended:
 #            return 
-
+        timesincelastframe = frameEvent.timeSinceLastFrame * s.speed
+        
         for u in s.unitmap.values():
             if u.text:
                 u.text.update()
@@ -394,7 +395,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 s.removeUnit(u)
         
         for x in s.app.animations:
-            x.addTime(frameEvent.timeSinceLastFrame)
+            x.addTime(timesincelastframe)
          
         self.Keyboard.capture()    
         self.Mouse.capture()    
@@ -437,7 +438,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         for x in s.app.timedbodies:
             
         
-            x.seconds -= frameEvent.timeSinceLastFrame
+            x.seconds -= timesincelastframe
         
             
             if x.seconds < 0:        
@@ -478,7 +479,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             sf.Application.debugText = str(s.app.msnCam.getPosition()) +"\n"+ str(s.app.msnCam.getOrientation())
            
         ##and Keyboard
-        moveamount = frameEvent.timeSinceLastFrame * 20
+        moveamount = timesincelastframe * 20
         if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
             
             self.msnCam.translate(trans * moveamount);
@@ -554,12 +555,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                 self.bodies.append(body)
                 
                 self.timer = 0.2
-        self.timer -= frameEvent.timeSinceLastFrame
+        self.timer -= timesincelastframe
         #if (self.timer > 0.0):
         #    return True
 
         s.turn.doTurn()        
-        self.runQueue(frameEvent.timeSinceLastFrame)
+        self.runQueue(timesincelastframe)
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False

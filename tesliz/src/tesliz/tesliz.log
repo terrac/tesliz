@@ -1,10 +1,531 @@
 turnbased = TrueNone
-turnbased = TrueNone
-Squire TerraNone
-Chemist unique6 damages Squire Terra for 8with type:physical :None
-Squire FioreNone
+Squire OathNone
+Chemist unique7None
 Chemist unique6None
-GridTargetingPotion has no action attributeChemist unique6
-Chemist unique5None
-Squire TerraNone
-Chemist unique6 damages Squire Terra for 8with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Chemist Alluvia for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+GridTargetingPotion has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique7None
+<data.traits.generictraits.Attack object at 0x01FD4A90> has no action attributeChemist unique7
+Chemist unique7 damages Squire Oath for 4with type:physical :None
+Chemist unique6None
+Squire OathNone
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique7 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+Chemist AlluviaNone
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Squire OathNone
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Chemist AlluviaNone
+<data.traits.generictraits.Attack object at 0x01FD44F0> has no action attributeChemist Alluvia
+Chemist Alluvia damages Chemist unique6 for 4with type:physical :None
+Squire OathNone
+Chemist unique6None
+<data.traits.generictraits.Attack object at 0x01FD4970> has no action attributeChemist unique6
+Chemist unique6 damages Chemist Alluvia for 4with type:physical :None
+Squire OathNone
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None
+Squire OathNone
+Chemist unique6None

@@ -28,6 +28,8 @@ class Singleton:
            self.app = None
            self.turnbased = True
            
+           #makes things based on timesincelast frame move faster or slower
+           self.speed = 1
            #current player for functions like changing jobs 
            self.cplayer = None
            

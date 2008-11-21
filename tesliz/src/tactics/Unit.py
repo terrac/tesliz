@@ -123,7 +123,8 @@ class Unit(object):
         
         if bool and not self.death:
             self.death = ManageDeath()
-            s.event.death(self)
+            if s.event:
+                s.event.death(self)
             self.death.execute(self)
             inertia = OgreNewt.CalcSphereSolid( 0, 1 )
             self.body.setMassMatrix( 0.0, inertia )
