@@ -42,6 +42,8 @@ class Singleton:
             self.unitmap = dict()            
             self.playermap= dict()
             self.actionlist= []
+            if self.turn:
+                self.turn.turnlist = []
             
             
         
@@ -53,15 +55,18 @@ class Singleton:
             unit.player.unitlist.remove(unit)
             
             a = ""
+            liveunits = 0
             for e in unit.player.unitlist:
                 a += str(e)
+                if e.node:
+                    liveunits +=1
             self.log(str(unit) + " destroyed.  Unitlist"+str(len(unit.player.unitlist))+a)
-            if not unit.player.unitlist:
+            if not liveunits:
                 self.log("endgame")
                 self.endGame()
-            
-            unit.destroy()    
-            del unit    
+            else:
+                unit.destroy()    
+                del unit    
             
                 
         def endGame(self):

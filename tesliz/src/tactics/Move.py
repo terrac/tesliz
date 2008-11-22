@@ -193,7 +193,7 @@ class FFTMove():
         #self.unit1.body.unFreeze()    
         #self.unit1.body.setVelocity(direction *5)
         src =self.unit1.node.getInitialOrientation() * Ogre.Vector3.UNIT_X
-        vec1 = vec1 + (direction * .02)
+        vec1 = vec1 + (direction * timer * 3)
         self.unit1.body.setPositionOrientation(vec1,src.getRotationTo(direction) )
         #finishedMoving = False
 #        if s.turnbased:

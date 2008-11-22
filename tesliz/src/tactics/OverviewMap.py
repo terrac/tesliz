@@ -89,7 +89,7 @@ class OverviewMap:
             #self.map = positionmap["map"]
             self.root,self.cpos = positionmap["mapdata"]
             
-            s.cplayer = positionmap["currentplayer"]
+            s.cplayer = s.playermap[positionmap["currentplayer"]]
         
             positionmap.close()
            # self.createLocations(self.root)
@@ -107,13 +107,13 @@ class OverviewMap:
         
 #        camera.position = Ogre.Vector3(0,5,0)
         #camera.orientation = Ogre.Vector3.NEGATIVE_UNIT_Y
-        
+        #s.framelistener.setCurrentPlayer( = s.overviewmap
         self.buildScene()
 
     def save(self):
         positionmap = shelve.open(self.filename)
         positionmap["mapdata"] = self.root, self.cpos
-        positionmap["currentplayer"] = s.cplayer
+        positionmap["currentplayer"] = s.cplayer.name
         #positionmap["map"] = self.map
         positionmap.close()
 
@@ -169,7 +169,7 @@ class OverviewMap:
         pos.next = pos1
         
         
-        pos1.next = Position((5,7,5),"scene03")
+        pos1.next = Position((5,7,5),"scene02")
         self.cpos = self.root
         
     def addPos(self,pos1,pos2):
@@ -210,6 +210,8 @@ class OverviewMap:
         self.cpos.visited = True 
         if winningplayer == "Player1":
             AddPos(self.cpos,self)
+        s.framelistener.setCurrentPlayer( self)
+        #s.turn.pause = True
         
         
     def getMoveList(self,cpos,topos,movedlist =[],posset = None):

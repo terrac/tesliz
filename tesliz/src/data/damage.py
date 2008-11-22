@@ -11,3 +11,6 @@ def basicMagical(unit):
     fs = unit.attributes.physical
     dam =fs.power * (fs.power * fs.belief/100)
     return dam,"magical"
+
+def test(unit):
+    return 999,"magical"

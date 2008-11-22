@@ -69,7 +69,7 @@ def createEntity(mesh,node):
     #attachMe.setNormaliseNormals(True)
 
 
-meshlist = dict()
+#meshlist = dict()
 def createMesh(mesh,pos,size=1,name = None):
     
     sceneManager = s.app.sceneManager     
@@ -79,7 +79,7 @@ def createMesh(mesh,pos,size=1,name = None):
     scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     scene_node.attachObject(attachMe)
-    meshlist[name] = scene_node
+    #meshlist[name] = scene_node
     #attachMe.setNormaliseNormals(True)
 
 
@@ -93,8 +93,8 @@ def clearMeshes():
     #s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
     s.app.sceneManager.destroyAllMovableObjects()
     s.app.World.destroyAllBodies()
-    for x in meshlist.values():
-        s.app.sceneManager.destroySceneNode(x)
+    s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
+    s.app.setupCamera()
 missed = "LOOP"
 blocked = "LOOP"
 def update(text,unit):

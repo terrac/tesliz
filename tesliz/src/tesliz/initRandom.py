@@ -10,10 +10,10 @@ class RandomBuilder(OgreNewtonApplication):
         pass    
     def _createScene ( self ):        
         OgreNewtonApplication._createScene(self)
-        self.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()
-        self.msnCam.attachObject( self.camera )
+        s.app.msnCam = self.sceneManager.getRootSceneNode().createChildSceneNode()
+        s.app.msnCam.attachObject( self.camera )
         self.camera.setPosition(0.0, 0.0, 0.0)
-        self.msnCam.setPosition( 0.0, -10.0, 20.0)
+        s.app.msnCam.setPosition( 0.0, -10.0, 20.0)
     
         ##make a light
         light = self.sceneManager.createLight( "Light1" )

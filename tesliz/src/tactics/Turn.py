@@ -69,12 +69,12 @@ class Turn(object):
         s.framelistener.timer = 1
         unit =self.turnlist.pop()
        
-        if unit.attributes.physical.points <1:
-            self.pause  = False
-            return
+#        if unit.attributes.physical.points <1:
+#            self.pause  = False
+#            return
             
         s.log(unit)
-        s.framelistener.cplayer = unit.player
+        s.framelistener.setCurrentPlayer(unit.player)
         
     
         show(unit)
@@ -99,7 +99,7 @@ class RealTimeTurn(object):
         if maplen <= self.turnindex:
             self.turnindex = 0
         unit = s.unitmap.values()[self.turnindex]
-        s.framelistener.cplayer = unit.player
+        s.framelistener.setCurrentPlayer(unit.player)
         unit.startTurn()
         
         #show(unit)
@@ -113,7 +113,7 @@ class RealTimeTurn(object):
                     #break
     def nextUnitTurn(self):
         pass
-        #s.framelistener.cplayer = s.playermap["Player1"]
+        #s.framelistener.setCurrentPlayer( = s.playermap["Player1"]
         
     def nextUnitTurnUnpause(self):
         #self.pause = False

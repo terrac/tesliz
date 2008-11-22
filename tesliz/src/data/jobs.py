@@ -84,9 +84,11 @@ class Squire(Job):
         trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
         
         throw.do = lambda self,unit2: damageHitpoints(data.damage.basicPhysical,self.unit1,unit2)
+        #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])
+        unit.mental = Mind([Combat(unit,action.Attack,combat.isWanted)])
     
 class Chemist(Job):
     acquired = True
