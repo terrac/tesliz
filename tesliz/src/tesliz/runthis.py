@@ -580,7 +580,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         return True        
     def clickEntity(self,name,position):
         self.showAttributes(name)                    
-        print self.cplayer
+        
         if self.cplayer:
             self.cplayer.clickEntity(name,position)
             

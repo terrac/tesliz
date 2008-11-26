@@ -131,14 +131,7 @@ class Unittypes(object):
         trait = Traits([boost1,boost2])
         unit.traits["Boost"] = trait    
         
-    def Wizard(self,unit,level):
-        setupBasic(unit, level)
-        
-        setupStats(unit, level, 5, 30, 5,5,20)
-        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
-        range = NumberedTraits([fireball],[5])
-        unit.traits["FireMagic"] = range
-        
+
     def Priest(self,unit,level):
         setupBasic(unit, level)
         
@@ -182,7 +175,15 @@ class Unittypes(object):
         setupBasic(unit, level)
         
         setupStats(unit, level, 4, 50, 10,5,5)
-                
+
+
+    def Wizard(self,unit,level):
+        setupBasic(unit, level)
+        unit.items.add(ClothCap())
+        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
+        range = NumberedTraits([fireball],[5])
+        unit.traits["FireMagic"] = range
+                        
     def Squire(self,unit,level):
         setupBasic(unit, level)
         unit.job = data.jobs.Squire()

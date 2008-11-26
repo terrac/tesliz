@@ -58,7 +58,7 @@ def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):
     #TODO convex hulls -figure out and do
         col = getattr(OgreNewt, type)(s.app.World,Ogre.Vector3(1,1,1))
     else:    
-        col = OgreNewt.Ellipsoid(s.app.World, Ogre.Vector3(1,1,1))
+        col = OgreNewt.Box(s.app.World, Ogre.Vector3(1,3,1))
     body = OgreNewt.Body( s.app.World, col)
       
 
@@ -130,18 +130,24 @@ def setupExtra(unit, mental = None):
     if has and not unit.mental or not has:
         unit.mental = mental
     return unit
-def createUnit(position,player,unittype,race,level=1,material = "Examples/RustySteel" ,mesh = 'cylinder.mesh' ,name = None,mental = None):
+def createUnit(position,player,unittype,race,level=1,name = None,material = None ,mesh = None ,mental = None):
     if not name:
         name = s.app.getUniqueName()+unittype +"-"+player.name   
+    
     sceneManager = s.app.sceneManager                        
     scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)                        
     scene_node.position = position             
-    attachMe = sceneManager.createEntity(name,mesh)    
-    scene_node.attachObject(attachMe)
+    
     unit = Unit()
     unit.node = scene_node
     buildUnit(unit,unittype,race,level,player.name)
-    unit.node.getAttachedObject(0).setMaterialName(material)
     
+    if not mesh:
+        mesh = unit.job.mesh
+    if not material:
+        material = unit.job.material
+    unit.node.getAttachedObject(0).setMaterialName(material)
+    attachMe = sceneManager.createEntity(name,mesh)    
+    scene_node.attachObject(attachMe)
     setupExtra(unit, mental)
     return unit

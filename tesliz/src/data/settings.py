@@ -22,12 +22,12 @@ class Settings(object):
         
         s.app.setTurnbased(True)
         s.AIon = True
-#        s.AIon = False
+        #s.AIon = False
         s.fog = False
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 12
+        s.speed = 5
         
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "aion")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
@@ -46,9 +46,10 @@ class Settings(object):
         
 #        s.eventpausing = True    
     def textChangedHandler(self, e):
-    
-        s.speed = int(str(e.window.getText()))
-        
+        try:
+            s.speed = int(str(e.window.getText()))
+        except:
+            e.window.setText(str(s.speed))
         return True    
     def handleAIONChange(self, e):
         s.AIon = not s.AIon

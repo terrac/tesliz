@@ -26,16 +26,19 @@ def getClose(unit,isWanted):
     return lounit
 
 def getBest(unit,isValid):
+    bestl = []
     best = None
     for trait in unit.traits.values():
        for ability in trait.getAbilities().values():
            if isValid(ability):
                if not best:
-                   best = ability                
+                   best = ability
+                   bestl.append(best)                
                elif best.value <ability.value:
                    best = ability
+                   bestl.append(best)
                    
-    return best
+    return bestl
 
 def getWithinRange(unit,eunit,isValid):
     best = None
@@ -60,51 +63,111 @@ class Combat(object):
         self.isWanted = isWanted
 #        else:
 #            self.getClose combat.getClose
+        self.state = "start"    
+        self.wait = 0
         
+
+    def setupMove(self):
+        unit = self.unit
+
+        #s.framelistener.clearAction
+        eunit = getClose(unit,self.isWanted)
+        self.eunit = eunit
+        if not self.eunit:                
+            return False
+        bool = False
+        move = unit.traits["Move"].getClassList()[0]
+        abill = getBest(unit, self.isValid)
+        vlist = data.util.getAllValid(unit.body.getOgreNode().getPosition(), move.range)
+        #vlist.reverse()
+        endvec = None
+        endabil = None
+        self.validvecs = []
+        while abill and not endvec:
+            abil = abill.pop()
+            validvecs = []
+            for vec in vlist:
+            #ray from vec to enemy unit, if valid then move there, but only
+                start = vec
+                end = eunit.body.getOgreNode().getPosition()
+                # print start
+                self.ray = OgreNewt.BasicRaycast(s.app.World, start, end)
+                info = self.ray.getFirstHit()
+                #print start
+                #print end
+                if info.mBody:
+                    name = info.mBody.getOgreNode().getName()
+                    if (s.unitmap.has_key(name) and s.unitmap[name].player != unit.player and data.util.withinRange(vec, end, abil.range)):
+                        validvecs.append(vec)
+                    #break;
+                    
+                
+            
+            lodis = 999
+            for vec in validvecs:
+                dis = distance(eunit.node.getPosition(), vec)
+                if dis < lodis:
+                    lodis = dis
+                    endvec = vec
+                    endabil = abil
+            self.validvecs = validvecs
+                
+            
+            print lodis
+        self.endabil = endabil
+        self.endvec = endvec
+        self.vlist = vlist
+        self.move = move
+        return True
+
 
 
     
     def execute(self,timer):
         #aoeu
+        if self.wait > 0:
+            self.wait -= timer
+            return True
         unit = self.unit
-        eunit = getClose(unit,self.isWanted)
 
-        if not eunit:                
+
         
+        
+        if self.state == "start": 
+            if not self.setupMove():
+                return False
+            self.state = "showmoves"
+        if self.state == "showmoves":
+            self.nlist = []
+            for vec in self.vlist:
+                self.nlist.append(data.util.show(vec))
+                
+            self.wait = 2
+            self.state ="showchoice"
+            return True
+        if self.state == "showchoice":  #show choices for now
+            for x in self.nlist:                    
+                s.app.sceneManager.getRootSceneNode().removeChild(x)
+            self.nlist = []
+            for vec in self.validvecs:
+                self.nlist.append(data.util.show(vec,"BlueMage/SOLID"))
+            if self.endvec:
+                self.nlist.append(data.util.show(self.endvec + Ogre.Vector3(0,1,0),"RedMage/SOLID"))
+            self.wait = 2
+            self.state ="addactions"
+            return True
+        if self.state == "addactions":
+            for x in self.nlist:                    
+                s.app.sceneManager.getRootSceneNode().removeChild(x)
+            if not self.endvec:
+                self.endvec = self.eunit.body.getOgreNode().getPosition()
+            setStart(self.move,unit,None,self.endvec)
+            s.framelistener.addToQueue(unit,copy.copy(self.move))
+            if self.endabil:
+                setStart(self.endabil,unit,self.eunit)              
+                s.framelistener.addToQueue(unit,copy.copy(self.endabil))
+            self.state = "start"
             return False
-        
-        
-    
-        #s.framelistener.clearActions(self.unit)
-        
-        
-        bool =False
-        
-        
-        while not bool:
-            abil = getBest(unit,self.isValid)
-            
-            #for example if there are no healing items
-            if not abil:
-                return
-            #unit.traits
-            if not data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), abil.range):
-                #should this be copied?
-                move = unit.traits["Move"].getClassList()[0]
-                
-                setStart(move,unit,None,eunit.node.getPosition())
-                s.framelistener.addToQueue(unit,move)
-                abil = getWithinRange(unit, eunit, self.isValid)
-                
-            if not setStart(abil,unit,eunit):
-                break # wasnt in range, maybe look for other abilites later 
-            s.framelistener.addToQueue(unit,copy.copy(abil))
-         
-            if hasattr(abil, "action"):
-                bool =abil.action
-            else:               
-                s.log( str(abil)+" has no action attribute",self.unit)
-                break;
         
         
         #unit.mental.state["angry"] = 50#     

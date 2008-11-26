@@ -10,7 +10,10 @@ class Chatbox:
         self.listholder.append(item)
         
         self.chatbox.addItem(item)
-        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+        try:
+            ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+        except:# we shouldn't be adding text if the unit is gone
+            return
         ogretext.enable(True)
         unit.text =ogretext
         ori = s.app.camera.getOrientation()

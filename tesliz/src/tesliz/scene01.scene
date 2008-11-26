@@ -21,7 +21,7 @@
       </light>
     </node>
     <node name="Camera">
-      <position x="6.481132" y="5.507640" z="20.343665"/>
+      <position x="0" y="5.507640" z="30"/>
       <quaternion x="0.481707" y="0.212922" z="0.334251" w="0.781600"/>
       <scale x="1.000000" y="1.000000" z="1.000000"/>
       <camera name="Camera" fov="37.849289" projectionType="perspective">

@@ -144,10 +144,10 @@ class FFTMove():
         self.toremove =data.util.markValid(self.unit1.node.getPosition(), self.range, data.util.show)
         
     def choiceEnd(self):
-        
-        for x in self.toremove:
+        if self.toremove:
+            for x in self.toremove:
                     
-            s.app.sceneManager.getRootSceneNode().removeChild(x)
+                s.app.sceneManager.getRootSceneNode().removeChild(x)
         self.toremove = None
         
 
@@ -163,6 +163,7 @@ class FFTMove():
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos
             self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            self.list.pop(0)
             if not self.list:
                 s.log("cant move",self)
                 return False
@@ -186,15 +187,17 @@ class FFTMove():
         if len(self.list) == self.cur:
             return False
         vec1 = self.unit1.node.getPosition()
-        vec2 = self.list[self.cur ]
+        vec2 = self.list[self.cur]
         
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
         #self.unit1.body.unFreeze()    
         #self.unit1.body.setVelocity(direction *5)
-        src =self.unit1.node.getInitialOrientation() * Ogre.Vector3.UNIT_X
+        
         vec1 = vec1 + (direction * timer * 3)
-        self.unit1.body.setPositionOrientation(vec1,src.getRotationTo(direction) )
+        rotateto = vec2 * 1
+        rotateto.y = vec1.y
+        self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(rotateto))
         #finishedMoving = False
 #        if s.turnbased:
 #            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
@@ -205,7 +208,7 @@ class FFTMove():
         #print vec2
         #print self.cur
         #print distance(self.unit1.node.getPosition(), vec2)
-        if distance(self.unit1.node.getPosition(), vec2) < .5:
+        if distance(self.unit1.node.getPosition(), vec2) < .3:
             self.unit1.body.freeze()    
             self.cur += 1
         return True

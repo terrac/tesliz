@@ -1,6 +1,5 @@
 from tactics.Singleton import *
 from tactics.Affect import *
-s = Singleton()
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText 
 
@@ -128,8 +127,17 @@ class Unit(object):
             self.death.execute(self)
             inertia = OgreNewt.CalcSphereSolid( 0, 1 )
             self.body.setMassMatrix( 0.0, inertia )
-        else:
-            self.death = False
+            
+
+            liveunits = 0
+            for e in self.player.unitlist:
+                if not e.death and e.node:
+                    liveunits +=1            
+            if not liveunits:
+                s.log("endgame")
+                s.endGame()
+#        else:
+#            self.death = False
         
         
             

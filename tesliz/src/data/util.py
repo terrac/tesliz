@@ -40,7 +40,7 @@ class VectorMap(dict):
         key = str(key)
         return dict.has_key(self,key)
 
-def show(pos):
+def show(pos, texturename = "Spark/SOLID" ):
     
     sceneManager = s.app.sceneManager        
     name = s.app.getUniqueName()
@@ -56,7 +56,7 @@ def show(pos):
     
     size = .3
     scene_node.setScale(Ogre.Vector3(size,size,size))
-    
+    scene_node.getAttachedObject(0).setMaterialName( texturename)
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
  
     return name
@@ -105,7 +105,8 @@ def update(text,unit):
 def damageHitpoints(getDamage,unit1,unit2):
     number,type = getDamage(unit1)
 
-        
+    if unit2.death:
+        return
     #return
     #determine resistance
 #    if unit1.attributes.resistance.has_key(type):
@@ -243,6 +244,7 @@ def experienceAccrued(unit1,unit2):
     unit1.attributes.exp += exp
     if unit1.attributes.exp > 100:
         unit1.attributes.exp = 0
+        unit1.attributes.level +=1
     unit1.job.exp  += jp
     if not unit1.expaccrued:
         unit1.expaccrued = True
@@ -303,7 +305,29 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
         prevfound[x] = True
         markValid(x, range,mark,names,prevfound)
     return names
-
+def getAllValid(vec1,range,valid = None, prevfound=None):
+    if not valid:
+        valid = []
+    if not prevfound:
+        prevfound = VectorMap()
+    
+    moves,jump = range
+    xlist = [0,0,1,-1]
+    zlist = [-1,1,0,0]
+    list =getValid(vec1, jump,xlist,zlist)
+    for x in list:
+        if prevfound.has_key(x):
+            list.remove(x)
+    moves -=1
+    range = moves,jump
+    if moves < 0:
+        return
+    for x in list:
+        
+        valid.append(x)
+        prevfound[x] = True
+        getAllValid(x, range,valid,prevfound)
+    return valid
 
 def getShortest(vec1,vec2,range, prevfound=None):
     if not prevfound:
@@ -320,7 +344,7 @@ def getShortest(vec1,vec2,range, prevfound=None):
     moves -=1
     range = moves,jump
     
-    if utilities.physics.distance(vec1, vec2) < 2:
+    if utilities.physics.distance(vec1, vec2) < 1:
         return [vec1]
     if moves < 0:
         return [vec1]
@@ -374,12 +398,17 @@ def getValid(vec,height,xlist , zlist):
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
         end = Ogre.Vector3(vec.x + x, vec.y - height, vec.z + z)
         ray = OgreNewt.BasicRaycast(s.app.World, start, end)
-        info = ray.getFirstHit() # will need to do multiple hits eventually
-        if (info.mBody):
-            dira = (end - start)
-            dira.normalise()
-            position = start + (dira * ((end - start).length() * info.mDistance))
-            validpos.append(position)
+        
+        for x in range(0,ray.getHitCount()):
+            info = ray.getInfoAt(x)
+            
+            if (info.mBody):
+                if s.unitmap.has_key(info.mBody.getOgreNode().getName()):
+                    break
+                dira = (end - start)
+                dira.normalise()
+                position = start + (dira * ((end - start).length() * info.mDistance))
+                validpos.append(position)
         
     
     return validpos

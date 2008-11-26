@@ -39,14 +39,13 @@ class Fstats(object):
 
 
 
-class JobHolder:
-    def __init__(self):
-        self.job = None
-        self.jlist = []
-        
-    def setJob(self,value):
-        self.job = job
-
+#class JobHolder:
+#    def __init__(self):
+#        self.job = None
+#        self.jlist = []
+#        
+#    def setJob(self,value):
+#        self.job = job
 def set(unit,hp,power,mp,mpower,ce,speed,move):
     po =unit.attributes.magical = Fstats()
     po =unit.attributes.physical = Fstats()
@@ -56,10 +55,10 @@ def set(unit,hp,power,mp,mpower,ce,speed,move):
     po.classevade = ce
     unit.attributes.speed = speed
     unit.attributes.move = move
-   
+requiredexp =[0,200,400,700,1100,1600,2000,2500]
 class Job:
     level = 1
-    exp = 100
+    exp = 0
     
     def incrementLevel(self,cjobs):
         
@@ -70,10 +69,15 @@ class Job:
             if requiredJobs(cjobs):
                 cjobs.append(copy.deepcopy(job))
                 
-                
+    
+    def upgradeLevel(self):
+        if requiredexp[level] < exp:
+            level +=1
+            
     def requiredJobs(self,cjobs):
         return True
     mesh = "zombie.mesh"
+    material = "Examples/RustySteel"
     def __str__( self ):
         return self.__class__.__name__
 class Squire(Job):
@@ -117,8 +121,11 @@ class Wizard(Job):
                 return True
             
 def changeTo(unit,job):
-    unit.job =  job
-    job.changeTo(unit)
+    if job.requiredJobs(unit.job.jlist):
+        
+        unit.job =  job
+    
+        job.changeTo(unit)
                
 def getJobList():
     return [Squire(),Chemist(),Wizard()]

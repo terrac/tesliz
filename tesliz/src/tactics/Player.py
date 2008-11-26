@@ -78,9 +78,7 @@ class HumanPlayer(object):
        else:
            if unit.mental:
                for x in unit.mental.list:
-                   if x.running:
-                       if x.execute(0):
-                           break;
+                   s.framelistener.addToQueue(unit,x)
                    
        
            
@@ -107,9 +105,7 @@ class ComputerPlayer(object):
     def startTurn(self,unit):
         if unit.mental:        
             for x in unit.mental.list:
-                if x.running:
-                    if x.execute(0):
-                        break;
+                s.framelistener.addToQueue(unit,x)
         
         s.turn.pause = False    
         

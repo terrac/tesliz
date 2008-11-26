@@ -67,7 +67,8 @@ class Throw():
                         
         data.util.createEntity(self.mesh,node)
 
-        node.setPosition(0.0, 0.0, 0.0)      
+        node.setPosition(0.0, 0.0, 0.0)
+        node.setScale(0.1,0.1,0.1)      
         col = OgreNewt.Cylinder(World, .5, .5)
         body = OgreNewt.Body( World, col)
         material =Material(name,ObjectCallback( 2))
@@ -76,7 +77,7 @@ class Throw():
         body.setUserData(self)
         del col
         inertia = OgreNewt.CalcSphereSolid( 10.0, 1.0 )
-        body.setMassMatrix( 10.0, inertia )
+        body.setMassMatrix( 1.0, inertia )
         body.attachToNode( node )
         body.setStandardForceCallback()
         body.setPositionOrientation( vector1, unit1.body.getOgreNode().getOrientation() )

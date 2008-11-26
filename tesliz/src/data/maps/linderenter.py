@@ -31,19 +31,32 @@ class Unitdata(object):
         unit =buildUnitNoNode("Oath","Player1", "Squire")
         unit =buildUnitNoNode("Bahaullah","Player1", "Squire")
         unit =buildUnitNoNode("Boru","Player1", "Squire")
-        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19),Ogre.Vector3(-2,0,19),Ogre.Vector3(-5,0,19)])
+        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19)])
         
+        
+        girl1 =tactics.util.createUnit(Ogre.Vector3(2,0,17),"Computer1","Squire",1)
+        girl2 =tactics.util.createUnit(Ogre.Vector3(2,0,17),"Computer1","Squire",1)
+        merchant =tactics.util.createUnit(Ogre.Vector3(2,0,17),"Computer1","Squire",1)
         CreateList(["Squire","Squire","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
         alluvia = s.unitmap["Alluvia"]
-        fiore = s.unitmap["Fiore"]
+#        fiore = s.unitmap["Fiore"]
         #setup a map of units with turns and positions and add it on
-        convo1 =[(alluvia,"We are surrounded"),
-         (fiore,"Hail travelers we are bandits in need of money.  We will accept it the easy or the hard way"),
-         (alluvia,"We haven't got any money.  We spent it all on goods"),
-         (fiore,"Well I am afraid we don't accept goods other than gold, spices, or weapons.  You should really research your routes and know this stuff .  "),
-         (fiore,"I am feeling generous today and I will accept an arm and a leg as payment for your lack of goods"),
-         (alluvia,"I like my arms!"),
-         (fiore,"Its your choice.")
+        
+        convo1 =[(girl1,"Did you see that Belouve boy fighting?  Hes a cutie"),
+         (girl2,"Personally I don't know how you can talk about the Belouves like that.  They have ruined this town."),
+         (girl1,"Aww, youre no fun"),
+         (girl2,"Did you see the price of cloth today?  The old Ratsger said that the Siege's kid left the door open on their barn and ruined half their supply"),
+         (girl1,"Yeah, Im not buying any cloth till the price goes down")
+         
+         ]
+        convo2 =[
+         (merchant,"The recent downturn in the economy due to all the soldiers coming back from the war with no jobs has cost me a lot.  They are all thieves now!"),
+         (merchant,"I can offer no more than $grain-price$ gold for your $grain$."),
+         (cerc,"Whats this, a transaction going on in broad daylight without my approval? What do you think i am? A chump?"),
+         (cerc,"To do business here you have to pay the toll."),
+         (alluvia,"No"),
+         (cerc,"No?")
+         (cerc,"Well I wish you good luck with that attitude my friend")
          ]
         tmap = {0:convo1,'end':(alluvia,"We have won!")}
         fmap = {'death-Fiore':(alluvia,"I bet you didn't expect that")}

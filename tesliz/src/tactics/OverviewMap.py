@@ -5,9 +5,11 @@ import data.util
 import tactics.util
 import tactics.Move
 import time
+import data.overviewtrade
 from tactics.Singleton import *
 from utilities.physics import *
-
+import ogre.gui.CEGUI as CEGUI
+from utilities.CEGUI_framework import *
 
 def addDots(vec1,vec2,slow = False):
 
@@ -84,13 +86,18 @@ class OverviewMap:
         self.map = dict()
         self.actionqueue=[]
         self.filename = text
+        
+        
+        
+        self.overviewtrade = data.overviewtrade.OverviewTrade()
+        
         if os.path.exists(text) and not self.newgame:
             positionmap = shelve.open(text)
             #self.map = positionmap["map"]
             self.root,self.cpos = positionmap["mapdata"]
             
             s.cplayer = s.playermap[positionmap["currentplayer"]]
-        
+            self.overviewtrade.load(positionmap)
             positionmap.close()
            # self.createLocations(self.root)
         else:
@@ -99,7 +106,6 @@ class OverviewMap:
         #if file text exists then load positions from file
         
         #else setup default positions
-        
         # load mesh 
         # for each pos create a big dot and call
         
@@ -110,11 +116,18 @@ class OverviewMap:
         #s.framelistener.setCurrentPlayer( = s.overviewmap
         self.buildScene()
 
+    def loadScene(self, sceenname):
+        self.overviewtrade.hide()
+        self.save()
+        s.app.loadScene(sceenname)
+
+
     def save(self):
         positionmap = shelve.open(self.filename)
         positionmap["mapdata"] = self.root, self.cpos
         positionmap["currentplayer"] = s.cplayer.name
         #positionmap["map"] = self.map
+        self.overviewtrade.save(positionmap)
         positionmap.close()
 
 
@@ -164,13 +177,15 @@ class OverviewMap:
     #    for x in cpos.plist:
     #        self.addVisits(cpos)
     def setupDefaultPositions(self):
-        self.root =pos = Position((0,7,0),"fillerscene",False)
-        pos1 = Position((5,7,0),"scene01")
+        self.root =pos = Position((0,7,0),"Linder",False)
+        pos1 = Position((5,7,0),"Exalia")
         pos.next = pos1
         
         
         pos1.next = Position((5,7,5),"scene02")
         self.cpos = self.root
+        
+        self.placetoscene = {"Linder":"fillerscene","Linder-Exit":"fillerscene","Exalia":"fillerscene"}
         
     def addPos(self,pos1,pos2):
         pos1.plist.append(pos2)
@@ -184,8 +199,10 @@ class OverviewMap:
        if not self.map.has_key(name):
            return
        
-       
-       
+       exitname = self.cpos.name+"-Exit"
+       if self.placetoscene.has_key(exitname):
+           self.loadScene(self.placetoscene[exitname])
+           del self.placetoscene[exitname]
        self.move = tactics.Move.FFTMove()
        self.move.unit1 = self.unit
        self.move.endPos = position
@@ -197,11 +214,17 @@ class OverviewMap:
        s.framelistener.addToQueue(self,self)
     
     def execute(self,timer):
-        
-        if not self.move.execute(timer) and not self.cpos.visited:
-            self.save()
+        if not self.move.execute(timer):
             
-            s.app.loadScene(self.cpos.name)
+            if not self.cpos.visited:
+                
+                sceenname = self.cpos.name
+                if self.placetoscene.has_key(self.cpos.name):
+                    sceenname = self.placetoscene[self.cpos.name]
+                self.loadScene(sceenname)
+                return False
+            
+            self.overviewtrade.show(self.cpos.name)
             return False
         return True
     
@@ -212,8 +235,10 @@ class OverviewMap:
             AddPos(self.cpos,self)
         s.framelistener.setCurrentPlayer( self)
         #s.turn.pause = True
+        0
+        CEGUI.WindowManager.getSingleton().destroyWindow("chatbox")
         
-        
+        self.overviewtrade.show(self.cpos.name)
     def getMoveList(self,cpos,topos,movedlist =[],posset = None):
         if not posset:
             posset = set()

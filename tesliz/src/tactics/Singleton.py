@@ -70,7 +70,8 @@ class Singleton:
             
                 
         def endGame(self):
-          
+            for unit in self.unitmap.values():
+                unit.destroy()
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
             if s.event:
                 s.event.end()
