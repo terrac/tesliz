@@ -37,6 +37,9 @@ class Singleton:
            self.event = None
            self.reset()
            
+           # state variable saying whether CEGUI has been initialized or not, default None (False)
+           self.initCEGUI = None
+           
         #key = name : value = node
         def reset(self):
             self.unitmap = dict()            
