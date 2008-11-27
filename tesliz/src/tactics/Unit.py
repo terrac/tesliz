@@ -1,5 +1,6 @@
 from tactics.Singleton import *
 from tactics.Affect import *
+from data.jobs import *
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText 
 
@@ -68,6 +69,7 @@ class Unit(object):
         self.type = None
         self.timeleft = 0
         self.text = None
+        self.job = Job()
         
         
         self.actionqueue = []
@@ -94,6 +96,12 @@ class Unit(object):
             animationState.setEnabled(True)
             s.app.animations.append(animationState)
             
+    def getJob(self):
+        return self.job
+    
+    def setJob(self, job):
+        self.job = job
+        
     def getVisible(self):
         return self.visible
     def setVisible(self,bool):

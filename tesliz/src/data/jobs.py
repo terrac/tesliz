@@ -2,7 +2,9 @@ from data.traits.generictraits import GridTargeting
 from data.actionlist import *
 from data.items import *
 from userinterface.traits import *
-import mental.combat as combat
+import mental.combat as Combat
+from mental.mind import Mind
+from mental.action import Action
 import copy
 class Fstats(object):
     points = 5
@@ -82,6 +84,9 @@ class Job:
         return self.__class__.__name__
 class Squire(Job):
     
+    def jobName(self):
+        return "Squire"
+    
     def changeTo(self,unit):
         set(unit,30,4,5,3,5,6,(4,4))
         throw = Throw("cylinder.mesh")
@@ -92,9 +97,12 @@ class Squire(Job):
         trait1.range = 50
         
         unit.traits["Squire"] =Traits([trait1])
-        unit.mental = Mind([Combat(unit,action.Attack,combat.isWanted)])
+#        unit.mental = Mind([Combat(unit,Action.Attack,Combat.isWanted)])
     
 class Chemist(Job):
+    def jobName(self):
+        return "Chemist"
+    
     acquired = True
     def healing(self,abil):
         return abil.type == "healing"
@@ -105,9 +113,12 @@ class Chemist(Job):
         trait1 = GridTargeting(GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
         trait1.range = 50
         
-        unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
-        unit.mental = Mind([Combat(unit,self.healing,combat.isWantedHurt),Combat(unit,action.Attack,combat.isWanted)])
+#        unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
+#        unit.mental = Mind([Combat(unit,self.healing,Combat.isWantedHurt),Combat(unit,Action.Attack,Combat.isWanted)])
 class Wizard(Job):
+    def jobName(self):
+        return "Wizard"
+    
     def changeTo(self,unit):
         set(unit,27,3,25,6,5,5,(3,3))
 
@@ -121,11 +132,12 @@ class Wizard(Job):
                 return True
             
 def changeTo(unit,job):
-    if job.requiredJobs(unit.job.jlist):
+    # No clue what jlist is, removing the call
+    #if job.requiredJobs(unit.job.jlist):
         
-        unit.job =  job
+    unit.job =  job
     
-        job.changeTo(unit)
+    job.changeTo(unit)
                
 def getJobList():
     return [Squire(),Chemist(),Wizard()]

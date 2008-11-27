@@ -33,6 +33,9 @@ class Singleton:
            #current player for functions like changing jobs 
            self.cplayer = None
            
+           # BPC - TEMP data for developing job stuff
+           #self
+           
            #self.running = True
            self.event = None
            self.reset()

@@ -1,5 +1,7 @@
 
-def Attack(abil): 
+class Action:
+
+    def Attack(abil): 
         if abil.type == "healing":
             return False   
         return True
