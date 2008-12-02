@@ -1,9 +1,10 @@
-from data.traits.generictraits import *
+import data.traits.generictraits 
 
+#from data.traits.generictraits import GridTargeting
 #import data.traits.Generictraits as GT
 from userinterface.traits import *
 
-from tactics.Move import *
+import tactics.Move
 #from data.traits.GenericTrait import Move
 import copy
 from tactics.Singleton import *
@@ -24,11 +25,12 @@ s = Singleton()
 def setupBasic(unit, level):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
     unit.attributes.moves = 5,5
-    move = Traits([FFTMove(unit)])
+    move = Traits([tactics.Move.FFTMove(unit)])
     move.action = False
     unit.traits["Move"] = move
-    attack = Traits([Attack()])
+    attack = Traits([data.traits.generictraits.Attack()])
     unit.traits["Attack"] = attack
+    unit.level = level
     #unit.attributes.hitpoints = 500 * level
     #unit.attributes.damage = 50 * level
     #unit.attributes.magical = Fstats()
@@ -179,10 +181,14 @@ class Unittypes(object):
 
     def Wizard(self,unit,level):
         setupBasic(unit, level)
+        unit.job = data.jobs.Wizard()
+        data.util.resetAttributes(unit)
+        
         unit.items.add(ClothCap())
-        fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
-        range = NumberedTraits([fireball],[5])
-        unit.traits["FireMagic"] = range
+        data.util.resetAttributes(unit)
+        #fireball = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
+        #range = NumberedTraits([fireball],[5])
+        #unit.traits["FireMagic"] = range
                         
     def Squire(self,unit,level):
         setupBasic(unit, level)

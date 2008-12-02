@@ -4,7 +4,7 @@ from data.items import *
 from userinterface.traits import *
 import mental.combat as Combat
 from mental.mind import Mind
-from mental.action import Action
+import mental.action
 import copy
 class Fstats(object):
     points = 5
@@ -61,7 +61,8 @@ requiredexp =[0,200,400,700,1100,1600,2000,2500]
 class Job:
     level = 1
     exp = 0
-    
+    def jobName(self):
+        return self.__class__.__name__
     def incrementLevel(self,cjobs):
         
         for job in getJobList():
@@ -75,8 +76,16 @@ class Job:
     def upgradeLevel(self):
         if requiredexp[level] < exp:
             level +=1
-            
+    required = None
     def requiredJobs(self,cjobs):
+        if self.required:                
+            for job,level in required:
+                boo = False
+                for x in cjobs:
+                    if x.__class__.__name__ == job and level >= x.level:
+                        boo = True
+                if not boo:
+                    return False
         return True
     mesh = "zombie.mesh"
     material = "Examples/RustySteel"
@@ -84,15 +93,14 @@ class Job:
         return self.__class__.__name__
 class Squire(Job):
     
-    def jobName(self):
-        return "Squire"
+ 
     
     def changeTo(self,unit):
         set(unit,30,4,5,3,5,6,(4,4))
         throw = Throw("cylinder.mesh")
         trait1 = GridTargeting(GridTargeting.offset1,[throw],"Stone","physical",)
         
-        throw.do = lambda self,unit2: damageHitpoints(data.damage.basicPhysical,self.unit1,unit2)
+        throw.do = lambda self,unit2: data.util.damageHitpoints(data.damage.basicPhysical,self.unit1,unit2)
         #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
         trait1.range = 50
         
@@ -100,8 +108,6 @@ class Squire(Job):
 #        unit.mental = Mind([Combat(unit,Action.Attack,Combat.isWanted)])
     
 class Chemist(Job):
-    def jobName(self):
-        return "Chemist"
     
     acquired = True
     def healing(self,abil):
@@ -116,13 +122,24 @@ class Chemist(Job):
 #        unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
 #        unit.mental = Mind([Combat(unit,self.healing,Combat.isWantedHurt),Combat(unit,Action.Attack,Combat.isWanted)])
 class Wizard(Job):
-    def jobName(self):
-        return "Wizard"
     
     def changeTo(self,unit):
         set(unit,27,3,25,6,5,5,(3,3))
 
         fireball = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireburst")
+        fireball.range = 50
+        range = NumberedTraits([fireball],[5])
+        unit.traits["BlackMagic"] = range
+        
+
+    required = [("Chemist",2)]
+class Poet(Job):
+    
+    def changeTo(self,unit):
+        set(unit,27,3,25,6,5,5,(3,3))
+
+        deadzone = GridTargeting(GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireburst")
+        fireball.range = 50
         range = NumberedTraits([fireball],[5])
         unit.traits["BlackMagic"] = range
         
@@ -130,7 +147,6 @@ class Wizard(Job):
         for job in cjobs:
             if isinstance(job, Chemist) and job.level > 1:
                 return True
-            
 def changeTo(unit,job):
     # No clue what jlist is, removing the call
     #if job.requiredJobs(unit.job.jlist):

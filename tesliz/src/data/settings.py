@@ -3,6 +3,8 @@ from tactics.Player import *
 from tactics.Singleton import *
 from data.races import *
 import ogre.gui.CEGUI as CEGUI
+from tactics.OverviewMap import Position
+import tactics.util
 
 s = Singleton()
 class Settings(object):
@@ -11,7 +13,7 @@ class Settings(object):
     #playermap = {"Player1":ComputerPlayer(),"Computer1":HumanPlayer()}
     
     def setupPlayerMap(self):
-        playermap = {"Player1":HumanPlayer("Player1"),"Computer1":ComputerPlayer("Computer1")}        
+        playermap = {"Player1":HumanPlayer("Player1")}        
         s.playermap = playermap        
         s.cplayer = playermap["Player1"]
     def __init__(self):
@@ -27,7 +29,7 @@ class Settings(object):
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 5
+        s.speed = 24
         
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "aion")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
@@ -56,4 +58,20 @@ class Settings(object):
         e.window.setText(str(s.AIon)) 
         
         return True    
+    
+    def setupDefaultPositions(self, overviewmap):
+        overviewmap.root =pos = Position((0,7,0),"Linder",False)
+        pos1 = Position((5,7,0),"Exalia")
+        pos.next = pos1
+        
+        
+        pos1.next = Position((5,7,5),"scene02")
+        overviewmap.cpos = overviewmap.root
+        
+        overviewmap.placetoscene = {"Linder":"linderenter","Linder-Exit":"linderexit","Exalia":"fillerscene"}
+        tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard")
+        #tactics.util.buildUnitNoNode("Oath","Player1", "Squire")
+#        tactics.util.buildUnitNoNode("Bahaullah","Player1", "Squire")
+#        tactics.util.buildUnitNoNode("Boru","Player1", "Squire")
+    
             

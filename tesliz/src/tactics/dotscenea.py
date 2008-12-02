@@ -150,7 +150,11 @@ def parse_scene_node(sceneManager, xml_node):
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = parse_floats(xml_node, 'position', 'x', 'y', 'z')
-    #scene_node.orientation = Ogre.Quaternion(parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z'))
+    try:
+        w,x,y,z = parse_floats(xml_node, 'quaternion', 'w', 'x', 'y', 'z')
+    except IndexError:
+        w,x,y,z = 1,0,0,0
+    scene_node.orientation = Ogre.Quaternion(w,x,y,z)
     scene_node.setScale(parse_floats(xml_node, 'scale', 'x', 'y', 'z'))
     return scene_node
 
@@ -227,6 +231,7 @@ def parse_camera(sceneManager, xml_node):
         
         s.app.msnCam.setPosition(scene_node.getPosition())
         s.app.msnCam.setOrientation(scene_node.getOrientation())
+        #camera.orientation = scene_node.getOrientation()
         #scene_node.attachObject(camera)
         s.app.sceneManager.destroySceneNode(scene_node)
         camera_list.append(camera)
@@ -347,6 +352,7 @@ class Dotscene(object):
         return sceneManager 
     
     app = None
+     
     def setup_scene(self,sceneManager, xml,papp):
         '''Create scene from XML file and apply defaults.
         >>> application = Ogre_unit.setup_unittest_application()
@@ -388,7 +394,11 @@ def setup_test_dotscene_application(setup_function, xml, application = None):
 #        Ogre_util.create_grid(self.sceneManager, 1, (-10,-10), (10,10))
 #        self.root.startRendering()
 
-
+def setupOnlyEvents(filename):
+    module = __import__("data.maps."+filename)
+    module = getattr(module,'maps')
+    map = getattr(module,filename).Unitdata()
+    map.setupEvents()
 if __name__ == "__main__":
     import code_util
     code_util.test(__file__)

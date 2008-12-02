@@ -1,10 +1,10 @@
 
-class Action:
+#class Action:
 
-    def Attack(abil): 
-        if abil.type == "healing":
-            return False   
-        return True
+def Attack(abil): 
+    if abil.type == "healing":
+        return False   
+    return True
 
 #def CloseAttack(unit1):
 #        det = lambda abil1,abil2: abil2.range < 3 and abil1.value > abil2.value

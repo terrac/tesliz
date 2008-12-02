@@ -1,6 +1,6 @@
 from tactics.Singleton import *
-from tactics.Affect import *
-from data.jobs import *
+import tactics.Affect
+import data.jobs 
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText 
 
@@ -13,7 +13,7 @@ class ManageDeath():
         print "aoeu"
         ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
         ogretext.enable(True)
-        unit.text =ogretext
+        unit.setText(ogretext)
         if self.count == 0:
             s.removeUnit(unit)
         self.count -= 1
@@ -58,28 +58,33 @@ class Unit(object):
     def __str__( self ):
         return str(self.job)+" "+self.getName()
     def destroy(self):
+        #if these aren't set to none they could be accessed later even when the nodes are destroyed
+        self.node = None
+        self.body = None
         if self.text:
             self.text.destroy()
     def __init__(self,name = "blah"):
         self.attributes = Attributes()
         self.traits = dict()
-        self.affect = AffectHolder(self)
-        self.items = AffectHolder(self)
+        self.affect = tactics.Affect.AffectHolder(self)
+        self.items = tactics.Affect.AffectHolder(self)        
+        self.mental = None
+        self.name = name
+        self.job = None
+        self.reset()
+
+    def reset(self):
         self.body = None
         self.type = None
         self.timeleft = 0
         self.text = None
-        self.job = Job()
-        
         
         self.actionqueue = []
         self.visible = True
-        self.mental = None
-        self.knowledgelist = ["general"]
         self.turncount = 0
         self.death = False
-        self.name = name
         self.node = None
+
     
     def animate(self,text):
         entity = None
@@ -119,7 +124,8 @@ class Unit(object):
         if self.getDeath():
             self.getDeath().execute(self)
             return
-        s.framelistener.showAttributesCurrent(self.getName())
+        if s.turnbased:
+            s.framelistener.showAttributesCurrent(self.getName())
         self.turncount += 1
         if s.event:
             s.event.turnStarted(self)
@@ -142,7 +148,7 @@ class Unit(object):
                 if not e.death and e.node:
                     liveunits +=1            
             if not liveunits:
-                s.log("endgame")
+                s.log("endgame from last unit death",self)
                 s.endGame()
 #        else:
 #            self.death = False
@@ -151,4 +157,15 @@ class Unit(object):
             
     def getDeath(self):
         return self.death
-                    
+    def setText(self,text):
+        if self.text:
+            self.text.destroy()
+        self.text = text
+        
+    def __getstate__(self):
+        return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"mental":self.mental,"job":self.job,"level":self.level,"player":self.player}
+    def __setstate__(self,dict):
+        self.__dict__ = dict
+        self.traits = {}
+        data.util.resetAttributes(self)
+        self.reset()

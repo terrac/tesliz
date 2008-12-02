@@ -29,14 +29,45 @@ s = Singleton()
 class OgreNewtonApplication (sf.Application):
     
     currentmap=None
+    def reset(self):
+        
+        self.timedbodies = []
+        self.animations = []
+        self.bodies=[]
+        if s.turn:
+            s.turn.turnlist = []
+        if s.framelistener:
+            s.framelistener.clearUnitQueue()
+        
+        
+        for unit in s.unitmap.values():
+            #removing like this because letting it be removed once there are no references
+            #is far prefererable to getting the root node due to memory issues
+            name =unit.name
+            if s.app.sceneManager.hasSceneNode(name):
+                s.app.sceneManager.destroySceneNode(name)
+                unit.node = None
+            #the body should dissapear upon all references going away
+            unit.body = None
+        if self.sceneManager:
+            self.sceneManager.destroyAllMovableObjects()
+            self.sceneManager.destroyAllEntities()
+            #s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
+        for name in data.util.meshlist:
+            print name
+            if s.app.sceneManager.hasSceneNode(name):
+                s.app.sceneManager.destroySceneNode(name)
+        meshlist = []
+        s.unitmap = dict()
+        
+        
+        
     def __init__ ( self,onStartup = None):
         sf.Application.__init__(self)
         self.World = OgreNewt.World()
         
         self.EntityCount = 0
-        self.bodies=[]
-        self.timedbodies = []
-        self.animations = []
+        self.reset()
         self.materialmap=dict()
         sf.Application.debugText = "aeou"
         s.app = self
@@ -61,7 +92,7 @@ class OgreNewtonApplication (sf.Application):
     def parseSceneFile(self,map):
         dotscene = Dotscene()
         self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
-
+        
 
 
     def __del__ (self):
@@ -94,7 +125,7 @@ class OgreNewtonApplication (sf.Application):
         
 
         self.createFrame()
-        s.overviewmap =overviewmap = OverviewMap("Terra.player")
+        OverviewMap("Terra.player")
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "current")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
         btn.setText("current")
@@ -104,9 +135,11 @@ class OgreNewtonApplication (sf.Application):
         self.onStartup()
 
     def loadScene(self,scenename):
-        data.util.clearMeshes()
-        s.app.sceneManager.destroyAllMovableObjects()
-        s.app.World.destroyAllBodies()
+        self.reset()
+        #data.util.clearMeshes()
+        s.playermap["Computer1"] = ComputerPlayer("Computer1")
+        for x in s.cplayer.unitlist:
+            s.unitmap[x.getName()] = x
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -126,9 +159,13 @@ class OgreNewtonApplication (sf.Application):
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = AIsettings()
+        if os.path.exists(scenename+".scene"):
+            self.parseSceneFile(scenename)
+        else:
+            self.parseSceneFile("begin")
+            setupOnlyEvents(scenename)
+            s.log("parsed begin file as did not find the regular file")
         
-        self.parseSceneFile(scenename)
-        s.settings.setupPlayerMap()
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
 #        winMgr = CEGUI.WindowManager.getSingleton() 
 #        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
@@ -244,6 +281,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.Debug = False
         self.ShutdownRequested = False
         self.paused = False
+        self.interrupt = []
+        self.pauseturns = True
 
     def addTimed(self, seconds,node,*extra):
         x = Timed(seconds,node,extra)
@@ -263,11 +302,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         return len(self.unitqueues)
 
     def clearActions(self,unit):
-        if self.unitqueues.contains(unit):
+        #dir([])
+        if unit in self.unitqueues :
             self.unitqueues.remove(unit)
         
         unit.actionqueue = []
-        
+    def clearUnitQueue(self):
+        for x in self.unitqueues:
+            self.clearActions(x)
             
     def isActive(self,unit):
         
@@ -278,6 +320,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         return False
     a =       0
     def runQueue(self,timer):
+        
         self.a += timer
         for unit in self.unitqueues:
             
@@ -295,7 +338,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
            
             boo = iexecute.execute(timer)
             
-            if not boo:
+            if not boo and len(unit.actionqueue):
                 unit.actionqueue.pop(0)
                 if hasattr(iexecute, "timeleft"):
                     
@@ -320,6 +363,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #        if s.ended:
 #            return 
         timesincelastframe = frameEvent.timeSinceLastFrame * s.speed
+        for inter in self.interrupt:
+            inter.execute(timesincelastframe)
+            #seems workable and easy if a bit hard to understand for others
+        if len(self.interrupt):
+            self.interrupt = []
+            return True
         
         for u in s.unitmap.values():
             if u.text:
@@ -493,8 +542,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         #if (self.timer > 0.0):
         #    return True
 
-        s.turn.doTurn()        
+        if not self.pauseturns:
+            s.turn.doTurn()        
+        
         self.runQueue(timesincelastframe)
+        
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False
@@ -586,11 +638,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
        CEGUIFrameListener.keyPressed(self,evt)
        s.app.Console.keyPressed(evt)
        #print evt.key
+       
+       
        if OIS.KC_RETURN ==evt.key:               
+           #s.framelistener.paused != s.framelistener.paused
            if hasattr(s.app.camera,"initialOrientation") and s.app.camera.initialOrientation:
-               s.app.camera.setOrientation(s.app.camera.initialOrientation)
+              s.app.camera.setOrientation(s.app.camera.initialOrientation)
            s.app.camera.initialOrientation = None
-           s.framelistener.paused = False
+
        if OIS.KC_NUMPAD5 == evt.key:
            s.screenshot()
        if OIS.KC_NUMPAD6 == evt.key:
@@ -600,14 +655,16 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     def keyReleased(self, evt):
        CEGUIFrameListener.keyReleased(self,evt)
        return True
-
+    def reset(self):
+        #pass
+        self.bodies = []
 
 if __name__ == '__main__':
-    try:
+#    try:
         application = OgreNewtonApplication()
         application.go()
-    except Ogre.OgreException, e:
-        raise e
+#    except Ogre.OgreException, e:
+#        raise e
     #except Exception, e:
         
         #import sys

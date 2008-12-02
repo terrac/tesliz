@@ -1,5 +1,9 @@
 from tactics.Singleton import *
 from tactics.util import *
+import utilities.physics
+import data.util
+import tactics.datautil
+import copy
 s = Singleton()
 
 
@@ -12,13 +16,14 @@ def isWanted(eunit,unit):
 
 def getClose(unit,isWanted):
 
+    
     lodis = 999
     lounit = None
     for eunit in s.unitmap.values():            
-        if isWanted(eunit,unit) and not eunit.getDeath(): #will probably need to meove this once raise
+        if isWanted(eunit,unit) and not eunit.getDeath() and eunit.node: #will probably need to meove this once raise
             
             
-            dis =distance(eunit.node.getPosition(),unit.node.getPosition())
+            dis =utilities.physics.distance(eunit.node.getPosition(),unit.node.getPosition())
             if dis < lodis:
                 lodis =dis
                 lounit = eunit
@@ -105,7 +110,7 @@ class Combat(object):
             
             lodis = 999
             for vec in validvecs:
-                dis = distance(eunit.node.getPosition(), vec)
+                dis = utilities.physics.distance(eunit.node.getPosition(), vec)
                 if dis < lodis:
                     lodis = dis
                     endvec = vec
@@ -161,10 +166,10 @@ class Combat(object):
                 s.app.sceneManager.getRootSceneNode().removeChild(x)
             if not self.endvec:
                 self.endvec = self.eunit.body.getOgreNode().getPosition()
-            setStart(self.move,unit,None,self.endvec)
+            tactics.datautil.setStart(self.move,unit,None,self.endvec)
             s.framelistener.addToQueue(unit,copy.copy(self.move))
             if self.endabil:
-                setStart(self.endabil,unit,self.eunit)              
+                tactics.datautil.setStart(self.endabil,unit,self.eunit)              
                 s.framelistener.addToQueue(unit,copy.copy(self.endabil))
             self.state = "start"
             return False

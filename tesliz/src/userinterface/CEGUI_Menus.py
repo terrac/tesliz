@@ -15,6 +15,7 @@ class CEGUI_Menus:
         if s.initCEGUI != True:
             self.initCEGUIStuff(renderWindow, sceneManager)
             s.initCEGUI = True
+        
 
 
     def initCEGUIStuff(self, renderWindow, sceneManager):
@@ -52,7 +53,7 @@ class CEGUI_Menus:
         startButton.setYPosition(CEGUI.UDim(0.3, 0))
         startButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
         startButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleStartGameFromMenu")
-        startButton.setAlwaysOnTop(True)
+        #startButton.setAlwaysOnTop(True)
 
         jobButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/JobButton")
         mainMenuBackground.addChildWindow(jobButton)
@@ -61,7 +62,7 @@ class CEGUI_Menus:
         jobButton.setYPosition(CEGUI.UDim(0.5, 0))
         jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
         jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleJobMenuCreation")
-        jobButton.setAlwaysOnTop(True)
+        #jobButton.setAlwaysOnTop(True)
 
         quitButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/QuitButton")
         mainMenuBackground.addChildWindow(quitButton)
@@ -71,7 +72,7 @@ class CEGUI_Menus:
 #        quitButton.setPosition(CEGUI.UVector2(cegui_reldim(0.035), cegui_reldim( 0.0)))
         quitButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
         quitButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuitGameFromMenu")
-        quitButton.setAlwaysOnTop(True)
+        #quitButton.setAlwaysOnTop(True)
         
     def deleteStartMenu(self):
         winMgr = CEGUI.WindowManager.getSingleton()
@@ -81,46 +82,46 @@ class CEGUI_Menus:
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
         
-        background = winMgr.createWindow ("TaharezLook/StaticImage")
+        #background = winMgr.createWindow ("TaharezLook/StaticImage")
         # set area rectangle
-        background.setArea (CEGUI.URect(cegui_reldim (0), cegui_reldim (0),
-                                          cegui_reldim (1), cegui_reldim (1)))
+        #background.setArea (CEGUI.URect(cegui_reldim (0), cegui_reldim (0),
+        #                                  cegui_reldim (1), cegui_reldim (1)))
         # disable frame and standard background
-        background.setProperty ("FrameEnabled", "false")
-        background.setProperty ("BackgroundEnabled", "false")
+        #background.setProperty ("FrameEnabled", "false")
+        #background.setProperty ("BackgroundEnabled", "false")
         # set the background image
-        background.setProperty ("Image", "set:BackgroundImage image:full_image")
+        #background.setProperty ("Image", "set:BackgroundImage image:full_image")
         # install this as the root GUI sheet
-        sheet.addChildWindow(background)
+        #sheet.addChildWindow(background)
 
         #/ set tooltip styles (by default there is none)
         CEGUI.System.getSingleton().setDefaultTooltip ("TaharezLook/Tooltip")
 
         # load some demo windows and attach to the background 'root'
-        background.addChildWindow (winMgr.loadWindowLayout ("Jobs.layout", False))
+        sheet.addChildWindow (winMgr.loadWindowLayout ("Jobs.layout", False))
         
         # REFACTOR - Set up the callbacks for the buttons loaded by the layout
-        backButton = background.getChild("cmdBackToMenu")
+        backButton = sheet.getChild("cmdBackToMenu")
         backButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleDeleteJobCreateStartMenu")
         
         # Add party list to the partybox
         lbox = winMgr.getWindow ("FontDemo/PartyList")
         
         ################ TEMP ##################
-        del s.cplayer.unitlist[:]
-        firstTempUnit = Unit()
-        firstTempUnit.name = "Shygar"
-        squire = Squire()
+        #del s.cplayer.unitlist[:]
+        #firstTempUnit = Unit()
+        #firstTempUnit.name = "Shygar"
+        #squire = Squire()
         # This function needs to be less generic, it changes the jobs of the unit passed in
-        changeTo(firstTempUnit,squire)
-        s.cplayer.unitlist.append(firstTempUnit)
+        #changeTo(firstTempUnit,squire)
+        #s.cplayer.unitlist.append(firstTempUnit)
         
-        secondTempUnit = Unit()
-        secondTempUnit.name = "Korben"
-        wizard = Wizard()
+        #secondTempUnit = Unit()
+        #secondTempUnit.name = "Korben"
+        #wizard = Wizard()
         # This function needs to be less generic, it changes the jobs of the unit passed in
-        changeTo(secondTempUnit,wizard)
-        s.cplayer.unitlist.append(secondTempUnit)
+        #changeTo(secondTempUnit,wizard)
+        #s.cplayer.unitlist.append(secondTempUnit)
         ############### END TEMP ######################
         
         s.log("Current Player Unit List: ", s.cplayer.unitlist)
@@ -157,9 +158,9 @@ class CEGUI_Menus:
 
     def deleteJobMenu(self):
         winMgr = CEGUI.WindowManager.getSingleton()
-        winMgr.destroyWindow("root")
+        winMgr.destroyWindow("jobmenu")
         # Not sure if i need to do this:
-        winMgr.destroyWindow("FontDemo/PartyList")
+        #winMgr.destroyWindow("FontDemo/PartyList")
         
     def handleStartGameFromMenu(self, e):
         # Remove the menu

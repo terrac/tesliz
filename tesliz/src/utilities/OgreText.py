@@ -51,6 +51,9 @@ class OgreText(object):
         ovm.destroyOverlayElement(self.textArea.name)
         ovm.destroyOverlayElement(self.container.name)
         ovm.destroy(self.overlay.name)
+        if hasattr(s.app.camera,"initialOrientation") and s.app.camera.initialOrientation:
+            s.app.camera.setOrientation(s.app.camera.initialOrientation)
+        s.app.camera.initialOrientation = None
     
 
     def enable(self, f):

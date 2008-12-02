@@ -94,7 +94,7 @@ class RealTimeTurn(object):
     def doTurn(self):
         maplen = len(s.unitmap.values())
         if maplen == 0:
-            s.endGame()
+#            s.endGame()
             return
         if maplen <= self.turnindex:
             self.turnindex = 0

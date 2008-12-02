@@ -6,20 +6,20 @@ class OverviewTrade(object):
         
         self.pricemap = dict()
         #defaults
-        self.pricemap["Cloth"] = 20
-        self.pricemap["Leather"] = 50
-        self.pricemap["Grain"] = 50
-        self.pricemap["Wolf Pelt"] = 35
-        self.addItem("Linder","Cloth",50)
-        self.addItem("Linder","Leather",40)
-        self.addItem("Exalia","Wolf Pelt",30)
-        self.cmoney = 500
+        self.pricemap["Cloth"] = 200
+        self.pricemap["Leather"] = 500
+        self.pricemap["Grain"] = 500
+        self.pricemap["Wolf Pelt"] = 350
+        self.addItem("Linder","Cloth",500)
+        self.addItem("Linder","Leather",400)
+        self.addItem("Exalia","Wolf Pelt",300)
+        self.cmoney = 0
         self.items = ["Grain"]
-        self.listholder = []
+        
         self.ilist = None
         
-        
-        
+    #arrr 
+    listholder = []    
         
     def addItem(self,place,item,money):
         if not self.map.has_key(place):
@@ -39,7 +39,7 @@ class OverviewTrade(object):
         trade.setText("actionlist")
         trade.setPosition(CEGUI.UVector2(cegui_reldim(x), cegui_reldim( y)))
         trade.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))                
-        trade.setAlwaysOnTop(True)
+        #trade.setAlwaysOnTop(True)
         trade.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, name)
         return trade
         
@@ -71,7 +71,7 @@ class OverviewTrade(object):
         trade.setText(str(self.cmoney))
         trade.setPosition(CEGUI.UVector2(cegui_reldim(.6), cegui_reldim( .4)))
         trade.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.1)))                
-        trade.setAlwaysOnTop(True)
+        #trade.setAlwaysOnTop(True)
         
         self.ceguimoney = trade
     def hide(self):
@@ -94,6 +94,7 @@ class OverviewTrade(object):
         if self.setMoney(money):
             self.add(text, self.ilist)
             self.items.append(key)
+        return True
         
     def handleSell(self,e):
         if not e.window.getFirstSelectedItem():
@@ -108,7 +109,7 @@ class OverviewTrade(object):
         self.setMoney(money)
         self.ilist.removeItem(item)
         self.items.remove(key)
-        
+        return True
     def getMoney(self,text):
         if self.map[self.cplace].has_key(text):
             return self.map[self.cplace][text]

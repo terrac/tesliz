@@ -3,7 +3,7 @@ import ogre.physics.OgreNewt as OgreNewt
 import ogre.renderer.OGRE as Ogre
 from mental.mind import *
 from mental.background import *
-from tactics.Unit import *
+import tactics.Unit
 from mental.combat import *
 import data.unittypes
 import mental.combat as combat
@@ -23,6 +23,7 @@ def buildUnit(unit,unittype,race,level,playername):
         unit.player = player
         
     else:
+
         s.playermap[unit.getName()] = player
         
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
@@ -32,7 +33,7 @@ def buildUnit(unit,unittype,race,level,playername):
 
 #creates a unit given a specific job
 def buildUnitNoNode(name,playername,unittype,level=1):
-    unit = Unit(name)
+    unit = tactics.Unit.Unit(name)
     
     #s.unitmap[unit.getName()]=unit
     
@@ -43,7 +44,7 @@ def buildUnitNoNode(name,playername,unittype,level=1):
         unit.player = player
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
     
-    
+    return unit
         
         
     
@@ -130,24 +131,27 @@ def setupExtra(unit, mental = None):
     if has and not unit.mental or not has:
         unit.mental = mental
     return unit
-def createUnit(position,player,unittype,race,level=1,name = None,material = None ,mesh = None ,mental = None):
+def createUnit(position,player,unittype,level=1,name = None,material = None ,mesh = None ,mental = None):
+    player = s.playermap[player]
     if not name:
         name = s.app.getUniqueName()+unittype +"-"+player.name   
     
     sceneManager = s.app.sceneManager                        
-    scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)                        
+    scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)                        
     scene_node.position = position             
     
-    unit = Unit()
+    unit = tactics.Unit.Unit(name)
     unit.node = scene_node
-    buildUnit(unit,unittype,race,level,player.name)
+    buildUnit(unit,unittype,"Human",level,player.name)
     
     if not mesh:
         mesh = unit.job.mesh
     if not material:
         material = unit.job.material
-    unit.node.getAttachedObject(0).setMaterialName(material)
-    attachMe = sceneManager.createEntity(name,mesh)    
+    
+    attachMe = sceneManager.createEntity(name,mesh)
+        
     scene_node.attachObject(attachMe)
+    unit.node.getAttachedObject(0).setMaterialName(material)
     setupExtra(unit, mental)
     return unit

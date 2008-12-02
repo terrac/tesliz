@@ -1,12 +1,16 @@
 from tactics.Singleton import *
 import ogre.renderer.OGRE as Ogre
-from data.traits.generictraits import *
+import data.traits.generictraits 
+#import data.traits.generictraits as GenericTraits
 import data.util
+import ogre.physics.OgreNewt as OgreNewt
+import tactics.Material
 s = Singleton()
 import copy
 class Particle():
-    def __init__(self, name):
+    def __init__(self, name,time = 5,turns = False):
         self.particlename = name
+        self.time = time
     def execute(self,unit1,unit,endpos):
     
         name = s.app.getUniqueName()
@@ -17,7 +21,7 @@ class Particle():
 
         particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)
-        s.framelistener.addTimed(5,node,None)
+        s.framelistener.addTimed(self.time,node,None)
 
 
 class Throw():
@@ -71,7 +75,7 @@ class Throw():
         node.setScale(0.1,0.1,0.1)      
         col = OgreNewt.Cylinder(World, .5, .5)
         body = OgreNewt.Body( World, col)
-        material =Material(name,ObjectCallback( 2))
+        material =tactics.Material.Material(name,data.traits.generictraits.ObjectCallback( 2))
         body.setMaterialGroupID( material.MatObject )
         body.setType(2)
         body.setUserData(self)

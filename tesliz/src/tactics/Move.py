@@ -1,6 +1,7 @@
 from utilities.physics import *
 from tactics.Singleton import *
 import data.util 
+import data.Affects
 s = Singleton()
 #from math import *
 #def distance(v1,v2):
@@ -129,14 +130,18 @@ class FFTMove():
     value = -1
     name = "move"
     
-    def __init__(self,unit = None):
+    def __init__(self,unit = None,endPos = None,speed = 1):
         if unit:
             self.range = unit.attributes.moves
         else:
             self.range = 500,500
+            
+        self.unit1 = unit
+        self.endPos = data.util.getValidPos(endPos)
         self.list = None
         self.cur = 0
-        pass
+        self.speed = speed
+        self.affect = None
 
     needsasecondclick = True
     def choiceStart(self):
@@ -153,7 +158,7 @@ class FFTMove():
 
     def execute(self,timer):
         #s.playsound("walk.wav")
-        if not self.unit1.body:
+        if not self.unit1 or not self.unit1.body or not self.unit1.node:
             return
         entity = None
         iter = self.unit1.node.getAttachedObjectIterator()
@@ -169,10 +174,10 @@ class FFTMove():
                 return False
             self.endPos = self.list[len(self.list)-1]
             self.cur = 0
-            for x in self.list:
-                print x
-            for x in self.list:
-                x.y +=1# don't know why buh will probably need to standardize sizes or offset by size
+#            for x in self.list:
+#                print x
+#            for x in self.list:
+#                x.y +=1# don't know why buh will probably need to standardize sizes or offset by size
                 #x.x -=10
             if entity:
                 self.animationState = entity.getAnimationState("LOOP")
@@ -185,44 +190,45 @@ class FFTMove():
         if entity:        
             self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
+            print "end"
             return False
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]
         
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
-        #self.unit1.body.unFreeze()    
-        #self.unit1.body.setVelocity(direction *5)
         
-        vec1 = vec1 + (direction * timer * 3)
+        vec1 = vec1 + (direction * timer * 3 * self.speed)
         rotateto = vec2 * 1
         rotateto.y = vec1.y
         self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(rotateto))
-        #finishedMoving = False
-#        if s.turnbased:
-#            finishedMoving = not distance(self.startPos, vec1) >  self.unit1.attributes.moves
-            #distance(self.startPos, position) > self.unit1.attributes.moves
+
         #print self.unit1.body.getVelocity()
         
         #print vec1
         #print vec2
         #print self.cur
         #print distance(self.unit1.node.getPosition(), vec2)
+        
+        #print self.unit1
+        #print vec1
+        #print vec2
         if distance(self.unit1.node.getPosition(), vec2) < .3:
             self.unit1.body.freeze()    
             self.cur += 1
-        return True
-            #finishedMoving =distance(self.endPos, position) < 2
-        #   self.unit1.body.setVelocity(direction*1)
-        #    self.unit1.body.freeze()
+
             
+            predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
+            name =data.util.getValidName(vec2, predicate)
+            if name:                                
+                affect = data.Affects.affectmap[name.split("-")[0]]
+                if self.affect != affect:
+                    self.affect.teardown(self.unit1)
+                self.affect.setup(self.unit1)
+            elif self.affect:
+                self.affect.teardown(self.unit1)
+                self.affect = None
+                
+        return True
 
-        #if finishedMoving:
-        #    for x in s.unitmap.values():
-        #        x.body.freeze()    
         
-#        return not finishedMoving
-
-        
-
-

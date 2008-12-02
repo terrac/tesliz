@@ -10,6 +10,7 @@ import utilities.SampleFramework as sf
 s = Singleton()
 
 class PlayerItemHolder():
+        
     def __init__(self):
         self.map = dict()
     def addItem(self,itemname):
@@ -30,13 +31,19 @@ class PlayerItemHolder():
     
 class HumanPlayer(object):
 
+    def __getstate__(self):
+        return {"name":self.name,"items":self.items,"unitlist":self.unitlist}
+    def __setstate__(self,dict):
+        self.__dict__ = dict
+        self.interface = HumanInterface(self)
     def __str__(self):
-        return self.name + str(self.items)
+        return self.name + str(self.items) +"\n"+str(printlist(self.unitlist))
     def __init__(self,name):
         self.name = name
         self.interface = HumanInterface(self)
         self.items =PlayerItemHolder()
-        
+        self.unitlist = []
+        self.cunit = None
     def endTurn(self):
         s.turn.pause = False
         s.turn.nextUnitTurn()
@@ -66,8 +73,7 @@ class HumanPlayer(object):
     #Tells you what the id of the last cegui hooks for the framelistener was    
   
     
-    unitlist = []
-    cunit = None
+
     def startTurn(self,unit):
        self.cunit = unit 
        sf.Application.debugText = self.cunit.type

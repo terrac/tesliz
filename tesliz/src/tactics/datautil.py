@@ -7,10 +7,11 @@ def setStart(ability,unit1,unit2=None,position=None):
     
     if unit1:
         ability.unit1 = unit1
-        
+        if not unit1.node:
+            return
         if hasattr(ability, "choiceStart"):
             ability.choiceStart()
-              
+        
     if unit2:
         ability.unit2 = unit2
             

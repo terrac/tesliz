@@ -2,7 +2,7 @@ from tactics.Singleton import *
 
 s = Singleton()
 class Affects:
-    def __init__(self,obj,type):
+    def __init__(self,obj,type = None):
         if isinstance(obj,list):
             self.alist = obj
         else:
@@ -98,7 +98,34 @@ class StatAffect:
             z =self.statsup[x]
             y -= z
             setattr(unit.attributes,x,y)
+class StatSet:
+    def __init__(self,stat,amount , color = None):
+        self.color = color
+        if not self.color:
+            self.color = 255,0,0 
+        self.stat = stat
+        self.amount = amount
+        
+    def setup(self,unit):
+        
+        obj = unit.attributes
+        for x in self.statsup:
+            val = getattr(obj,x)
+            if isinstance(val, int):        
+                #y =val + self.amount                            
+                setattr(obj,x,self.amount)
+            else:
+                obj = val
+            
 
+        
+    def teardown(self,unit):
+        
+        for x in self.statsup.keys():
+            y = getattr(unit.attributes,x)
+            z =self.statsup[x]
+            #y -= z
+            setattr(unit.attributes,x,self.amount)
 class TraitAffect:
     def __init__(self,traitmap , color = None):
         self.color = color

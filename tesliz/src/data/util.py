@@ -4,6 +4,7 @@ import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.physics
 import utilities.OgreText 
+import data.unittypes
 from tactics.Singleton import *
 
 
@@ -69,7 +70,7 @@ def createEntity(mesh,node):
     #attachMe.setNormaliseNormals(True)
 
 
-#meshlist = dict()
+meshlist = []
 def createMesh(mesh,pos,size=1,name = None):
     
     sceneManager = s.app.sceneManager     
@@ -79,7 +80,7 @@ def createMesh(mesh,pos,size=1,name = None):
     scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     scene_node.attachObject(attachMe)
-    #meshlist[name] = scene_node
+    meshlist.append(scene_node.getName())
     #attachMe.setNormaliseNormals(True)
 
 
@@ -89,19 +90,23 @@ def createMesh(mesh,pos,size=1,name = None):
  
     return scene_node
    
-def clearMeshes():
+#def clearMeshes():
     #s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
-    s.app.sceneManager.destroyAllMovableObjects()
-    s.app.World.destroyAllBodies()
-    s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
-    s.app.setupCamera()
+    #s.app.reset()
+    #s.app.sceneManager.destroyAllMovableObjects()
+    
+    #s.app.World.destroyAllBodies()
+    
+    
+    
+   
 missed = "LOOP"
 blocked = "LOOP"
 def update(text,unit):
     ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
     ogretext.enable(True)
     s.framelistener.addTimed(1,ogretext)
-    unit.text = ogretext
+    unit.setText(ogretext)
 def damageHitpoints(getDamage,unit1,unit2):
     number,type = getDamage(unit1)
 
@@ -292,17 +297,19 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     xlist = [0,0,1,-1]
     zlist = [-1,1,0,0]
     list =getValid(vec1, jump,xlist,zlist)
-    for x in list:
-        if prevfound.has_key(x):
-            list.remove(x)
+
     moves -=1
+    
+    for x in list:
+        if prevfound.has_key(x) and moves < prevfound[x]:
+            list.remove(x)
     range = moves,jump
     if moves < 0:
         return
     for x in list:
         
         names.add(mark(x))
-        prevfound[x] = True
+        prevfound[x] = moves
         markValid(x, range,mark,names,prevfound)
     return names
 def getAllValid(vec1,range,valid = None, prevfound=None):
@@ -346,12 +353,13 @@ def getShortest(vec1,vec2,range, prevfound=None):
     
     if utilities.physics.distance(vec1, vec2) < 1:
         return [vec1]
-    if moves < 0:
+    if moves < 0 and s.turnbased:
         return [vec1]
-    
+    print vec1
+    print vec2
     lowest = 999
     lvec = None
-    lvlist = None
+    lvlist = None                    
     if list:
         for x in list:
             prevfound[x] = True
@@ -413,13 +421,33 @@ def getValid(vec,height,xlist , zlist):
     
     return validpos
 def getValidPos(vec):
+    if not vec:
+        return 
     vlist = getValid(vec, 50, [0], [0])
     if vlist:
         return vlist[0]
-def resetAttributes(unit):        
+    
+def getValidName(vec,predicate,height=5):
+
+
+    start = Ogre.Vector3(vec.x , vec.y + height, vec.z )
+    end = Ogre.Vector3(vec.x , vec.y - height, vec.z )
+    ray = OgreNewt.BasicRaycast(s.app.World, start, end)
+    
+    for x in range(0,ray.getHitCount()):
+        info = ray.getInfoAt(x)
+        
+        if (info.mBody):
+            name = info.mBody.getOgreNode().getName()
+            if predicate(name):
+                return name
+                
+def resetAttributes(unit):
+    data.unittypes.setupBasic(unit, unit.level)
     unit.job.changeTo(unit)
     unit.items.setupAll()
     unit.affect.setupAll()
     unit.attributes.physical.points = unit.attributes.physical.maxpoints
     unit.attributes.magical.points = unit.attributes.magical.maxpoints 
+    
     

@@ -7,6 +7,13 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import winsound
+
+class LoadScene:
+    def __init__(self,name):
+        self.name = name
+    def execute(self,timer):
+        s.app.loadScene(self.name)        
+
 class Singleton:
     """ A python singleton """
 
@@ -38,28 +45,19 @@ class Singleton:
            
            #self.running = True
            self.event = None
-           self.reset()
+           self.playermap= dict()
            
+           self.unitmap = dict()
            # state variable saying whether CEGUI has been initialized or not, default None (False)
            self.initCEGUI = None
            
-        #key = name : value = node
-        def reset(self):
-            self.unitmap = dict()            
-            self.playermap= dict()
-            self.actionlist= []
-            if self.turn:
-                self.turn.turnlist = []
-            
-            
         
         def removeUnit(self,unit):
-            
+            unit.destroy()   
             self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
-            unit.body = None
             del self.unitmap[unit.getName()]
             unit.player.unitlist.remove(unit)
-            
+            unit.node = None
             a = ""
             liveunits = 0
             for e in unit.player.unitlist:
@@ -70,18 +68,19 @@ class Singleton:
             if not liveunits:
                 self.log("endgame")
                 self.endGame()
-            else:
-                unit.destroy()    
-                del unit    
+            
+                   
             
                 
         def endGame(self):
             for unit in self.unitmap.values():
                 unit.destroy()
-            #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
             if s.event:
                 s.event.end()
-            winMgr = CEGUI.WindowManager.getSingleton()
+            del self.playermap["Computer1"]
+            #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
+
+            
             winMgr = CEGUI.WindowManager.getSingleton()
             name = "QuitButton"
             if winMgr.isWindowPresent(name):            
@@ -101,9 +100,12 @@ class Singleton:
                 
                 break;
             self.overviewmap.currentVisited("Player1")
+            
             #self.running = False
             
-            self.reset()
+            
+            
+            
             
             
         def log(self,text,calling = None):
@@ -139,3 +141,9 @@ class Singleton:
         """ Delegate access to implementation """
         return setattr(self.__instance, attr, value)
 s = Singleton()
+
+def printlist(x):
+    y = ""
+    for z in x:
+        y += str(z)
+    return y

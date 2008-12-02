@@ -3,7 +3,7 @@ from tesliz.runthis import *
 
 
 def startup():
-    s.app.loadScene("scene01")
+    s.app.loadScene("linderenter")
     pass
 
 if __name__ == '__main__':

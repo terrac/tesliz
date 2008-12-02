@@ -27,11 +27,11 @@ class Unitdata(object):
         
         
         
-        unit =buildUnitNoNode("Alluvia","Player1", "Squire")
+        #unit =buildUnitNoNode("Alluvia","Player1", "Squire")
         unit =buildUnitNoNode("Oath","Player1", "Squire")
-        unit =buildUnitNoNode("Bahaullah","Player1", "Squire")
-        unit =buildUnitNoNode("Boru","Player1", "Squire")
-        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19),Ogre.Vector3(-2,0,19),Ogre.Vector3(-5,0,19)])
+        #unit =buildUnitNoNode("Bahaullah","Player1", "Squire")
+        #unit =buildUnitNoNode("Boru","Player1", "Squire")
+        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19)])
         
         CreateList(["Squire","Squire","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
         alluvia = s.unitmap["Alluvia"]

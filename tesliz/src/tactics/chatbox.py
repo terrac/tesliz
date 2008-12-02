@@ -4,24 +4,26 @@ import utilities.OgreText
 
 class Chatbox:
     listholder = []
-    def add(self,text,unit ):        
-        item =CEGUI.ListboxTextItem (text+":"+unit.getName())        
-        item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system 
-        self.listholder.append(item)
+    def add(self,text,unit ,time):
+        text =wrap(text, 40)
         
-        self.chatbox.addItem(item)
+        otext = unit.getName()+"\n"+text
+                
+        self.addText(unit.getName())
+        self.addText(text)
         try:
-            ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+            ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,otext)
         except:# we shouldn't be adding text if the unit is gone
             return
         ogretext.enable(True)
-        unit.text =ogretext
+        unit.setText(ogretext)
         ori = s.app.camera.getOrientation()
         if not s.app.camera.initialOrientation:
             s.app.camera.initialOrientation = ori
-        if s.eventpausing:
-            s.app.camera.lookAt(unit.node.getPosition())        
-            s.framelistener.paused = True
+        s.framelistener.addTimed(time,ogretext)
+#        if s.eventpausing:
+#            s.app.camera.lookAt(unit.node.getPosition())        
+#            s.framelistener.paused = True
         
                  
     def __init__(self):
@@ -38,3 +40,25 @@ class Chatbox:
         chatbox.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
         chatbox.setAlwaysOnTop(True)
         self.chatbox = chatbox
+
+    def addText(self, text):
+        item = CEGUI.ListboxTextItem(text)
+        item.AutoDeleted = False # Fix to ensure that items are not deleted by the CEGUI system
+        self.listholder.append(item)
+        self.chatbox.addItem(item)
+        self.chatbox.ensureItemIsVisible(item)
+
+def wrap(text, width):
+    """
+    A word-wrap function that preserves existing line breaks
+    and most spaces in the text. Expects that existing line
+    breaks are posix newlines (\n).
+    """
+    return reduce(lambda line, word, width=width: '%s%s%s' %
+                  (line,
+                   ' \n'[(len(line)-line.rfind('\n')-1
+                         + len(word.split('\n',1)[0]
+                              ) >= width)],
+                   word),
+                  text.split(' ')
+                 )

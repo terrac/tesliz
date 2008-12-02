@@ -7,7 +7,7 @@ import random
 
 s = Singleton()
 
-class AddChat:
+class ScriptEvent:
     def __init__(self,text,unit = None):
         if isinstance(text, list):
             self.tlist = text
@@ -15,12 +15,32 @@ class AddChat:
             self.tlist = [(unit,text)]
         else:#tuple
             self.tlist = [text]
+        self.unit1 = unit
+        self.time = 0
         
     def execute(self,timer):
         if not self.tlist:
             return
-        x,y = self.tlist.pop(0)                 
-        s.chatbox.add(y,x)
+        if self.time > 0:
+            self.time -= timer
+            return True
+        tuple = self.tlist.pop(0)
+        
+        #if not a tuple
+        
+        if not hasattr(tuple,'__len__'):
+            if hasattr(tuple,'unit1') and tuple.unit1:
+                s.framelistener.addToQueue(tuple.unit1,tuple)
+            else:
+                tuple.execute(0)
+            return True
+        if len(tuple) ==3:
+            x,y,z = tuple
+        else:
+            x,y = tuple
+            z = 4                 
+        s.chatbox.add(y,x,z)
+        self.time = z
         return True
 class Event:
     #do the dict param here
@@ -29,8 +49,7 @@ class Event:
         self.turnmap = turnmap
         for x in turnmap.values():
             for y in x.keys():
-                if not hasattr(y, "execute"):
-                    x[y] = AddChat(x[y])
+                x[y] = ScriptEvent(x[y])
                 
         self.turncount = dict()
        

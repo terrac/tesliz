@@ -1,12 +1,12 @@
-from tactics.util import *
-from tactics.Material import *
+import tactics.util 
+import tactics.Material
 import utilities.SampleFramework as sf
-from math import *
+import math
 from tactics.Singleton import *
 import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
-from utilities.physics import *
-from data.util import *
+import utilities.physics 
+import data.util 
 import data.damage 
 s = Singleton()
 
@@ -16,10 +16,10 @@ def show(unit):
     name = "turncircle"
     mesh = "cylinder.mesh"
     if not sceneManager.hasSceneNode(name):
-        scene_node = sceneManager.rootSceneNode.createChildSceneNode(name)
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
         attachMe = s.app.sceneManager.createEntity(name,mesh)            
         scene_node.attachObject(attachMe)
-        attachMe.setNormaliseNormals(True)
+        #attachMe.setNormaliseNormals(True)
     else:
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
@@ -284,7 +284,7 @@ class Attack(object):
         #self.unit2.body.setVelocity(direction )        
         unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
     #lambda self,unit2: damageHitpoints(damage.basicPhysical,self.unit1,unit2)
-        damageHitpoints(self.getDamage, self.unit1, unittobehit)
+        data.util.damageHitpoints(self.getDamage, self.unit1, unittobehit)
 
         return False
 class DoubleAttack(Attack):

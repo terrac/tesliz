@@ -188,7 +188,7 @@ class SetupPlayer():
              
                 unit.node = scene_node
                 buildPhysics(unit)
-                unit.player
+
                 s.unitmap[unit.getName()]=unit
                 
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
@@ -204,4 +204,7 @@ class SetupPlayer():
             else:
                 print str((v,unit)) +"doesn't have a valid place to put "
         for x in s.unitmap.values():
-            x.body.freeze()   
+            if x.body:
+                x.body.freeze()
+            else:
+                pass   
