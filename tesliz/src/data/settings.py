@@ -29,7 +29,7 @@ class Settings(object):
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 24
+        s.speed = 12
         
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "aion")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
@@ -69,7 +69,7 @@ class Settings(object):
         overviewmap.cpos = overviewmap.root
         
         overviewmap.placetoscene = {"Linder":"linderenter","Linder-Exit":"linderexit","Exalia":"fillerscene"}
-        tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard")
+       
         #tactics.util.buildUnitNoNode("Oath","Player1", "Squire")
 #        tactics.util.buildUnitNoNode("Bahaullah","Player1", "Squire")
 #        tactics.util.buildUnitNoNode("Boru","Player1", "Squire")

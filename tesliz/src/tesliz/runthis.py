@@ -8,13 +8,13 @@
 import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.io.OIS as OIS
-from utilities.physics import *
-from tactics.dotscenea import *
-from tactics.Turn import *
-from tactics.Player import *
-from tactics.Move import *
-from data.settings import *
-from data.aisettings import *
+import utilities.physics 
+import tactics.dotscenea 
+import tactics.Turn 
+import tactics.Player 
+import tactics.Move 
+import data.settings 
+import data.aisettings 
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
 from utilities.CEGUIFrameListener import *
 from utilities.CEGUI_framework import *
@@ -90,7 +90,7 @@ class OgreNewtonApplication (sf.Application):
 
 
     def parseSceneFile(self,map):
-        dotscene = Dotscene()
+        dotscene = tactics.dotscenea.Dotscene()
         self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
         
 
@@ -116,7 +116,7 @@ class OgreNewtonApplication (sf.Application):
         self.menus.startMenu()
         
         #self.loadScene()
-        Settings()
+        data.settings.Settings()
         
         
         self.setupCamera()
@@ -134,10 +134,10 @@ class OgreNewtonApplication (sf.Application):
         s.framelistener.setCurrentPlayer( s.overviewmap)
         self.onStartup()
 
-    def loadScene(self,scenename):
+    def loadScene(self,scenename, test = False):
         self.reset()
         #data.util.clearMeshes()
-        s.playermap["Computer1"] = ComputerPlayer("Computer1")
+        s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
         for x in s.cplayer.unitlist:
             s.unitmap[x.getName()] = x
         # Play Windows exit sound.
@@ -158,12 +158,14 @@ class OgreNewtonApplication (sf.Application):
         
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
-        mental = AIsettings()
+        mental = data.aisettings.AIsettings()
+        if test:
+            tactics.dotscenea.setupTest(scenename)
         if os.path.exists(scenename+".scene"):
             self.parseSceneFile(scenename)
         else:
             self.parseSceneFile("begin")
-            setupOnlyEvents(scenename)
+            tactics.dotscenea.setupOnlyEvents(scenename)
             s.log("parsed begin file as did not find the regular file")
         
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
@@ -246,10 +248,10 @@ class OgreNewtonApplication (sf.Application):
     def setTurnbased(self,bool):
             s.turnbased = bool
             if bool:
-                s.turn = Turn()
+                s.turn = tactics.Turn.Turn()
                 s.AIon = False
             else:
-                s.turn = RealTimeTurn()
+                s.turn = tactics.Turn.RealTimeTurn()
                 s.AIon = True
             s.log("turnbased = " +str(s.turnbased))
 
@@ -259,6 +261,26 @@ class Timed():
         self.seconds = seconds
         self.node = node
         self.body = body
+    def __str__(self):
+        name = None
+        if self.node:
+            name = str(self.node.getName())
+        return str(self.seconds)+" "+name+"\n"
+        
+def incrementTimed(timesincelastframe, timedbodies):
+    toremove = []
+    for x in timedbodies:
+        x.seconds -= timesincelastframe
+        if x.seconds < 0:
+            toremove.append(x)
+            if isinstance(x.node, Ogre.SceneNode):
+                s.app.sceneManager.getRootSceneNode().removeChild(x.node)
+            
+            if hasattr(x.node, "destroy"):
+                getattr(x.node, "destroy")()
+                
+    for x in toremove:
+        timedbodies.remove(x)
 class OgreNewtonFrameListener(CEGUIFrameListener):
     def __init__(self, renderWindow, camera, Mgr, World, msnCam, NewtonListener):
 
@@ -283,6 +305,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.paused = False
         self.interrupt = []
         self.pauseturns = True
+
+
+
 
     def addTimed(self, seconds,node,*extra):
         x = Timed(seconds,node,extra)
@@ -418,20 +443,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
     
-        for x in s.app.timedbodies:
-            
-        
-            x.seconds -= timesincelastframe
-        
-            
-            if x.seconds < 0:        
-                        
-                
-                s.app.timedbodies.remove(x)
-                if isinstance(x.node, Ogre.SceneNode):
-                    s.app.sceneManager.getRootSceneNode().removeChild(x.node)
-                if hasattr(x.node, "destroy"):
-                    getattr(x.node,"destroy")()
+        incrementTimed(timesincelastframe,s.app.timedbodies)
                 
                 
                        

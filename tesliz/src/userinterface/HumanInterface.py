@@ -69,7 +69,7 @@ class HumanInterface:
         
 
     def clickEntity(self,name,position):
-        if not s.turnbased and s.unitmap.has_key(name):
+        if not s.turnbased and s.unitmap.has_key(name) and not s.framelistener.pauseturns:
             if s.unitmap[name] in self.player.unitlist:
             
                 self.cunit = s.unitmap[name] 

@@ -5,8 +5,10 @@ import data.traits.generictraits
 import data.util
 import ogre.physics.OgreNewt as OgreNewt
 import tactics.Material
+import damage
 s = Singleton()
 import copy
+import data.Affects
 class Particle():
     def __init__(self, name,time = 5,turns = False):
         self.particlename = name
@@ -16,7 +18,7 @@ class Particle():
         name = s.app.getUniqueName()
         
         node = s.app.sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
-        node.setPosition(Ogre.Vector3(endpos))
+        node.setPosition(Ogre.Vector3(endpos.x,endpos.y,endpos.z))
         psm = Ogre.ParticleSystemManager.getSingleton()
 
         particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
@@ -222,12 +224,13 @@ class DamagePhysical():
         unit.damageHitpoints(damage,self.type,unit1)
         
 class DamageMagic():
-    def __init__(self,damage,type):
+    def __init__(self,damage,type = None):
         self.damage = damage
-        self.type = type
+    
     def execute(self,unit1,unit,endpos):    
         if unit:    
-            unit.damageHitpoints(self.damage,self.type,unit1)
+            data.util.damageHitpoints(self.damage, unit1, unit)
+            #unit.damageHitpoints(self.damage,self.type,unit1)
     
         
 class AffectOther():
@@ -244,3 +247,16 @@ class RemoveItem():
     def execute(self,unit1,unit,endpos):
         return unit1.player.items.removeItem(self.itemname)    
        # s.screenshot()
+       
+class AffectLand():
+    def __init__(self,affectname):
+        self.affectname = affectname
+    def execute(self,unit1,unit,endpos):
+        #build node with the name of the affect
+        
+        name =data.util.show(endpos,None,self.affectname+"-"+s.app.getUniqueName())
+        unit1.addTurned(0,s.app.sceneManager.getSceneNode(name),None)
+        
+        if unit:    
+            unit.affect.add( data.Affects.affectmap[self.affectname])        
+            

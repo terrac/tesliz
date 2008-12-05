@@ -7,6 +7,11 @@ import random
 
 s = Singleton()
 
+class PauseTurns:
+    def __init__(self, bool):
+        self.bool = bool
+    def execute(self,timer):
+        s.framelistener.pauseturns = self.bool
 class ScriptEvent:
     def __init__(self,text,unit = None):
         if isinstance(text, list):
@@ -71,14 +76,16 @@ class Event:
              
         if self.turnmap[unit].has_key(self.turncount[unit]):
             exe = self.turnmap[unit][self.turncount[unit]]
-
+            s.framelistener.pauseturns = True
             s.framelistener.addToQueue(unit,exe)
+            s.framelistener.addToQueue(unit,PauseTurns(False))
     def end(self):
         for unit in s.unitmap.values():            
             if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
                 exe = self.turnmap[unit]["end"]
-    
+                
                 s.framelistener.addToQueue(unit,exe)
+                
                 
     def death(self,unit):
         dkey = "death-"+unit.getName()

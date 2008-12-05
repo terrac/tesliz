@@ -1,8 +1,12 @@
 from tactics.Singleton import *
 import tactics.Affect
+import tactics.AffectHolder
 import data.jobs 
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText 
+
+import tesliz.runthis
+
 
 class ManageDeath():
     def __init__(self):
@@ -66,8 +70,8 @@ class Unit(object):
     def __init__(self,name = "blah"):
         self.attributes = Attributes()
         self.traits = dict()
-        self.affect = tactics.Affect.AffectHolder(self)
-        self.items = tactics.Affect.AffectHolder(self)        
+        self.affect = tactics.AffectHolder.AffectHolder(self)
+        self.items = tactics.AffectHolder.AffectHolder(self)        
         self.mental = None
         self.name = name
         self.job = None
@@ -84,6 +88,7 @@ class Unit(object):
         self.turncount = 0
         self.death = False
         self.node = None
+        self.timedbodies = []
 
     
     def animate(self,text):
@@ -120,12 +125,20 @@ class Unit(object):
         return self.attributes.increment()
     
      
+    def incrementTurn(self):
+        print self.timedbodies
+        tesliz.runthis.incrementTimed(1,self.timedbodies)
+    
+    def addTurned(self,turns,node,*extra):                 
+        x = tesliz.runthis.Timed(turns,node,extra)
+        self.timedbodies.append(x)
     def startTurn(self):
         if self.getDeath():
             self.getDeath().execute(self)
             return
         if s.turnbased:
             s.framelistener.showAttributesCurrent(self.getName())
+            self.incrementTurn()
         self.turncount += 1
         if s.event:
             s.event.turnStarted(self)
@@ -167,5 +180,5 @@ class Unit(object):
     def __setstate__(self,dict):
         self.__dict__ = dict
         self.traits = {}
-        data.util.resetAttributes(self)
+        tactics.util.resetAttributes(self)
         self.reset()

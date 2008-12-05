@@ -4,10 +4,11 @@ import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.physics
 import utilities.OgreText 
-import data.unittypes
+#import data.unittypes
 from tactics.Singleton import *
-
-
+import userinterface.traits
+import data.traits.generictraits
+#import tactics.trait
 
 s = Singleton()
 
@@ -41,10 +42,13 @@ class VectorMap(dict):
         key = str(key)
         return dict.has_key(self,key)
 
-def show(pos, texturename = "Spark/SOLID" ):
+def show(pos, texturename = None ,name = None):
     
     sceneManager = s.app.sceneManager        
-    name = s.app.getUniqueName()
+    if not name:
+        name = s.app.getUniqueName()
+    if not texturename:
+        texturename = "Spark/SOLID"
     mesh = "cylinder.mesh"
     if not sceneManager.hasSceneNode(name):
         scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
@@ -441,13 +445,15 @@ def getValidName(vec,predicate,height=5):
             name = info.mBody.getOgreNode().getName()
             if predicate(name):
                 return name
-                
-def resetAttributes(unit):
-    data.unittypes.setupBasic(unit, unit.level)
-    unit.job.changeTo(unit)
-    unit.items.setupAll()
-    unit.affect.setupAll()
-    unit.attributes.physical.points = unit.attributes.physical.maxpoints
-    unit.attributes.magical.points = unit.attributes.magical.maxpoints 
+def getValidUnit(vec,height = 5):
+    predicate = lambda name:s.unitmap.has_key(name)
+    getValidName(vec, predicate, height)
     
+
+    #unit.attributes.hitpoints = 500 * level
+    #unit.attributes.damage = 50 * level
+    #unit.attributes.magical = Fstats()
+    #unit.attributes.physical = Fstats()
+    #unit.attributes.faith = 50
+    #unit.attributes.bravery = 50
     

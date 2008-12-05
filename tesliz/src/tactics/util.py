@@ -1,16 +1,19 @@
 from tactics.Singleton import *
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.renderer.OGRE as Ogre
-from mental.mind import *
-from mental.background import *
+#from mental.mind import *
+#from mental.background import *
 import tactics.Unit
-from mental.combat import *
+#from mental.combat import *
 import data.unittypes
 import mental.combat as combat
 import data.jobs
+import data.util
+import userinterface.traits
 s = Singleton()
 
 
+    
 def buildUnit(unit,unittype,race,level,playername):
     s.unitmap[unit.getName()]=unit
     
@@ -25,12 +28,13 @@ def buildUnit(unit,unittype,race,level,playername):
     else:
 
         s.playermap[unit.getName()] = player
-        
+    setupBasic(unit, level)
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
     
     unit.node.setScale(s.racemap[race].scale)
     buildPhysics(unit,"Ellipsoid",s.racemap[race].scale)
-
+    tactics.util.resetAttributes(unit)
+    tactics.util.setupMaxPoints(unit)
 #creates a unit given a specific job
 def buildUnitNoNode(name,playername,unittype,level=1):
     unit = tactics.Unit.Unit(name)
@@ -42,10 +46,39 @@ def buildUnitNoNode(name,playername,unittype,level=1):
         player = s.playermap[playername]
         player.unitlist.append(unit)
         unit.player = player
+    setupBasic(unit, level)
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
-    
+    tactics.util.resetAttributes(unit)
+    tactics.util.setupMaxPoints(unit)
     return unit
-        
+def resetAttributes(unit):
+    try:
+        hitpoints = unit.attributes.physical.points
+        magicpoints = unit.attributes.magical.points
+    except:
+        hitpoints = 0
+        magicpoints = 0
+        #if they don't exist yet then ignore 
+    setupBasic(unit, unit.level)
+    unit.job.changeTo(unit)
+    unit.items.setupAll()
+    unit.affect.setupAll()
+    unit.attributes.physical.points = hitpoints
+    unit.attributes.magical.points = magicpoints
+def setupMaxPoints(unit):
+    unit.attributes.physical.points = unit.attributes.physical.maxpoints
+    unit.attributes.magical.points = unit.attributes.magical.maxpoints 
+    
+def setupBasic(unit, level):
+    
+    #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+    unit.attributes.moves = 5,5
+    move = userinterface.traits.Traits([tactics.Move.FFTMove(unit)])
+    move.action = False
+    unit.traits["Move"] = move
+    attack = userinterface.traits.Traits([data.traits.generictraits.Attack()])
+    unit.traits["Attack"] = attack
+    unit.level = level
         
     
     
@@ -155,3 +188,5 @@ def createUnit(position,player,unittype,level=1,name = None,material = None ,mes
     unit.node.getAttachedObject(0).setMaterialName(material)
     setupExtra(unit, mental)
     return unit
+
+    

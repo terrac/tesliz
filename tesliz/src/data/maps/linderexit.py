@@ -19,7 +19,7 @@ class Unitdata(object):
         
         SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19)])
         cerc =tactics.util.buildUnitNoNode("cerc", "Computer1","Squire")
-        SetupPlayer("Computer1",[Ogre.Vector3(-20,0,19)])
+        SetupPlayer("Computer1",[Ogre.Vector3(12,0,19)])
         CreateList(["Squire","Squire","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
         alluvia = s.unitmap["Alluvia"]
         oath =buildUnitNoNode("Oath","Player1", "Squire")
@@ -40,3 +40,7 @@ class Unitdata(object):
         tmap = {0:convo1}
         fmap = {'death-Cerc':(alluvia,"Wut Wut")}
         s.event = Event(turnmap = {alluvia:tmap,cerc:fmap})
+        
+    def setupTestMap(self):
+        unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
+        unit =buildUnitNoNode("Oath","Player1", "Squire",2)

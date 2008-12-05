@@ -1,12 +1,14 @@
 from tactics.Singleton import *
+#import tactics.util
+#import data.util
 
-s = Singleton()
 class Affects:
     def __init__(self,obj,type = None):
         if isinstance(obj,list):
             self.alist = obj
         else:
             self.alist = [obj]
+        self.type = type
     def setup(self,unit):
         for x in self.alist:
             
@@ -46,30 +48,7 @@ class AffectsLight:
             x.teardown(unit)
     
 
-class AffectHolder():
-    def __init__(self,unit):
-        self.itemmap = dict()
-        self.unit = unit
-    def add(self,item):
 
-        if self.itemmap.has_key(item.type):
-            self.itemmap[item.type].teardown(self.unit)
-        self.itemmap[item.type] = item
-        self.itemmap[item.type].setup(self.unit)
-    def do(self,item):
-        item.setup(self.unit)
-    def remove(self,type):
-        am =self.itemmap[type]
-        am.teardown(self.unit)
-        del self.itemmap[type]
-    def has(self,type):
-        return self.itemmap.has_key(type)
-    def setupAll(self):
-        for item in self.itemmap.values():
-            item.setup(self.unit)
-    def get(self,type):
-        if self.itemmap.has_key(type):
-            return self.itemmap[type]
 class StatAffect:
     def __init__(self,statsup,amount , color = None):
         self.color = color
@@ -109,23 +88,19 @@ class StatSet:
     def setup(self,unit):
         
         obj = unit.attributes
-        for x in self.statsup:
+        for x in self.stat:
             val = getattr(obj,x)
             if isinstance(val, int):        
                 #y =val + self.amount                            
                 setattr(obj,x,self.amount)
             else:
                 obj = val
+        
+        #return [str(unit.name)+"'s "+ self.stat.join(" ")+" set to "+ str(self.amount)]
+        
+    
             
-
         
-    def teardown(self,unit):
-        
-        for x in self.statsup.keys():
-            y = getattr(unit.attributes,x)
-            z =self.statsup[x]
-            #y -= z
-            setattr(unit.attributes,x,self.amount)
 class TraitAffect:
     def __init__(self,traitmap , color = None):
         self.color = color

@@ -14,7 +14,7 @@ import utilities.ogre_unit
 import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
-from tactics.Unit import *
+import tactics.Unit 
 
 
 
@@ -308,7 +308,7 @@ class Dotscene(object):
             #TODO: for later 
           #  attachMe.setMaterialName( "Examples/RustySteel" )
             #attachMe.setNormaliseNormals(True)
-            unit = Unit(scene_node.getName())
+            unit = tactics.Unit.Unit(scene_node.getName())
             unit.node = scene_node
             
         
@@ -399,6 +399,11 @@ def setupOnlyEvents(filename):
     module = getattr(module,'maps')
     map = getattr(module,filename).Unitdata()
     map.setupEvents()
+def setupTest(filename):
+    module = __import__("data.maps."+filename)
+    module = getattr(module,'maps')
+    map = getattr(module,filename).Unitdata()
+    map.setupTestMap()
 if __name__ == "__main__":
     import code_util
     code_util.test(__file__)

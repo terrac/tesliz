@@ -56,7 +56,9 @@ class Singleton:
             unit.destroy()   
             self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
             del self.unitmap[unit.getName()]
-            unit.player.unitlist.remove(unit)
+            
+            #units now always stay with players and can be ressurected.  But they can still be dismissed
+            #unit.player.unitlist.remove(unit)
             unit.node = None
             a = ""
             liveunits = 0
