@@ -11,6 +11,7 @@ from utilities.physics import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import tactics.util
+import utilities.OgreText 
 def addDots(vec1,vec2,slow = False):
 
     direction = vec2-vec1
@@ -40,17 +41,37 @@ class Position:
         self.position = vec
         #self.node = None
         self.name = name
-        self.visited = visited
+        self.node = None
+        self.setVisited(visited)
         self.next = None
+        
     
     def show(self):
-        node =data.util.createMesh("cylinder.mesh",self.position,1,self.name)
-        tactics.util.buildImmoblePhysics(self,node)
+        self.node =data.util.createMesh("cylinder.mesh",self.position,1,self.name)
+        tactics.util.buildImmoblePhysics(self,self.node)
+        self.setVisited(self.visited)
+        s.framelistener.textlist.append(utilities.OgreText.OgreText(self.node.getAttachedObject(0),s.app.camera,self.name))
+        
     def getVec(self):
         x,y,z = self.position
         return Ogre.Vector3(x,y,z)
     def __str__( self ):
         return str(self.getVec())
+    def setVisited(self,visited):
+        self.visited = visited
+        if self.node:
+            if self.visited :
+                self.node.getAttachedObject(0).setMaterialName( "LightBlue/SOLID" )
+            else:
+                self.node.getAttachedObject(0).setMaterialName( "BlueMage/SOLID" )
+                
+         
+    def __getstate__(self):
+        return {"name":self.name,"plist":self.plist,"position":self.position,"visited":self.visited,"next":self.next}
+    def __setstate__(self,dict):
+        self.__dict__ = dict
+        self.node = None
+        
 class AddPos:
     def __init__(self,cpos,playermap):
         self.actionqueue=[]
@@ -78,7 +99,7 @@ class AddPos:
         return True
 class SetVisited:
     def execute(self,timer):
-        s.overviewmap.cpos.visited = True 
+        s.overviewmap.cpos.setVisited( True) 
         AddPos(s.overviewmap.cpos,s.overviewmap)
         
 class OverviewMap:

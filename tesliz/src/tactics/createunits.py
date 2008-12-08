@@ -2,6 +2,7 @@ from tesliz.runthis import *
 import data.unittypes
 from tactics.util import *
 import random
+import tactics.Unit
 
 from tactics.Singleton import *
 s = Singleton()
@@ -116,7 +117,7 @@ class CreateList():
                 attachMe = sceneManager.createEntity(name,mesh)
         
                 scene_node.attachObject(attachMe)
-                unit = Unit()
+                unit = tactics.Unit.Unit()
                 unit.name = scene_node.getName()
                 unit.node = scene_node
                 unittype = u

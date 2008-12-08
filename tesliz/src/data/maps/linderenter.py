@@ -3,25 +3,26 @@ from tactics.util import *
 from tactics.Event import *
 from tactics.createunits import *
 import tactics.Move
+import utilities.FollowCamera
 
 class EndGame:
     def execute(self,timer):
         s.endGame()
         #s.app.setTurnbased(True)
 
-class AttachCamera:
-    def __init__(self, node,position = Ogre.Vector3(0,0,0)):
-        if isinstance(node, Unit):
-            node = node.node
-        self.node = node
-        self.position = position
-    def execute(self,timer= None):
-        #s.app.msnCam.getParent().removeChild(s.app.msnCam)
-        s.app.msnCam.detachAllObjects()
-        self.node.attachObject(s.app.camera)
-        #self.node.addChild(s.app.msnCam)
-        #s.app.msnCam.setPosition(self.position)
-        #s.app.setTurnbased(True)
+#class AttachCamera:
+#    def __init__(self, node,position = Ogre.Vector3(0,0,0)):
+#        if isinstance(node, Unit):
+#            node = node.node
+#        self.node = node
+#        self.position = position
+#    def execute(self,timer= None):
+#        #s.app.msnCam.getParent().removeChild(s.app.msnCam)
+#        s.app.msnCam.detachAllObjects()
+#        self.node.attachObject(s.app.camera)
+#        #self.node.addChild(s.app.msnCam)
+#        #s.app.msnCam.setPosition(self.position)
+#        #s.app.setTurnbased(True)
         
 class Unitdata(object):
 
@@ -68,9 +69,10 @@ class Unitdata(object):
         #setup a map of units with turns and positions and add it on
         s.app.setTurnbased(False)
         
-        AttachCamera(girl1).execute()
+        #AttachCamera(girl1).execute()
         girlconvo =ScriptEvent([
-                                tactics.Move.FFTMove(girl1,Ogre.Vector3(50,0,17),.5),
+        utilities.FollowCamera.FollowCamera(girl1),
+                                tactics.Move.FFTMove(girl1,Ogre.Vector3(50,5,17),.5),
                  tactics.Move.FFTMove(girl2,Ogre.Vector3(50,0,18),.5),
                  
                  (girl1,"Did you see that Belouve boy fighting?  Hes a cutie"),
@@ -78,17 +80,20 @@ class Unitdata(object):
          (girl1,"Aww, youre no fun"),
          (girl2,"Did you see the price of cloth today?  The old Ratsger said that the Siege's kid left the door open on their barn and ruined half their supply"),
          (girl1,"Yeah, Im not buying any cloth till the price goes down"),
-         AttachCamera(cerc),
+         #AttachCamera(cerc),
+         
          (cerc,"I'll show them today what kind of man I am"),
+         utilities.FollowCamera.FollowCamera(cerc),
          tactics.Move.FFTMove(cerc,Ogre.Vector3(0,0,20)),
          (cerc,"Hey"),
          (cerc,"Whats this, a transaction going on in broad daylight without my approval? What do you think i am? A chump?"),
          
          (cerc,"To do business here you have to pay the toll."),
-         (merchant,"Ignore him"),
-         (alluvia,"No"),
-         (cerc,"No?"),
-         (cerc,"Well I wish you good luck with that attitude my friend"),
+         (merchant,"Ignore him.  I feel sorry for him as he is Allison's boy, but he is going a bit too far now"),
+         (cerc,"I am going to be big in this town someday.  You will need my protection like you did in the war!"),
+         #(alluvia,"No"),
+#         (cerc,"No?"),
+#         (cerc,"Well I wish you good luck with that attitude my friend"),
          EndGame()
          ],Unit())
         

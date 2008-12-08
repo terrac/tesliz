@@ -138,12 +138,15 @@ class FFTMove():
             
         self.unit1 = unit
         self.endPos = data.util.getValidPos(endPos)
+#        if self.endPos:
+#            self.endPos.y +=5
         self.list = None
         self.cur = 0
         self.speed = speed
         self.affect = None
 
     needsasecondclick = True
+    animationState = None
     def choiceStart(self):
         #create a mark that creates a small block
         self.toremove =data.util.markValid(self.unit1.node.getPosition(), self.range, data.util.show)
@@ -160,14 +163,19 @@ class FFTMove():
         #s.playsound("walk.wav")
         if not self.unit1 or not self.unit1.body or not self.unit1.node:
             return
-        entity = None
-        iter = self.unit1.node.getAttachedObjectIterator()
-
+        entity = self.unit1.node.getAttachedObject(0)
+        #iter = self.unit1.node.getAttachedObjectIterator()
+        
         
         if not self.list:
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos
             self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            
+            #offset to not walk in the ground
+            for x in self.list:
+                x.y +=1
+            
             self.list.pop(0)
             if not self.list:
                 s.log("cant move",self)
@@ -187,7 +195,7 @@ class FFTMove():
             
 
         
-        if entity:        
+        if entity and self.animationState:        
             self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
             print "end"
@@ -201,6 +209,7 @@ class FFTMove():
         vec1 = vec1 + (direction * timer * 3 * self.speed)
         rotateto = vec2 * 1
         rotateto.y = vec1.y
+        #vec1.y +=1
         self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(rotateto))
 
         #print self.unit1.body.getVelocity()

@@ -5,16 +5,30 @@ import data.jobs
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText 
 
-import tesliz.runthis
+#import tesliz.runthis
 
+def incrementTimed(timesincelastframe, timedbodies):
+    toremove = []
+    for x in timedbodies:
+        x.seconds -= timesincelastframe
+        if x.seconds < 0:
+            toremove.append(x)
+            if isinstance(x.node, Ogre.SceneNode):
+                s.app.sceneManager.getRootSceneNode().removeChild(x.node)
+            
+            if hasattr(x.node, "destroy"):
+                getattr(x.node, "destroy")()
+                
+    for x in toremove:
+        timedbodies.remove(x)
 
 class ManageDeath():
     def __init__(self):
         self.count = 3
     def execute(self,unit):
         text = str(self.count)
-        print text
-        print "aoeu"
+#        print text
+#        print "aoeu"
         ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
         ogretext.enable(True)
         unit.setText(ogretext)
@@ -126,8 +140,8 @@ class Unit(object):
     
      
     def incrementTurn(self):
-        print self.timedbodies
-        tesliz.runthis.incrementTimed(1,self.timedbodies)
+        #print self.timedbodies
+        incrementTimed(1,self.timedbodies)
     
     def addTurned(self,turns,node,*extra):                 
         x = tesliz.runthis.Timed(turns,node,extra)

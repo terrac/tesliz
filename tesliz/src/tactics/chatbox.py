@@ -5,12 +5,15 @@ import utilities.OgreText
 class Chatbox:
     listholder = []
     def add(self,text,unit ,time):
+        
+        
+        self.addText(unit.getName())
+        self.addText(text)
+        
         text =wrap(text, 40)
         
         otext = unit.getName()+"\n"+text
                 
-        self.addText(unit.getName())
-        self.addText(text)
         try:
             ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,otext)
         except:# we shouldn't be adding text if the unit is gone

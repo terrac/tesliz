@@ -355,12 +355,12 @@ def getShortest(vec1,vec2,range, prevfound=None):
     moves -=1
     range = moves,jump
     
-    if utilities.physics.distance(vec1, vec2) < 1:
+    if utilities.physics.ignoreHeightDistance(vec1, vec2) < 1:
         return [vec1]
     if moves < 0 and s.turnbased:
         return [vec1]
-    print vec1
-    print vec2
+#    print vec1
+#    print vec2
     lowest = 999
     lvec = None
     lvlist = None                    
@@ -376,6 +376,8 @@ def getShortest(vec1,vec2,range, prevfound=None):
             
             
     if lvlist:
+        #
+        
         lvlist.insert(0,vec1)
         return lvlist
 

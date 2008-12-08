@@ -10,6 +10,7 @@ import mental.combat as combat
 import data.jobs
 import data.util
 import userinterface.traits
+import mental.mind
 s = Singleton()
 
 
@@ -149,7 +150,7 @@ def buildImmoblePhysics(unit,node = None):
     
     s.app.bodies.append ( bod )
 
-def setupExtra(unit, mental = None):
+def setupExtra(unit, mentalstate = None):
     player = unit.player
     if hasattr( player, "setVisualMarker"):
         player.setVisualMarker(unit)
@@ -157,12 +158,12 @@ def setupExtra(unit, mental = None):
     if s.fog and player.name == "Computer1":
         unit.setVisible(False)
     
-    if not mental:
-        mental = Mind([Combat(unit,action.Attack,combat.isWanted)])    
+    if not mentalstate:
+        mentalstate = mental.mind.Mind([mental.combat.Combat(unit,mental.action.Attack,combat.isWanted)])    
         #mental.state = {"angry":0,"happy":0}
     has = hasattr(unit,"mental")
     if has and not unit.mental or not has:
-        unit.mental = mental
+        unit.mental = mentalstate
     return unit
 def createUnit(position,player,unittype,level=1,name = None,material = None ,mesh = None ,mental = None):
     player = s.playermap[player]

@@ -24,7 +24,7 @@ import random
 import utilities.Console
 from userinterface.CEGUI_Menus import CEGUI_Menus
 from tactics.OverviewMap import *
- 
+import tactics.Unit
 s = Singleton()
 class OgreNewtonApplication (sf.Application):
     
@@ -267,21 +267,8 @@ class Timed():
             name = str(self.node.getName())
         return str(self.seconds)+" "+name+"\n"
         
-def incrementTimed(timesincelastframe, timedbodies):
-    toremove = []
-    for x in timedbodies:
-        x.seconds -= timesincelastframe
-        if x.seconds < 0:
-            toremove.append(x)
-            if isinstance(x.node, Ogre.SceneNode):
-                s.app.sceneManager.getRootSceneNode().removeChild(x.node)
-            
-            if hasattr(x.node, "destroy"):
-                getattr(x.node, "destroy")()
-                
-    for x in toremove:
-        timedbodies.remove(x)
 class OgreNewtonFrameListener(CEGUIFrameListener):
+    
     def __init__(self, renderWindow, camera, Mgr, World, msnCam, NewtonListener):
 
         CEGUIFrameListener.__init__(self, renderWindow, camera)
@@ -305,7 +292,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.paused = False
         self.interrupt = []
         self.pauseturns = True
-
+        self.textlist = []
 
 
 
@@ -314,8 +301,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         s.app.timedbodies.append(x)
 
     #then you can have both
-    def addToQueue(self, unit,action):
 
+
+    def addToQueue(self, unit,action):
+        
         action.running = True
         unit.actionqueue.append(action)
         if not unit in self.unitqueues:
@@ -379,8 +368,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             if s.turnbased :   
                 break    
     #turn = Turn()
+    updatecamera = None
     def frameStarted(self, frameEvent):
-    
+        #fix better later todo
+  
         ## in this frame listener we control the camera movement, and allow the user to "shoot" cylinders
         ## by pressing the space bar.  first the camera movement...
         #turn.runturns()
@@ -398,6 +389,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         for u in s.unitmap.values():
             if u.text:
                 u.text.update()
+        for text in self.textlist:
+            text.update()
         for u in s.unitmap.values():
             if u.node and u.node.getPosition().y < -100:
                 s.removeUnit(u)
@@ -443,7 +436,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
     
-        incrementTimed(timesincelastframe,s.app.timedbodies)
+        tactics.Unit.incrementTimed(timesincelastframe,s.app.timedbodies)
                 
                 
                        
