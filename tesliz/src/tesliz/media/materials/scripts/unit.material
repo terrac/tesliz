@@ -1,0 +1,192 @@
+material Spark/SOLID
+{
+	technique
+	{
+		pass
+		{
+			diffuse 0.000000 0.000000 1.000000
+			specular 0.500000 0.500000 0.500000 12.500000
+		}
+	}
+}
+material BlueMage/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture RustySteel.jpg
+			}
+		}
+	}
+}
+material RedMage/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture redmage.jpg
+			}
+		}
+	}
+}
+material FastFighter/SOLID
+
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture kat.JPG
+			}
+		}
+	}
+}
+material Robot/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture kat.JPG
+			}
+		}
+	}
+}
+material ZaiSoldier/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture boy.JPG
+			}
+		}
+	}
+}
+material Ta/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture boy.JPG
+			}
+		}
+	}
+}
+
+material Wizard/SOLID
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture boy.JPG
+			}
+		}
+	}
+}
+
+material TimeMage/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture green.JPG
+			}
+		}
+	}
+}
+material Priest/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture red.JPG
+			}
+		}
+	}
+}
+material Ninja/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture black.JPG
+			}
+		}
+	}
+}
+material Knight/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture blue.JPG
+			}
+		}
+	}
+}
+
+material Chemist/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture blue.JPG
+			}
+		}
+	}
+}
+
+material Squire/SOLID
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture kat.JPG
+			}
+		}
+	}
+}

@@ -1,0 +1,72 @@
+
+<scene formatVersion="1.0.0">
+  <nodes>
+    <node name="anti1">
+      <position x="4.441185" y="-10.466457" z="-2.703125"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".3" y=".3" z=".3"/>
+      <entity name="anti1" meshFile="antimony.mesh"/>
+    </node>
+
+    <node name="anti2">
+      <position x="-4.968002" y="-10.185442" z="0.570840"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".3" y=".3" z=".3"/>
+      <entity name="anti2" meshFile="antimony.mesh"/>
+    </node>
+    <node name="anti3">
+      <position x="3.720145" y="-10.466457" z="2.703125"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".3" y=".3" z=".3"/>
+      <entity name="anti3" meshFile="antimony.mesh"/>
+    </node>
+        <node name="horf2">
+      <position x="13.110566" y="-10.735053" z="4.570840"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".3" y=".3" z=".3"/>
+      <entity name="horf2" meshFile="horf.mesh"/>
+    </node>
+    <node name="horf1">
+      <position x="11.294511" y="-10.900315" z="5.703125"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x=".3" y=".3" z=".3"/>
+      <entity name="horf1" meshFile="horf.mesh"/>
+    </node>
+    <node name="Lamp">
+      <position x="4.076245" y="1.005454" z="5.903862"/>
+      <quaternion x="0.169076" y="0.272171" z="0.755880" w="0.570948"/>
+      <scale x="1.000000" y="1.000000" z="1.000000"/>
+      <light name="Spot" type="point">
+        <colourDiffuse r="1.000000" g="1.000000" b="1.000000"/>
+        <colourSpecular r="1.000000" g="1.000000" b="1.000000"/>
+        <lightAttenuation range="5000.0" constant="1.000000" linear="0.033333" quadratic="0.000000"/>
+      </light>
+    </node>
+    <node name="Camera">
+      <position x="7.481132" y="-6.507640" z="5.343665"/>
+      <quaternion x="0.481707" y="0.212922" z="0.334251" w="0.781600"/>
+      <scale x="1.000000" y="1.000000" z="1.000000"/>
+      <camera name="Camera" fov="37.849289" projectionType="perspective">
+        <clipping nearPlaneDist="0.100000" farPlaneDist="100.000000"/>
+      </camera>
+    </node>
+    <node name="floormap">
+      <shape type="TreeCollision" />      
+      <position x="0.000000" y="-25.000000" z="5.000000"/>
+      <quaternion x="0.000000" y="0.000000" z="0.000000" w="1.000000"/>
+      <scale x="50" y="17" z="17"/>
+      <entity name="floormap" meshFile="box.mesh"/>
+    </node>
+
+    
+  </nodes>
+  <externals>
+    <item type="material">
+      <file name="Scene.material"/>
+    </item>
+  </externals>
+  <environment>
+    <colourAmbient r="0.000000" g="0.000000" b="0.000000"/>
+    <colourBackground r="0.056563" g="0.220815" b="0.400000"/>
+  </environment>
+</scene>

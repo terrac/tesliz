@@ -1,0 +1,75 @@
+material RedFire
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         scene_blend add
+         depth_write off
+
+         texture_unit
+         {
+            texture flare.tga
+            tex_address_mode clamp
+         }
+      }
+   }
+} 
+
+material BlueFire
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         scene_blend add
+         depth_write off
+
+         texture_unit
+         {
+            texture boy.JPG
+            tex_address_mode clamp
+         }
+      }
+   }
+} 
+
+material GreenFire
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         scene_blend add
+         depth_write off
+
+         texture_unit
+         {
+            texture green.JPG
+            tex_address_mode clamp
+         }
+      }
+   }
+} 
+
+material WhiteFire
+{
+   technique
+   {
+      pass
+      {
+         lighting off
+         scene_blend add
+         depth_write off
+
+         texture_unit
+         {
+            texture boy.JPG
+            tex_address_mode clamp
+         }
+      }
+   }
+} 
