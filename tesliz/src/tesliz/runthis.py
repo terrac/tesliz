@@ -38,7 +38,7 @@ class OgreNewtonApplication (sf.Application):
             s.turn.turnlist = []
         if s.framelistener:
             s.framelistener.clearUnitQueue()
-        
+            s.framelistener.textlist = []
         
         for unit in s.unitmap.values():
             #removing like this because letting it be removed once there are no references
@@ -664,9 +664,16 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         #pass
         self.bodies = []
 
+import sys
+def startup():
+    s.framelistener.pauseturns = False
+    s.app.loadScene(sys.argv[1],True)
+    pass
 if __name__ == '__main__':
 #    try:
-        application = OgreNewtonApplication()
+        if len(sys.argv) == 1:
+            starup = None
+        application = OgreNewtonApplication(startup)
         application.go()
 #    except Ogre.OgreException, e:
 #        raise e

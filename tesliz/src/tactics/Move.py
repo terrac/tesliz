@@ -210,7 +210,7 @@ class FFTMove():
         rotateto = vec2 * 1
         rotateto.y = vec1.y
         #vec1.y +=1
-        self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(rotateto))
+        self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(direction))
 
         #print self.unit1.body.getVelocity()
         
