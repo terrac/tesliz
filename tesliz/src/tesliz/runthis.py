@@ -672,7 +672,7 @@ def startup():
 if __name__ == '__main__':
 #    try:
         if len(sys.argv) == 1:
-            starup = None
+            startup = None
         application = OgreNewtonApplication(startup)
         application.go()
 #    except Ogre.OgreException, e:

@@ -1,4 +1,4 @@
-material Materiala
+material Material.001
 {
 	receive_shadows on
 	technique

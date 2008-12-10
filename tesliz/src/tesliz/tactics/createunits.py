@@ -1,4 +1,4 @@
-from tesliz.runthis import *
+#from tesliz.runthis import *
 import data.unittypes
 from tactics.util import *
 import random

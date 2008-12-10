@@ -1,6 +1,8 @@
 import ogre.renderer.OGRE as Ogre
 import os
 import shelve
+import dbhash
+import anydbm
 import data.util
 import tactics.util
 import tactics.Move
@@ -145,11 +147,9 @@ class OverviewMap:
         #s.framelistener.setCurrentPlayer( = s.overviewmap
         s.app.loadScene("loadoverview")
         s.framelistener.setCurrentPlayer( self)
-        #s.app.setTurnbased(True)
         #self.buildScene()
 
     def loadScene(self, sceenname):
-        #s.app.setTurnbased(False)
         s.framelistener.interrupt.append(LoadScene((sceenname)))
         s.framelistener.pauseturns = False
         self.overviewtrade.hide()
@@ -254,7 +254,6 @@ class OverviewMap:
         
         self.overviewtrade.show(self.cpos.name)
         
-        #s.app.setTurnbased(True)
     def getMoveList(self,cpos,topos,movedlist =[],posset = None):
         if not posset:
             posset = set()
