@@ -107,19 +107,19 @@ class SetVisited:
 class OverviewMap:
     
     timeleft = 0
-#    newgame = False
-    newgame = True
+    newgame = False
+#    newgame = True
     def __init__(self,text):
         self.map = dict()
         self.actionqueue=[]
-        self.filename = text
+        self.filename = "media\\saves\\"+text
         self.exitscene = None
         
         s.overviewmap = self
         self.overviewtrade = data.overviewtrade.OverviewTrade()
         
-        if os.path.exists(text) and not self.newgame:
-            positionmap = shelve.open(text)
+        if os.path.exists(self.filename) and not self.newgame:
+            positionmap = shelve.open(self.filename)
             #self.map = positionmap["map"]
             self.root,self.cpos = positionmap["mapdata"]
             

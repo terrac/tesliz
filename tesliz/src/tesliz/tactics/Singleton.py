@@ -118,7 +118,7 @@ class Singleton:
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
         def playsound(self,filename="C:\sound.wav"):
-            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
+            winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
             winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
     

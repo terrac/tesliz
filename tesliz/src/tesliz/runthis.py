@@ -135,6 +135,7 @@ class OgreNewtonApplication (sf.Application):
         self.onStartup()
 
     def loadScene(self,scenename, test = False):
+        #scenename = "media\\scenes\\" + scenename
         self.reset()
         #data.util.clearMeshes()
         s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
@@ -161,7 +162,7 @@ class OgreNewtonApplication (sf.Application):
         mental = data.aisettings.AIsettings()
         if test:
             tactics.dotscenea.setupTest(scenename)
-        if os.path.exists(scenename+".scene"):
+        if os.path.exists( "media\\scenes\\" +scenename+".scene"):
             self.parseSceneFile(scenename)
         else:
             self.parseSceneFile("begin")

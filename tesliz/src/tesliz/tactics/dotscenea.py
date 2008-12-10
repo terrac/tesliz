@@ -325,7 +325,7 @@ class Dotscene(object):
     def parse_scene(self,sceneManager, xml):
         self.filename = xml
         
-        xml =  minidom.parse(xml+'.scene')
+        xml =  minidom.parse("media\\scenes\\"+xml+'.scene')
         '''Modify and return reference to sceneManager from elements specified in dotscene XML document. 
         >>> application = Ogre_unit.setup_unittest_application()
         >>> xml = get_test_xml()
