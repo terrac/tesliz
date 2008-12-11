@@ -107,8 +107,8 @@ class SetVisited:
 class OverviewMap:
     
     timeleft = 0
-    newgame = False
-#    newgame = True
+#    newgame = False
+    newgame = True
     def __init__(self,text):
         self.map = dict()
         self.actionqueue=[]
@@ -148,11 +148,13 @@ class OverviewMap:
         s.app.loadScene("loadoverview")
         s.framelistener.setCurrentPlayer( self)
         #self.buildScene()
+        s.app.menus.setupStartMenu()
 
     def loadScene(self, sceenname):
         s.framelistener.interrupt.append(LoadScene((sceenname)))
         s.framelistener.pauseturns = False
         self.overviewtrade.hide()
+        s.app.menus.deleteStartMenu()
         self.save()
 
 
@@ -253,6 +255,7 @@ class OverviewMap:
             s.framelistener.interrupt.append(SetVisited())
         
         self.overviewtrade.show(self.cpos.name)
+        s.app.menus.setupStartMenu()
         
     def getMoveList(self,cpos,topos,movedlist =[],posset = None):
         if not posset:

@@ -255,7 +255,7 @@ class Attack(object):
     name = "Attack"
     value= 5     
     timeleft = 3
-    range=5
+    range=1,1
     animation = "LOOP"
     type = "bludgeon"
     sound = "sword.wav"
@@ -350,7 +350,7 @@ class GridTargeting(object):
         self.particlename = 'RedTorch'
         self.name=name
         self.value=4     
-        self.range = 10
+        self.range = 10,10
         self.type = type
         self.unit2 = None
         self.timeleft = 3
@@ -378,22 +378,10 @@ class GridTargeting(object):
             x = x + self.endPos.x            
             y = y + self.endPos.y
             z = z + self.endPos.z
-            
-            start = Ogre.Vector3(x,y+5,z)
-            end = Ogre.Vector3(x,y-5,z)
-            self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
-            info = self.ray.getFirstHit()
-            if info.mBody:
-                name = info.mBody.getOgreNode().getName()
-                if s.unitmap.has_key(name):
-                    unit = s.unitmap[name]
-                    unitlist.append(unit)
-                else:
-                    unit = None
-            else:
-                unit = None
+            vec = Ogre.Vector3(x,y,z)
+            unit = data.util.getValidUnit(vec)
             for to in self.todo:
-                to.execute(self.unit1,unit,Ogre.Vector3(x,y,z))
+                to.execute(self.unit1,unit,vec)
                 
     def __str__( self ):
         return "GridTargeting"+self.name

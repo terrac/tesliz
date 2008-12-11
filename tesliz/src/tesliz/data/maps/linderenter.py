@@ -8,7 +8,7 @@ import utilities.FollowCamera
 class EndGame:
     def execute(self,timer):
         s.endGame()
-        #s.app.setTurnbased(True)
+        s.app.setTurnbased(True)
 
 #class AttachCamera:
 #    def __init__(self, node,position = Ogre.Vector3(0,0,0)):

@@ -50,7 +50,10 @@ class Fstats(object):
 #        self.job = job
 def set(unit,hp,power,mp,mpower,ce,speed,move):
     po =unit.attributes.magical = Fstats()
+    po.power = mpower
+    po.points = mp
     po =unit.attributes.physical = Fstats()
+    
     po.maxpoints = hp
     po.points = hp
     po.power = power
@@ -102,7 +105,7 @@ class Squire(Job):
         
         throw.do = lambda self,unit2: data.util.damageHitpoints(data.damage.basicPhysical,self.unit1,unit2)
         #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
-        trait1.range = 50
+        trait1.range = 5
         
         unit.traits["Squire"] =Traits([trait1])
 #        unit.mental = Mind([Combat(unit,Action.Attack,Combat.isWanted)])
@@ -124,11 +127,11 @@ class Chemist(Job):
 class Wizard(Job):
     
     def changeTo(self,unit):
-        set(unit,27,3,25,6,5,5,(3,3))
+        set(unit,27,3,25,6,9,5,(3,3))
 
         fireball = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst")
-        fireball.range = 50
-        range = NumberedTraits([fireball],[5])
+        fireball.range = 5
+        range = NumberedTraits([fireball],[50])
         unit.traits["BlackMagic"] = range
         
 
@@ -139,7 +142,7 @@ class Poet(Job):
         set(unit,27,3,25,6,5,7,(3,3))
 
         deadzone = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),AffectLand("deadzone")],"Deadzone")
-        deadzone.range = 50
+        deadzone.range = 50,50
         range = NumberedTraits([deadzone],[5])
         unit.traits["Poetry"] = range
         

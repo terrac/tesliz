@@ -51,6 +51,7 @@ def buildUnitNoNode(name,playername,unittype,level=1):
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
     tactics.util.resetAttributes(unit)
     tactics.util.setupMaxPoints(unit)
+    setupExtra(unit)
     return unit
 def resetAttributes(unit):
     try:
@@ -152,11 +153,12 @@ def buildImmoblePhysics(unit,node = None):
 
 def setupExtra(unit, mentalstate = None):
     player = unit.player
-    if hasattr( player, "setVisualMarker"):
-        player.setVisualMarker(unit)
+    if unit.node:
+        if hasattr( player, "setVisualMarker"):
+            player.setVisualMarker(unit)
    
-    if s.fog and player.name == "Computer1":
-        unit.setVisible(False)
+        if s.fog and player.name == "Computer1":
+            unit.setVisible(False)
     
     if not mentalstate:
         mentalstate = mental.mind.Mind([mental.combat.Combat(unit,mental.action.Attack,combat.isWanted)])    

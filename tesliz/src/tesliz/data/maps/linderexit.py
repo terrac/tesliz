@@ -17,12 +17,14 @@ class Unitdata(object):
     def setupEvents(self):
         
         
-        SetupPlayer("Player1",[Ogre.Vector3(2,0,19),Ogre.Vector3(0,0,19)])
-        cerc =tactics.util.buildUnitNoNode("cerc", "Computer1","Squire")
-        SetupPlayer("Computer1",[Ogre.Vector3(12,0,19)])
-        CreateList(["Squire","Squire","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
-        alluvia = s.unitmap["Alluvia"]
         oath =buildUnitNoNode("Oath","Player1", "Squire")
+        SetupPlayer("Player1",[Ogre.Vector3(0,0,19),Ogre.Vector3(0,0,20)])
+        cerc =tactics.util.buildUnitNoNode("cerc", "Computer1","Squire")
+        trent  =tactics.util.buildUnitNoNode("trent", "Computer1","Squire")
+        SetupPlayer("Computer1",[Ogre.Vector3(12,0,19),Ogre.Vector3(12,0,20)])
+        #CreateList(["Squire","Squire","Chemist"],"Computer1",[Ogre.Vector3(-18,0,17),Ogre.Vector3(14,0,18),Ogre.Vector3(12,0,20)],[1,2,1])
+        alluvia = s.unitmap["Alluvia"]
+
         #fiore = s.unitmap["Fiore"]
         #setup a map of units with turns and positions and add it on
         convo1 =[
@@ -35,12 +37,14 @@ class Unitdata(object):
          (alluvia,"Well sorry, I was just checking the price to see our cut"),
          (oath,"You could have mentioned something"),
          (alluvia,"I can't be expected to remember everything"),
-         (cerc,"Hey hey, you can continue this conversation after you are dead"),
+         (cerc,"Hey hey, you can continue this conversation after you are dead.  Me and trent will make short work of you"),
          ]
         tmap = {0:convo1}
         fmap = {'death-Cerc':(alluvia,"Wut Wut")}
         s.event = Event(turnmap = {alluvia:tmap,cerc:fmap})
         
+            
+        
     def setupTestMap(self):
         unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
-        unit =buildUnitNoNode("Oath","Player1", "Squire",2)
+        #unit =buildUnitNoNode("Oath","Player1", "Squire",2)

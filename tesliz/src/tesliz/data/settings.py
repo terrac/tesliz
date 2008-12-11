@@ -29,7 +29,7 @@ class Settings(object):
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 5
+        s.speed = 12
         
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "aion")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)

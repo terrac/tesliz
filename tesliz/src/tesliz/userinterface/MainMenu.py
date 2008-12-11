@@ -8,7 +8,7 @@ import utilities.SampleFramework as sf
 
 s = Singleton()
 
-class CEGUI_Menus:
+class MainMenu:
     
     def __init__(self, renderWindow, sceneManager):
         self.ListItems = []
@@ -34,7 +34,7 @@ class CEGUI_Menus:
         sheet = CEGUI.WindowManager.getSingleton().createWindow( "DefaultWindow", "root_wnd" )
         CEGUI.System.getSingleton().setGUISheet( sheet )
 
-    def startMenu(self):
+    def setupStartMenu(self):
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
         mainMenuBackground = winMgr.createWindow("TaharezLook/FrameWindow", "Tesliz/MainMenuBackground")
@@ -46,18 +46,10 @@ class CEGUI_Menus:
         mainMenuBackground.setText("Tesliz Menu Frame")
 
 
-        startButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/StartButton")
-        mainMenuBackground.addChildWindow(startButton)
-        startButton.setText("Start Game")
-        startButton.setXPosition(CEGUI.UDim(0.375, 0))
-        startButton.setYPosition(CEGUI.UDim(0.3, 0))
-        startButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
-        startButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleStartGameFromMenu")
-        #startButton.setAlwaysOnTop(True)
 
         jobButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/JobButton")
         mainMenuBackground.addChildWindow(jobButton)
-        jobButton.setText("Jobs")
+        jobButton.setText("Edit Units")
         jobButton.setXPosition(CEGUI.UDim(0.375, 0))
         jobButton.setYPosition(CEGUI.UDim(0.5, 0))
         jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))

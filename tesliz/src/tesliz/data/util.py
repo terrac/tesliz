@@ -49,7 +49,7 @@ def show(pos, texturename = None ,name = None):
         name = s.app.getUniqueName()
     if not texturename:
         texturename = "Spark/SOLID"
-    mesh = "cylinder.mesh"
+    mesh = "box.mesh"
     if not sceneManager.hasSceneNode(name):
         scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
         attachMe = s.app.sceneManager.createEntity(name,mesh)            
@@ -65,6 +65,7 @@ def show(pos, texturename = None ,name = None):
     scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
  
     return name
+
 
 def createEntity(mesh,node):    
     sceneManager = s.app.sceneManager
@@ -297,16 +298,25 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     if not prevfound:
         prevfound = VectorMap()
     
-    moves,jump = range
+    if hasattr(range,'__iter__'):
+        moves,jump = range
+    else:
+        moves = range
+        jump = 50
     xlist = [0,0,1,-1]
     zlist = [-1,1,0,0]
-    list =getValid(vec1, jump,xlist,zlist)
+    #xlist = []
+    #zlist = []
+    list = []
+    xzlist = [(0,-1),(0,1),(1,0),(-1,0)]
+    for x,z in xzlist:
+        cvec = Ogre.Vector3(vec1.x+ x,vec1.y,vec1.z+z)
+        if not( prevfound.has_key(cvec) and moves < prevfound[cvec]):
+            list.append(getValidPos(cvec, jump))
 
     moves -=1
     
-    for x in list:
-        if prevfound.has_key(x) and moves < prevfound[x]:
-            list.remove(x)
+
     range = moves,jump
     if moves < 0:
         return
@@ -426,10 +436,10 @@ def getValid(vec,height,xlist , zlist):
         
     
     return validpos
-def getValidPos(vec):
+def getValidPos(vec, height = 50):
     if not vec:
         return 
-    vlist = getValid(vec, 50, [0], [0])
+    vlist = getValid(vec, height, [0], [0])
     if vlist:
         return vlist[0]
     
@@ -449,7 +459,7 @@ def getValidName(vec,predicate,height=5):
                 return name
 def getValidUnit(vec,height = 5):
     predicate = lambda name:s.unitmap.has_key(name)
-    getValidName(vec, predicate, height)
+    return s.unitmap[getValidName(vec, predicate, height)]
     
 
     #unit.attributes.hitpoints = 500 * level

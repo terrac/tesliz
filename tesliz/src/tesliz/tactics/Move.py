@@ -2,6 +2,8 @@ from utilities.physics import *
 from tactics.Singleton import *
 import data.util 
 import data.Affects
+
+import ogre.renderer.OGRE as Ogre
 s = Singleton()
 #from math import *
 #def distance(v1,v2):
@@ -147,16 +149,7 @@ class FFTMove():
 
     needsasecondclick = True
     animationState = None
-    def choiceStart(self):
-        #create a mark that creates a small block
-        self.toremove =data.util.markValid(self.unit1.node.getPosition(), self.range, data.util.show)
-        
-    def choiceEnd(self):
-        if self.toremove:
-            for x in self.toremove:
-                    
-                s.app.sceneManager.getRootSceneNode().removeChild(x)
-        self.toremove = None
+
         
 
     def execute(self,timer):
@@ -199,18 +192,24 @@ class FFTMove():
             self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
             print "end"
+            self.animationState.setTimePosition(0)
             return False
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]
         
+        #vec2.y = vec1.y
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1
         
         vec1 = vec1 + (direction * timer * 3 * self.speed)
-        rotateto = vec2 * 1
-        rotateto.y = vec1.y
+        xzdirection = direction * 1
+        xzdirection.y = 0
+        xzdirection.normalise()
+        xzsrc = vec1 * 1
+        xzsrc.y = 0
+        xzsrc.normalise()
         #vec1.y +=1
-        self.unit1.body.setPositionOrientation(vec1,vec1.getRotationTo(direction))
+        self.unit1.body.setPositionOrientation(vec1,xzsrc.getRotationTo(xzdirection))
 
         #print self.unit1.body.getVelocity()
         

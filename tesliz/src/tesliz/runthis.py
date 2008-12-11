@@ -22,7 +22,7 @@ import utilities.SampleFramework as sf
 import ogre.gui.CEGUI as CEGUI
 import random
 import utilities.Console
-from userinterface.CEGUI_Menus import CEGUI_Menus
+from userinterface.MainMenu import MainMenu
 from tactics.OverviewMap import *
 import tactics.Unit
 s = Singleton()
@@ -52,6 +52,7 @@ class OgreNewtonApplication (sf.Application):
         if self.sceneManager:
             self.sceneManager.destroyAllMovableObjects()
             self.sceneManager.destroyAllEntities()
+            
             #s.app.sceneManager.getRootSceneNode().removeAndDestroyAllChildren()
         for name in data.util.meshlist:
             print name
@@ -59,6 +60,7 @@ class OgreNewtonApplication (sf.Application):
                 s.app.sceneManager.destroySceneNode(name)
         meshlist = []
         s.unitmap = dict()
+        self.World.destroyAllBodies()
         
         
         
@@ -109,11 +111,11 @@ class OgreNewtonApplication (sf.Application):
     def _createScene ( self ):
           
         # Create all the CEGUI stuff
-        self.menus = CEGUI_Menus(self.renderWindow, self.sceneManager)
+        self.menus = MainMenu(self.renderWindow, self.sceneManager)
 #        self.initCEGUIStuff()
         
         # Create the Main Window
-        self.menus.startMenu()
+        
         
         #self.loadScene()
         data.settings.Settings()

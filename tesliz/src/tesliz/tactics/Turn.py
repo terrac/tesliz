@@ -37,7 +37,6 @@ class Turn(object):
         
     pause = False    
     def doTurn(self):
-        
         if self.pause and not s.AIon:
             return
         
@@ -92,6 +91,7 @@ class RealTimeTurn(object):
         
         self.turnindex = 0
     def doTurn(self):
+        
         maplen = len(s.unitmap.values())
         if maplen == 0:
 #            s.endGame()

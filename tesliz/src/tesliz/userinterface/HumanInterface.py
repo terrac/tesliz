@@ -7,6 +7,7 @@ from userinterface.HumanInterface import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
+import data.util
 
 class HumanInterface:
     def __init__(self,player):
@@ -84,6 +85,7 @@ class HumanInterface:
                 sf.Application.debugText = "Action failed"
                 s.playsound()
                 return
+            self.choiceEnd()
             sf.Application.debugText = "Action Succeeded"
             if self.removeFrom:
                 self.removeFrom.removeItem(self.toRemove)
@@ -129,8 +131,8 @@ class HumanInterface:
         if text == "Cancel":
             if CEGUI.WindowManager.getSingleton().isWindowPresent("abilitylist"):
                 CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
-            if hasattr(self.iexecute, "choiceEnd"):
-                self.iexecute.choiceEnd()
+            #if hasattr(self.iexecute, "choiceEnd"):
+            self.choiceEnd()
               
             item.setText(self.choosing)
             self.iexecute = None
@@ -192,6 +194,7 @@ class HumanInterface:
         self.abilityused = self.abilmap[text]
         
         setStart(toexecute,self.cunit)
+        self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range)
         if toexecute.needsasecondclick:
             self.iexecute = copy.copy(toexecute)
         else:
@@ -214,3 +217,14 @@ class HumanInterface:
         self.actionSelected = False
         if self.cunit:
             self.cunit.player.endTurn()
+            
+    def choiceStart(self,pos,range):
+        #create a mark that creates a small block
+        self.toremove =data.util.markValid(pos, range, data.util.show)
+        
+    def choiceEnd(self):
+        if self.toremove:
+            for x in self.toremove:
+                    
+                s.app.sceneManager.getRootSceneNode().removeChild(x)
+        self.toremove = None
