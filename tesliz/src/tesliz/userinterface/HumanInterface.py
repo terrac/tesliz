@@ -41,7 +41,7 @@ class HumanInterface:
         list.setText(name)
         list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim( 0.5)))
         list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-        list.setAlwaysOnTop(True)
+        #list.setAlwaysOnTop(True)
         
         self.listmap = dict()
 
@@ -60,7 +60,7 @@ class HumanInterface:
             list.setText("list")
             list.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( .4)))
             list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-            list.setAlwaysOnTop(True)
+            #list.setAlwaysOnTop(True)
             #display mental
             
             for x in self.cunit.mental.getMentalCommands():
@@ -70,6 +70,9 @@ class HumanInterface:
         
 
     def clickEntity(self,name,position):
+        position.x = int(position.x)
+        position.y = int(position.y)
+        position.z = int(position.z)
         if not s.turnbased and s.unitmap.has_key(name) and not s.framelistener.pauseturns:
             if s.unitmap[name] in self.player.unitlist:
             
@@ -171,7 +174,7 @@ class HumanInterface:
         list1.setText("abilitylist")
         list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
         list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-        list1.setAlwaysOnTop(True)
+        #list1.setAlwaysOnTop(True)
         
         self.listmap = dict()
 

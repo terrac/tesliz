@@ -24,11 +24,12 @@ class ScriptEvent:
         self.time = 0
         
     def execute(self,timer):
-        if not self.tlist:
-            return
         if self.time > 0:
             self.time -= timer
             return True
+        if not self.tlist:
+            return
+
         tuple = self.tlist.pop(0)
         
         #if not a tuple
@@ -49,13 +50,17 @@ class ScriptEvent:
         return True
 class Event:
     #do the dict param here
-    def __init__(self, positionmap = None, turnmap = None):
+    def __init__(self, positionmap = dict(), turnmap = dict(),startlist = []):
         self.positionmap = positionmap
         self.turnmap = turnmap
+        self.startlist = startlist
         for x in turnmap.values():
             for y in x.keys():
                 x[y] = ScriptEvent(x[y])
-                
+#        slist = []
+#        for x in self.startlist:
+#            slist.append(ScriptEvent(x))
+        self.startlist = ScriptEvent(self.startlist)
         self.turncount = dict()
        
         
@@ -79,6 +84,15 @@ class Event:
             s.framelistener.pauseturns = True
             s.framelistener.addToQueue(unit,exe)
             s.framelistener.addToQueue(unit,PauseTurns(False))
+            
+    def start(self):
+        unit = Unit()
+        s.framelistener.pauseturns = True
+        #for exe in self.startlist:
+        s.framelistener.addToQueue(unit,self.startlist)
+        #s.framelistener.addToQueue(unit,PauseTurns(False))
+        
+        
     def end(self):
         for unit in s.unitmap.values():            
             if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
@@ -86,7 +100,7 @@ class Event:
                 
                 s.framelistener.addToQueue(unit,exe)
                 
-                
+    
     def death(self,unit):
         dkey = "death-"+unit.getName()
         if self.turnmap.has_key(unit) and self.turnmap[unit].has_key(dkey):

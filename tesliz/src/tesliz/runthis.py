@@ -116,7 +116,6 @@ class OgreNewtonApplication (sf.Application):
         
         # Create the Main Window
         
-        
         #self.loadScene()
         data.settings.Settings()
         
@@ -170,7 +169,8 @@ class OgreNewtonApplication (sf.Application):
             self.parseSceneFile("begin")
             tactics.dotscenea.setupOnlyEvents(scenename)
             s.log("parsed begin file as did not find the regular file")
-        
+        if s.event:
+            s.event.start()
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
 #        winMgr = CEGUI.WindowManager.getSingleton() 
 #        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
@@ -356,6 +356,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             boo = iexecute.execute(timer)
             
             if not boo and len(unit.actionqueue):
+                if hasattr(unit, "name"):
+                    name = unit.name
+                else:
+                    name = str(unit)
+                s.log("executable done "+ name+" "+str(iexecute),self)
                 unit.actionqueue.pop(0)
                 if hasattr(iexecute, "timeleft"):
                     
@@ -552,6 +557,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
         if not self.pauseturns:
             s.turn.doTurn()        
+            print "aoeu"
         
         self.runQueue(timesincelastframe)
         
@@ -606,7 +612,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.2)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))        
         
-        btn.setAlwaysOnTop(True)
+        #btn.setAlwaysOnTop(True)
                                 
     oncegui = False       
     #runningexecutes = []

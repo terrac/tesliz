@@ -36,7 +36,13 @@ class Fstats(object):
 
 
 
- 
+def setupJobList(unit):
+    #nit.jobslist = []
+    unit.joblist.append(Squire())
+    unit.joblist.append(Chemist())
+    if unit.job.required:
+        unit.joblist + unit.job.required
+    unit.joblist.append(unit.job)
       
 
 
@@ -61,54 +67,79 @@ def set(unit,hp,power,mp,mpower,ce,speed,move):
     unit.attributes.speed = speed
     unit.attributes.move = move
 requiredexp =[0,200,400,700,1100,1600,2000,2500]
-class Job:
+
+
+class Job(object):
     level = 1
     exp = 0
-    def jobName(self):
-        return self.__class__.__name__
-    def incrementLevel(self,cjobs):
-        
-        for job in getJobList():
-            for x in cjobs:
-                if isinstance(job, cjobs.getclass):
-                    continue
-            if requiredJobs(cjobs):
-                cjobs.append(copy.deepcopy(job))
-                
     
-    def upgradeLevel(self):
-        if requiredexp[level] < exp:
-            level +=1
+    def __init__(self,level = 1):
+        self.level = level
+
+
+    def getName(self):
+        return self.__class__.__name__
+ 
+        
+
+#    def setupStats(self,unit):
+#        pass
+#    def getTraits(self):
+#        pass
+    def changeTo(self,unit):
+        self.setupStats(unit)
+        traits,reaction,support,abilities = self.getAbilities()
+        unit.traits[self.getName()] =traits
+            
+                                         
+    def addExp(self,unit,toadd):
+        self.exp += toadd
+        if requiredexp[self.level] < self.exp:
+            self.level +=1
+            self.addNewJobs(unit.joblist)
     required = None
-    def requiredJobs(self,cjobs):
-        if self.required:                
-            for job,level in required:
-                boo = False
-                for x in cjobs:
-                    if x.__class__.__name__ == job and level >= x.level:
-                        boo = True
-                if not boo:
-                    return False
-        return True
+    def addNewJobs(self,joblist):
+        for ajob in alljobs:
+            if ajob.required:                
+                for job in ajob.required:
+                    boo = False
+                    
+                    #if x meets requirements then check to see if it needs to be added
+                    for x in joblist:
+                        
+                        if isinstance(x,job.__class__) and job.level <= x.level:
+                            boo = True
+                    if boo:
+                        
+                        #check to see if unit already has job
+                        for x in joblist:
+                            if isinstance(x,ajob.__class__):
+                                boo = False
+                        #if job not in list and meets requirement then add        
+                        if boo:
+                            joblist.append(copy.deepcopy(ajob))
+            
     mesh = "zombie.mesh"
     material = "Examples/RustySteel"
     def __str__( self ):
         return self.__class__.__name__
+
+    
 class Squire(Job):
     
- 
-    
-    def changeTo(self,unit):
-        set(unit,30,4,5,3,5,6,(4,4))
+    def getAbilities(self):
         throw = Throw("cylinder.mesh")
-        trait1 = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset1,[throw],"Stone","physical",)
+        abil = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset1,[throw],"Stone","physical",)
         
         throw.do = lambda self,unit2: data.util.damageHitpoints(data.damage.basicPhysical,self.unit1,unit2)
         #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
-        trait1.range = 5
-        
-        unit.traits["Squire"] =Traits([trait1])
-#        unit.mental = Mind([Combat(unit,Action.Attack,Combat.isWanted)])
+        abil.range = 5
+        trait1 =Traits([abil])
+                #primary,reaction,support,movement
+        return (trait1,None,None,None)
+       
+    def setupStats(self,unit):
+        set(unit,30,4,5,3,5,6,(4,4))
     
 class Chemist(Job):
     
@@ -116,26 +147,27 @@ class Chemist(Job):
     def healing(self,abil):
         return abil.type == "healing"
 
-    def changeTo(self,unit):
+    def setupStats(self,unit):
         set(unit,28,3,7,4,5,5,(3,3))
-
-        trait1 = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
-        trait1.range = 50
-        
+    def getAbilities(self):
+        abil = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
+        abil.range = 50
+        trait1 = ItemTraits([abil],unit.player)
 #        unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
 #        unit.mental = Mind([Combat(unit,self.healing,Combat.isWantedHurt),Combat(unit,Action.Attack,Combat.isWanted)])
+        return (trait1,None,None,None)
 class Wizard(Job):
     
-    def changeTo(self,unit):
+    def setupStats(self,unit):        
         set(unit,27,3,25,6,9,5,(3,3))
-
+    def getAbilities(self):
         fireball = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst")
         fireball.range = 5
-        range = NumberedTraits([fireball],[50])
-        unit.traits["BlackMagic"] = range
+        trait1 = NumberedTraits([fireball],[50])
         
+        return (trait1,None,None,None)
 
-    required = [("Chemist",2)]
+    required = [Chemist(2)]
 class Poet(Job):
     
     def changeTo(self,unit):
@@ -143,13 +175,10 @@ class Poet(Job):
 
         deadzone = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),AffectLand("deadzone")],"Deadzone")
         deadzone.range = 50,50
-        range = NumberedTraits([deadzone],[5])
-        unit.traits["Poetry"] = range
+        trait1 = NumberedTraits([deadzone],[5])
+        return (trait1,None,None,None)
         
-    def requiredJobs(self,cjobs):
-        for job in cjobs:
-            if isinstance(job, Chemist) and job.level > 1:
-                return True
+    required = [Chemist(2)]
 def changeTo(unit,job):
     # No clue what jlist is, removing the call
     #if job.requiredJobs(unit.job.jlist):
@@ -158,5 +187,4 @@ def changeTo(unit,job):
     
     job.changeTo(unit)
                
-def getJobList():
-    return [Squire(),Chemist(),Wizard()]
+alljobs =[ Squire(),Chemist(),Wizard(),Poet()]

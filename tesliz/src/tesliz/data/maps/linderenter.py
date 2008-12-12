@@ -94,6 +94,7 @@ class Unitdata(object):
          #(alluvia,"No"),
 #         (cerc,"No?"),
 #         (cerc,"Well I wish you good luck with that attitude my friend"),
+       
          EndGame()
          ],Unit())
         
@@ -104,9 +105,9 @@ class Unitdata(object):
          
           
          ]
-        tmap = {0:convo1 }
-        
-        s.event = Event(turnmap = {alluvia:tmap})
+        #tmap = {0:convo1 }
+       # s.framelistener.pauseturns = True
+        s.event = Event(startlist = convo1)
         
     def setupTestMap(self):
         pass

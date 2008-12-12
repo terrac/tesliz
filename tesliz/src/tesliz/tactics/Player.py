@@ -109,6 +109,8 @@ class ComputerPlayer(object):
 
     s = Singleton()
     def startTurn(self,unit):
+        if s.framelistener.pauseturns:
+            return
         if unit.mental:        
             for x in unit.mental.list:
                 s.framelistener.addToQueue(unit,x)

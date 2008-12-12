@@ -41,7 +41,7 @@ class Chatbox:
         chatbox.setText("actionlist")
         chatbox.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.7)))
         chatbox.setSize(CEGUI.UVector2(cegui_reldim(0.4), cegui_reldim( 0.2)))                
-        chatbox.setAlwaysOnTop(True)
+        #chatbox.setAlwaysOnTop(True)
         self.chatbox = chatbox
 
     def addText(self, text):

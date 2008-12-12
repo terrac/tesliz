@@ -12,7 +12,7 @@ class OverviewTrade(object):
         self.pricemap["Wolf Pelt"] = 350
         self.addItem("Linder","Cloth",500)
         self.addItem("Linder","Leather",400)
-        self.addItem("Exalia","Wolf Pelt",300)
+        self.addItem("Exalia","Cloth",300)
         self.cmoney = 0
         self.items = ["Grain"]
         

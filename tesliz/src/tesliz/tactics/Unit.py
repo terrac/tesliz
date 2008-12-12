@@ -89,6 +89,7 @@ class Unit(object):
         self.mental = None
         self.name = name
         self.job = None
+        self.joblist = []
         self.reset()
 
     def reset(self):
@@ -149,6 +150,7 @@ class Unit(object):
     def startTurn(self):
         if self.getDeath():
             self.getDeath().execute(self)
+            s.turn.nextUnitTurnUnpause()
             return
         if s.turnbased:
             s.framelistener.showAttributesCurrent(self.getName())
@@ -190,7 +192,7 @@ class Unit(object):
         self.text = text
         
     def __getstate__(self):
-        return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"mental":self.mental,"job":self.job,"level":self.level,"player":self.player}
+        return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"mental":self.mental,"job":self.job,"level":self.level,"player":self.player,"joblist":self.joblist}
     def __setstate__(self,dict):
         self.__dict__ = dict
         self.traits = {}

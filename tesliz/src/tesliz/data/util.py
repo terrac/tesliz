@@ -248,15 +248,16 @@ def getChanceToHitAndDamage(number,type,unit1,unit2):
 #for say a spell you would give a high jump
 
 def experienceAccrued(unit1,unit2):
-    exp = unit2.attributes.level - unit1.attributes.level + 10
-    jp = 10 +unit1.job.level * 3
-    
-    unit1.attributes.exp += exp
-    if unit1.attributes.exp > 100:
-        unit1.attributes.exp = 0
-        unit1.attributes.level +=1
-    unit1.job.exp  += jp
     if not unit1.expaccrued:
+        exp = unit2.attributes.level - unit1.attributes.level + 10
+        jp = 10 +unit1.job.level * 3
+        
+        unit1.attributes.exp += exp
+        if unit1.attributes.exp > 100:
+            unit1.attributes.exp = 0
+            unit1.attributes.level +=1
+        unit1.job.addExp(unit1,jp)
+        
         unit1.expaccrued = True
         update(str(exp)+" exp "+str(jp)+" jp",unit1)
         
@@ -321,10 +322,10 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     if moves < 0:
         return
     for x in list:
-        
-        names.add(mark(x))
-        prevfound[x] = moves
-        markValid(x, range,mark,names,prevfound)
+        if x:
+            names.add(mark(x))
+            prevfound[x] = moves
+            markValid(x, range,mark,names,prevfound)
     return names
 def getAllValid(vec1,range,valid = None, prevfound=None):
     if not valid:
@@ -432,6 +433,7 @@ def getValid(vec,height,xlist , zlist):
                 dira = (end - start)
                 dira.normalise()
                 position = start + (dira * ((end - start).length() * info.mDistance))
+   
                 validpos.append(position)
         
     
@@ -459,7 +461,9 @@ def getValidName(vec,predicate,height=5):
                 return name
 def getValidUnit(vec,height = 5):
     predicate = lambda name:s.unitmap.has_key(name)
-    return s.unitmap[getValidName(vec, predicate, height)]
+    name = getValidName(vec, predicate, height)
+    if name:
+        return s.unitmap[name]
     
 
     #unit.attributes.hitpoints = 500 * level

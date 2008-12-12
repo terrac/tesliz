@@ -38,10 +38,11 @@ class Unitdata(object):
          (oath,"You could have mentioned something"),
          (alluvia,"I can't be expected to remember everything"),
          (cerc,"Hey hey, you can continue this conversation after you are dead.  Me and trent will make short work of you"),
+          PauseTurns(False)
          ]
-        tmap = {0:convo1}
+        #tmap = {0:convo1}
         fmap = {'death-Cerc':(alluvia,"Wut Wut")}
-        s.event = Event(turnmap = {alluvia:tmap,cerc:fmap})
+        s.event = Event(turnmap = {cerc:fmap}, startlist = convo1)
         
             
         

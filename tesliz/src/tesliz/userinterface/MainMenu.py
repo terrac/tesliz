@@ -3,10 +3,54 @@ from tactics.Singleton import *
 from data.jobs import *
 from tactics.Unit import Unit
 import ogre.gui.CEGUI as CEGUI
+import util
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
-
+import ogre.renderer.OGRE as Ogre
 s = Singleton()
+
+
+
+class JobsMenu:
+    def setup(self,unit):
+        if not unit:
+            return
+        
+        list1 = util.getNewWindow("joblist","Main/Window")
+                
+        list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
+        list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+
+        self.unit = unit
+        for job in unit.joblist:
+            util.addItem(self,list1,job.getName())
+        list1.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleJobsSelection")
+    def handleJobsSelection(self, e):
+        lbox = e.window
+        if lbox.getFirstSelectedItem():
+            jobName = lbox.getFirstSelectedItem()
+            jobNameText = jobName.getText()
+            idx = lbox.getItemIndex(jobName)
+            s.log("handleJobSelection: jobName = "+str( jobNameText),self)
+
+            
+            if self.unit != None and self.unit.job.getName() != jobNameText:
+                for x in self.unit.joblist:
+                    if x.getName() == jobNameText:
+                        changeTo(self.unit, x)
+                    
+            #cs = CEGUI.String()
+            #cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
+            #winMgr = CEGUI.WindowManager.getSingleton()
+            #winMgr.getWindow("Main/FontSample").setText(cs)
+
+        return True
+class ItemsMenu:
+    def setup(self,unit):
+        pass
+class AbilitiesMenu:
+    def setup(self,unit):
+        pass
 
 class MainMenu:
     
@@ -15,7 +59,8 @@ class MainMenu:
         if s.initCEGUI != True:
             self.initCEGUIStuff(renderWindow, sceneManager)
             s.initCEGUI = True
-        
+        self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilitiesMenu()}
+        self.unit = None
 
 
     def initCEGUIStuff(self, renderWindow, sceneManager):
@@ -33,12 +78,15 @@ class MainMenu:
         
         sheet = CEGUI.WindowManager.getSingleton().createWindow( "DefaultWindow", "root_wnd" )
         CEGUI.System.getSingleton().setGUISheet( sheet )
+        CEGUI.System.getSingleton().getRenderer().setTargetRenderQueue(Ogre.RENDER_QUEUE_OVERLAY, True);
+         
 
     def setupStartMenu(self):
-        sheet = CEGUI.System.getSingleton().getGUISheet()
+ #       sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
-        mainMenuBackground = winMgr.createWindow("TaharezLook/FrameWindow", "Tesliz/MainMenuBackground")
-        sheet.addChildWindow(mainMenuBackground)
+        
+        mainMenuBackground = util.getNewWindow( "Tesliz/MainMenuBackground", "root_wnd", "TaharezLook/FrameWindow")
+#        sheet.addChildWindow(mainMenuBackground)
         mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.25, 0), CEGUI.UDim(0.25, 0)))
         mainMenuBackground.setXPosition(CEGUI.UDim(0, 0))
         mainMenuBackground.setYPosition(CEGUI.UDim(0, 0))
@@ -53,7 +101,7 @@ class MainMenu:
         jobButton.setXPosition(CEGUI.UDim(0.375, 0))
         jobButton.setYPosition(CEGUI.UDim(0.5, 0))
         jobButton.setSize(CEGUI.UVector2(cegui_reldim(0.25), cegui_reldim( 0.1)))
-        jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleJobMenuCreation")
+        jobButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleEditMenuCreation")
         #jobButton.setAlwaysOnTop(True)
 
         quitButton = winMgr.createWindow("TaharezLook/Button", "Tesliz/MainMenuBackground/QuitButton")
@@ -66,181 +114,92 @@ class MainMenu:
         quitButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuitGameFromMenu")
         #quitButton.setAlwaysOnTop(True)
         
-    def deleteStartMenu(self):
-        winMgr = CEGUI.WindowManager.getSingleton()
-        winMgr.destroyWindow("Tesliz/MainMenuBackground")
 
-    def createJobMenu(self):
+
+    def createEditMenu(self):
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
         
-        #background = winMgr.createWindow ("TaharezLook/StaticImage")
-        # set area rectangle
-        #background.setArea (CEGUI.URect(cegui_reldim (0), cegui_reldim (0),
-        #                                  cegui_reldim (1), cegui_reldim (1)))
-        # disable frame and standard background
-        #background.setProperty ("FrameEnabled", "false")
-        #background.setProperty ("BackgroundEnabled", "false")
-        # set the background image
-        #background.setProperty ("Image", "set:BackgroundImage image:full_image")
-        # install this as the root GUI sheet
-        #sheet.addChildWindow(background)
 
         #/ set tooltip styles (by default there is none)
         CEGUI.System.getSingleton().setDefaultTooltip ("TaharezLook/Tooltip")
 
         # load some demo windows and attach to the background 'root'
-        sheet.addChildWindow (winMgr.loadWindowLayout ("Jobs.layout", False))
+        sheet.addChildWindow (winMgr.loadWindowLayout ("edit.layout", False))
         
         # REFACTOR - Set up the callbacks for the buttons loaded by the layout
         backButton = sheet.getChild("cmdBackToMenu")
-        backButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleDeleteJobCreateStartMenu")
+        backButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleDeleteEditCreateStartMenu")
         
         # Add party list to the partybox
-        lbox = winMgr.getWindow ("FontDemo/PartyList")
+        lbox = winMgr.getWindow ("Main/PartyList")
         
-        ################ TEMP ##################
-        #del s.cplayer.unitlist[:]
-        #firstTempUnit = Unit()
-        #firstTempUnit.name = "Shygar"
-        #squire = Squire()
-        # This function needs to be less generic, it changes the jobs of the unit passed in
-        #changeTo(firstTempUnit,squire)
-        #s.cplayer.unitlist.append(firstTempUnit)
         
-        #secondTempUnit = Unit()
-        #secondTempUnit.name = "Korben"
-        #wizard = Wizard()
-        # This function needs to be less generic, it changes the jobs of the unit passed in
-        #changeTo(secondTempUnit,wizard)
-        #s.cplayer.unitlist.append(secondTempUnit)
-        ############### END TEMP ######################
-        
-        s.log("Current Player Unit List: ", s.cplayer.unitlist)
-        partyDict = s.cplayer.unitlist
-        for l in partyDict:
-            item = CEGUI.ListboxTextItem(l.name)
-            item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
-            # ensure Python is in control of it's "deletion"
-            item.AutoDeleted = False
-            lbox.addItem( item)
-            self.ListItems.append(item)
+       
+        for l in s.cplayer.unitlist:
+            
+            util.addItem(self,lbox,l.name)
 
         # set up the language listbox callback
         lbox.subscribeEvent(
                     CEGUI.Listbox.EventSelectionChanged, self, "handlePartySelection")
-
+        if len(s.cplayer.unitlist) > 0:
+            item = lbox.getListboxItemFromIndex(0)
+            item.setSelected(True)
+            self.unit = s.unitmap[str(item.getText())]
+        lbox = winMgr.getWindow ("Main/EditList")
         
-        # Add language list to the listbox
-        lbox = winMgr.getWindow ("FontDemo/JobsList")
-        jobsDict = self.getJobsDict()
-        for l in jobsDict.keys():
-            item = CEGUI.ListboxTextItem(l)
-            item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
-            # ensure Python is in control of it's "deletion"
-            item.AutoDeleted = False
-            lbox.addItem( item)
-            self.ListItems.append(item)
+        
+      
+        for l in self.editmap.keys():
+            util.addItem(self,lbox,l)
 
         # set up the language listbox callback
         lbox.subscribeEvent(
-                    CEGUI.Listbox.EventSelectionChanged, self, "handleJobsSelection")
-        # select the first language
-        lbox.setItemSelectState(0, True)
+                    CEGUI.Listbox.EventSelectionChanged, self, "handleEditSelection")
 
-    def deleteJobMenu(self):
-        winMgr = CEGUI.WindowManager.getSingleton()
-        winMgr.destroyWindow("jobmenu")
-        # Not sure if i need to do this:
-        #winMgr.destroyWindow("FontDemo/PartyList")
-        
-    def handleStartGameFromMenu(self, e):
-        # Remove the menu
-        self.deleteStartMenu()
-        self.loadScene("scene01")
+
+
+ 
         
     def handleQuitGameFromMenu(self, e):
-        self.handleQuit(e)
+        s.app.handleQuit(e)
         
-    def getJobsDict(self):
-        SCHEME_JOBS = {}
-        SCHEME_JOBS['Squire'] = "Squire"
-        SCHEME_JOBS['Chemist'] = "Chemist"
-        SCHEME_JOBS['Wizard'] = "Wizard"
     
-        return SCHEME_JOBS
     
-    def handleDeleteJobCreateStartMenu(self, e):
-        self.deleteJobMenu()
-        self.startMenu()
+    def handleDeleteEditCreateStartMenu(self, e):
+
+        util.destroyWindow("editmenu")
+        self.setupStartMenu()
         
-    def handleJobMenuCreation(self, e):
-        self.deleteStartMenu()
-        self.createJobMenu()
+    def handleEditMenuCreation(self, e):
+        util.destroyWindow("Tesliz/MainMenuBackground")
+        self.createEditMenu()
         
     # Global variable for the time being, the currently selected unit object
-    selectedUnit = None
+
     def handlePartySelection(self, e):
         # Need to find the unit object based off the string name of the unit
         lbox = e.window
         if lbox.getFirstSelectedItem():
-            unitName = lbox.getFirstSelectedItem().getText()
-            s.log("Selected Party Member: ", unitName)
+            unitName = str(lbox.getFirstSelectedItem().getText())
+            s.log("Selected Party Member: "+ unitName,self)
 
-            partyDict = s.cplayer.unitlist
-            for l in partyDict:
-                if l.name == unitName:
-                    # Save the unit object that matches
-                    self.selectedUnit = l
+            self.unit = s.unitmap[unitName]
             
-            if self.selectedUnit == None:
-                return False
-            
-            jobName = self.selectedUnit.getJob().jobName()
-            s.log("handlePartySelection: jobName = ", jobName)
-            
-            winMgr = CEGUI.WindowManager.getSingleton()
-
-#            cs = CEGUI.String()
-#            cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
-            jobListBox = winMgr.getWindow("FontDemo/JobsList")
-            listBoxItemFound = jobListBox.findItemWithText(jobName, None)
-            # Set the already defined job in the job list for this selected unit, deselect the others
-            jobListBox.clearAllSelections()
-            jobListBox.setItemSelectState(listBoxItemFound, True)
 
         return True
 
-    def handleJobsSelection(self, e):
+    def handleEditSelection(self, e):
+        # Need to find the unit object based off the string name of the unit
         lbox = e.window
         if lbox.getFirstSelectedItem():
-            jobName = lbox.getFirstSelectedItem()
-            jobNameText = jobName.getText()
-            idx = lbox.getItemIndex(jobName)
-            s.log("handleJobSelection: jobName = ", jobNameText)
+            etext = str(lbox.getFirstSelectedItem().getText())
+            
+            self.editmap[etext].setup(self.unit)
 
-            # Make this its own function, prob in the jobs.py file
-            if jobNameText == "Squire":
-                if self.selectedUnit != None and self.selectedUnit.getJob().jobName() != jobNameText:
-                    # As stated above, make this changeTo function a more defined name
-                    # Also, we need to have a way to revert this change if users don't hit the save button
-                    changeTo(self.selectedUnit, Squire())
-            elif jobNameText == "Wizard":
-                if self.selectedUnit != None and self.selectedUnit.getJob().jobName() != jobNameText:
-                    # As stated above, make this changeTo function a more defined name
-                    # Also, we need to have a way to revert this change if users don't hit the save button
-                    changeTo(self.selectedUnit, Wizard())
-            elif jobNameText == "Chemist":
-                if self.selectedUnit != None and self.selectedUnit.getJob().jobName() != jobNameText:
-                    # As stated above, make this changeTo function a more defined name
-                    # Also, we need to have a way to revert this change if users don't hit the save button
-                    changeTo(self.selectedUnit, Chemist())
-                    
-            cs = CEGUI.String()
-            cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
-            winMgr = CEGUI.WindowManager.getSingleton()
-            winMgr.getWindow("FontDemo/FontSample").setText(cs)
+            
+            
 
         return True
-
-        
+  

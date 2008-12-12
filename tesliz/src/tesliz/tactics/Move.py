@@ -140,6 +140,7 @@ class FFTMove():
             
         self.unit1 = unit
         self.endPos = data.util.getValidPos(endPos)
+        
 #        if self.endPos:
 #            self.endPos.y +=5
         self.list = None
@@ -192,7 +193,8 @@ class FFTMove():
             self.animationState.addTime(timer)    
         if len(self.list) == self.cur:
             print "end"
-            self.animationState.setTimePosition(0)
+            if self.animationState:
+                self.animationState.setTimePosition(0)
             return False
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]

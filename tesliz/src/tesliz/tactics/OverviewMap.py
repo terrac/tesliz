@@ -13,7 +13,8 @@ from utilities.physics import *
 import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import tactics.util
-import utilities.OgreText 
+import utilities.OgreText
+import userinterface.util 
 def addDots(vec1,vec2,slow = False):
 
     direction = vec2-vec1
@@ -154,7 +155,7 @@ class OverviewMap:
         s.framelistener.interrupt.append(LoadScene((sceenname)))
         s.framelistener.pauseturns = False
         self.overviewtrade.hide()
-        s.app.menus.deleteStartMenu()
+        userinterface.util.destroyWindow("Tesliz/MainMenuBackground")
         self.save()
 
 

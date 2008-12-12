@@ -166,6 +166,7 @@ def setupExtra(unit, mentalstate = None):
     has = hasattr(unit,"mental")
     if has and not unit.mental or not has:
         unit.mental = mentalstate
+    data.jobs.setupJobList(unit)
     return unit
 def createUnit(position,player,unittype,level=1,name = None,material = None ,mesh = None ,mental = None):
     player = s.playermap[player]
