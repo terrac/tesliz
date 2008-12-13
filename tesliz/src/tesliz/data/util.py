@@ -7,42 +7,51 @@ import utilities.OgreText
 #import data.unittypes
 from tactics.Singleton import *
 import userinterface.traits
-import data.traits.generictraits
+#import data.traits.generictraits
 #import tactics.trait
-
+import ogre.gui.CEGUI as CEGUI
 s = Singleton()
 
+def cleanup(key):
+
+    if int(key.x) + .50 > key.x:
+        key.x = int(key.x)
+    else:
+        key.x = int(key.x) + 1
+    if int(key.y) + .50 > key.y:
+        key.y = int(key.y)
+    else:
+        key.y = int(key.y) + 1
+    if int(key.z) + .50 > key.z:
+        key.z = int(key.z)
+    else:
+        key.z = int(key.z) + 1        
+
+    return key
 class VectorMap(dict):
     
    
     def __getitem__(self, key):
-        key.x = int(key.x)
-        key.Y = int(key.y)
-        key.z = int(key.z)
+        key =cleanup(key)
         key = str(key)
         return dict.__getitem__(self,key)
         
     def __setitem__(self, key, value):
-        key.x = int(key.x)
-        key.Y = int(key.y)
-        key.z = int(key.z)
+        key =cleanup(key)
         key = str(key)
         dict.__setitem__(self,key, value)
     
     def __delitem__(self, key):
-        key.x = int(key.x)
-        key.Y = int(key.y)
-        key.z = int(key.z)      
+              
         key = str(key)  
         dict.__delitem__(key)
     def has_key(self,key):
-        key.x = int(key.x)
-        key.Y = int(key.y)
-        key.z = int(key.z)
+        key =cleanup(key)
         key = str(key)
         return dict.has_key(self,key)
 
-def show(pos, texturename = None ,name = None):
+
+def show(pos, texturename = None ,name = None,size = .3):
     
     sceneManager = s.app.sceneManager        
     if not name:
@@ -59,13 +68,51 @@ def show(pos, texturename = None ,name = None):
         scene_node = sceneManager.getSceneNode(name)
     scene_node.position = Ogre.Vector3(pos.x,pos.y,pos.z)
     
-    size = .3
+    
     scene_node.setScale(Ogre.Vector3(size,size,size))
     scene_node.getAttachedObject(0).setMaterialName( texturename)
-    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+#    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
  
     return name
 
+def fromCameraToMesh():
+    mouse = CEGUI.MouseCursor.getSingleton().getPosition()
+    rend = CEGUI.System.getSingleton().getRenderer()
+    mx = mouse.d_x / rend.getWidth()
+    my = mouse.d_y / rend.getHeight()
+    camray = s.app.camera.getCameraToViewportRay(mx,my)
+    
+
+    #start = camray.getOrigin()
+    #end = camray.getPoint( 100.0 )
+    s.app.raySceneQuery.setRay(camray)
+
+    result = s.app.raySceneQuery.execute()
+    position = False
+    for item in result:
+        
+        #if item.worldFragment:
+        #dir(item.movable)
+    
+        if item.movable.Name == "PlayerCam" or item.movable.Name.startswith("ETTerrain/Terrain/Tile"):
+            continue
+        
+        position = item.movable.ParentSceneNode.getPosition()
+        
+        name = item.movable.Name
+        break
+    if not position:
+        result = s.terrainmanager.terrainInfo.rayIntersects(camray)
+        intersects = result[0]
+        ## update pointer's position
+        if (intersects):
+            x = result[1][0]
+            y = result[1][1]
+            z = result[1][2]
+            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+            position =Ogre.Vector3(x, y, z)
+            name = "terrain"
+    return name,position
 
 def createEntity(mesh,node):    
     sceneManager = s.app.sceneManager
@@ -421,20 +468,18 @@ def getValid(vec,height,xlist , zlist):
         x = xlist[a]
         z = zlist[a]
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
-        end = Ogre.Vector3(vec.x + x, vec.y - height, vec.z + z)
-        ray = OgreNewt.BasicRaycast(s.app.World, start, end)
-        
-        for x in range(0,ray.getHitCount()):
-            info = ray.getInfoAt(x)
-            
-            if (info.mBody):
-                if s.unitmap.has_key(info.mBody.getOgreNode().getName()):
-                    break
-                dira = (end - start)
-                dira.normalise()
-                position = start + (dira * ((end - start).length() * info.mDistance))
-   
-                validpos.append(position)
+                
+        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
+        result = s.terrainmanager.terrainInfo.rayIntersects(ray)
+        intersects = result[0]
+        ## update pointer's position
+        if (intersects):
+            x = result[1][0]
+            y = result[1][1]
+            z = result[1][2]
+            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+            position =Ogre.Vector3(x, y, z)   
+            validpos.append(position)
         
     
     return validpos
@@ -455,7 +500,7 @@ def getValidName(vec,predicate,height=5):
     for x in range(0,ray.getHitCount()):
         info = ray.getInfoAt(x)
         
-        if (info.mBody):
+        if (info.mBody and info.mBody.getOgreNode()):
             name = info.mBody.getOgreNode().getName()
             if predicate(name):
                 return name

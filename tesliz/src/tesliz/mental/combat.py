@@ -83,7 +83,7 @@ class Combat(object):
         bool = False
         move = unit.traits["Move"].getClassList()[0]
         abill = getBest(unit, self.isValid)
-        vlist = data.util.getAllValid(unit.body.getOgreNode().getPosition(), move.range)
+        vlist = data.util.getAllValid(unit.body.getOgreNode().getPosition(), unit.attributes.moves)
         #vlist.reverse()
         endvec = None
         endabil = None
@@ -167,10 +167,10 @@ class Combat(object):
             if not self.endvec:
                 self.endvec = self.eunit.body.getOgreNode().getPosition()
             tactics.datautil.setStart(self.move,unit,None,self.endvec)
-            s.framelistener.addToQueue(unit,copy.copy(self.move))
+            s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.move))
             if self.endabil:
                 tactics.datautil.setStart(self.endabil,unit,self.eunit)              
-                s.framelistener.addToQueue(unit,copy.copy(self.endabil))
+                s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.endabil))
             self.state = "start"
             return False
         

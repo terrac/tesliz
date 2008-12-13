@@ -27,8 +27,6 @@ class ManageDeath():
         self.count = 3
     def execute(self,unit):
         text = str(self.count)
-#        print text
-#        print "aoeu"
         ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
         ogretext.enable(True)
         unit.setText(ogretext)
@@ -42,7 +40,7 @@ class Attributes(object):
  
         self.speed = 5
         self.curMovement = 0
-        self.moves = 25
+        self.moves = 3,3
         self.level = 1
         self.exp = 0
       #  self.sight = 100,100

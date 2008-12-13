@@ -9,7 +9,7 @@ class SetPosition:
         
     def execute(self,timer):
         self.mental.pos = self.endPos
-        s.framelistener.addToQueue(self.mental.unit,self.mental)
+        s.framelistener.unitqueue.addToQueue(self.mental.unit,self.mental)
         return False
     
     

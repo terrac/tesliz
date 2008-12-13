@@ -10,8 +10,8 @@ http://www.ogre3d.org/wiki/index.php/DotScene_Loader_with_User_Data_Class
 """
 from xml.dom import minidom, Node
 import ogre.renderer.OGRE as Ogre
-import utilities.ogre_unit
-import utilities.ogre_util
+#import utilities.ogre_unit
+#import utilities.ogre_util
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
 import tactics.Unit 
@@ -219,7 +219,7 @@ def parse_camera(sceneManager, xml_node):
        #     s.app.msnCam.setPosition( scene_node.getPosition())
        # else:
         camera = sceneManager.getCamera(name)
-        camera.position = Ogre.Vector3.ZERO
+        #camera.position = Ogre.Vector3.ZERO
         camera.orientation = Ogre.Quaternion()
         clippings = find_nodes(camera_xml_node, 'clipping')
         if clippings:
@@ -375,7 +375,7 @@ def setup_test_dotscene_application(setup_function, xml, application = None):
     '''
     application = Ogre_unit.setup_quiet_application(setup_function, application)
     application.sceneManager = setup_scene(application.sceneManager, xml)
-    Ogre_util.create_grid(application.sceneManager, 1, (-10,-10), (10,10))
+#    Ogre_util.create_grid(application.sceneManager, 1, (-10,-10), (10,10))
     return application
 
 
@@ -394,16 +394,7 @@ def setup_test_dotscene_application(setup_function, xml, application = None):
 #        Ogre_util.create_grid(self.sceneManager, 1, (-10,-10), (10,10))
 #        self.root.startRendering()
 
-def setupOnlyEvents(filename):
-    module = __import__("data.maps."+filename)
-    module = getattr(module,'maps')
-    map = getattr(module,filename).Unitdata()
-    map.setupEvents()
-def setupTest(filename):
-    module = __import__("data.maps."+filename)
-    module = getattr(module,'maps')
-    map = getattr(module,filename).Unitdata()
-    map.setupTestMap()
+
 if __name__ == "__main__":
     import code_util
     code_util.test(__file__)

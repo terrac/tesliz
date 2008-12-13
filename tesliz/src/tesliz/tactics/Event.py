@@ -36,7 +36,7 @@ class ScriptEvent:
         
         if not hasattr(tuple,'__len__'):
             if hasattr(tuple,'unit1') and tuple.unit1:
-                s.framelistener.addToQueue(tuple.unit1,tuple)
+                s.framelistener.unitqueue.addToQueue(tuple.unit1,tuple)
             else:
                 tuple.execute(0)
             return True
@@ -82,15 +82,15 @@ class Event:
         if self.turnmap[unit].has_key(self.turncount[unit]):
             exe = self.turnmap[unit][self.turncount[unit]]
             s.framelistener.pauseturns = True
-            s.framelistener.addToQueue(unit,exe)
-            s.framelistener.addToQueue(unit,PauseTurns(False))
+            s.framelistener.unitqueue.addToQueue(unit,exe)
+            s.framelistener.unitqueue.addToQueue(unit,PauseTurns(False))
             
     def start(self):
         unit = Unit()
         s.framelistener.pauseturns = True
         #for exe in self.startlist:
-        s.framelistener.addToQueue(unit,self.startlist)
-        #s.framelistener.addToQueue(unit,PauseTurns(False))
+        s.framelistener.unitqueue.addToQueue(unit,self.startlist)
+        #s.framelistener.unitqueue.addToQueue(unit,PauseTurns(False))
         
         
     def end(self):
@@ -98,7 +98,7 @@ class Event:
             if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
                 exe = self.turnmap[unit]["end"]
                 
-                s.framelistener.addToQueue(unit,exe)
+                s.framelistener.unitqueue.addToQueue(unit,exe)
                 
     
     def death(self,unit):
@@ -106,4 +106,4 @@ class Event:
         if self.turnmap.has_key(unit) and self.turnmap[unit].has_key(dkey):
             exe = self.turnmap[unit][dkey]
             unit, blah = exe.tlist[0]
-            s.framelistener.addToQueue(unit,exe)
+            s.framelistener.unitqueue.addToQueue(unit,exe)

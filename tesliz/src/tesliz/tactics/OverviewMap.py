@@ -80,7 +80,7 @@ class AddPos:
         self.actionqueue=[]
         self.timeleft = 0
         if cpos.visited and cpos.next:
-            s.framelistener.addToQueue(self,self)
+            s.framelistener.unitqueue.addToQueue(self,self)
             playermap.map[cpos.next.name] = cpos.next
             playermap.addPos(cpos, cpos.next)
             self.cpos = cpos
@@ -221,7 +221,7 @@ class OverviewMap:
        for x in self.move.list:
            print x
        print "aoue"
-       s.framelistener.addToQueue(self,self)
+       s.framelistener.unitqueue.addToQueue(self,self)
     
     def execute(self,timer):
         if not self.move.execute(timer):

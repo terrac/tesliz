@@ -49,19 +49,19 @@ def x(vector, x):
     '''
     if vector:
         if is_number(x):
-            return ( float(x), vector.y, vector.z )
+            return (float(x), vector.y, vector.z)
 
 
 def y(vector, y):
     if vector:
         if is_number(y):
-            return ( vector.x, float(y), vector.z )
+            return (vector.x, float(y), vector.z)
 
 
 def z(vector, z):
     if vector:
         if is_number(z):
-            return ( vector.x, vector.y, float(z) )
+            return (vector.x, vector.y, float(z))
 
 
 # TODO:  Fix gimball lock or other rotation corruption cases.
@@ -86,7 +86,7 @@ def set_roll(node, roll):
             node.roll(relative_roll)
 
 
-def setMaterial( node, materialName ):
+def setMaterial(node, materialName):
     '''Set material for every entity's sub entity.
         >>> application = ogre_unit.setup_unittest_application()
         >>> sceneManager = application.sceneManager
@@ -111,13 +111,13 @@ def reload_mesh(node):
             object.mesh.reload()
 
 
-def create_object(sceneManager, name, mesh, materialName = None, parent_node =
+def create_object(sceneManager, name, mesh, materialName=None, parent_node=
         None):
     '''Create scene node and entity.  Return node.'''
     if not parent_node:
-        node =  sceneManager.rootSceneNode.createChildSceneNode(name)
+        node = sceneManager.rootSceneNode.createChildSceneNode(name)
     else:
-        node =  parent_node.createChildSceneNode(name)
+        node = parent_node.createChildSceneNode(name)
     if mesh and entity_enabled:
         entity = sceneManager.createEntity(name, mesh)
         if materialName:
@@ -127,14 +127,14 @@ def create_object(sceneManager, name, mesh, materialName = None, parent_node =
     return node
 
 
-def create_cube(sceneManager, name, scale = 1):
+def create_cube(sceneManager, name, scale=1):
     node = ogre_util.create_object(sceneManager, name, sceneManager.PT_CUBE)
     global PT_SCALE
-    node.scale = (scale/PT_SCALE, scale/PT_SCALE, scale/PT_SCALE)
+    node.scale = (scale / PT_SCALE, scale / PT_SCALE, scale / PT_SCALE)
     return node
 
 
-def set_tree_visible( sceneManager, root_node, is_visible ):
+def set_tree_visible(sceneManager, root_node, is_visible):
     if sceneManager.hasSceneNode(root_node.name):
         iterator = root_node.getChildIterator()
         while iterator.hasMoreElements():
@@ -165,7 +165,7 @@ def destroy_structure(sceneManager, node):
         print '! destroy_object: node not found:', node, sceneManager
 
 
-def child_name_list( ogre_scene_node, name_list ):
+def child_name_list(ogre_scene_node, name_list):
     '''Return a sorted list of child node names of an Ogre scene node.
     >>> application = ogre_unit.setup_unittest_application()
     >>> root_node = application.sceneManager.getRootSceneNode()
@@ -180,59 +180,59 @@ def child_name_list( ogre_scene_node, name_list ):
     ['root node', 'child_node', 'grandchild_node']
     '''
     if ogre_scene_node:
-        name_list.append( ogre_scene_node.name )
+        name_list.append(ogre_scene_node.name)
         node_iterator = ogre_scene_node.getChildIterator()
         while node_iterator.hasMoreElements():
             node = node_iterator.getNext()
             child_list = child_name_list(node, name_list)
             if child_list:  
                 if 1 == len(child_list):
-                    name_list.append( child_list )
+                    name_list.append(child_list)
         return name_list
 
 
-def sorted_child_name_list( ogre_scene_node ):
+def sorted_child_name_list(ogre_scene_node):
     '''Return self and child names, sorted by name.'''
-    name_list = child_name_list( ogre_scene_node, [] )
+    name_list = child_name_list(ogre_scene_node, [])
     name_list.sort()
     return name_list
 
 
-def create_grid(sceneManager, spacing, lower_bound = None, upper_bound = None):
+def create_grid(sceneManager, spacing, lower_bound=None, upper_bound=None):
     '''2D grid of markers about the origin (0,0,0) for detecting motion.
     Every 5th and 10th is larger.  spacing should be integer 1 or greater.
     '''
     assert 1 <= spacing
     if sceneManager.hasSceneNode('grid'):
         print 'grid exists'
-        destroy_structure( sceneManager, sceneManager.getSceneNode('grid') )
+        destroy_structure(sceneManager, sceneManager.getSceneNode('grid'))
     
     grid_parent_node = sceneManager.rootSceneNode.createChildSceneNode(
         'grid')
     base_markerScale = 0.001 * spacing
-    radius = 5*spacing
+    radius = 5 * spacing
     if lower_bound is None and upper_bound is None:
-        lower_bound = -radius, -radius
+        lower_bound = - radius, - radius
         upper_bound = radius, radius
     index = 0
     for x in range(lower_bound[0], upper_bound[0], int(spacing)):
         for z in range(lower_bound[1], upper_bound[1], int(spacing)):
             markerEnt = sceneManager.createEntity(
-                'grid_'+str(index), sceneManager.PT_CUBE)
+                'grid_' + str(index), sceneManager.PT_CUBE)
             index += 1
             markerScale = base_markerScale
-            if (x/spacing) % 10 == 0 and (z/spacing) % 10 == 0:
+            if (x / spacing) % 10 == 0 and (z / spacing) % 10 == 0:
                 markerScale = base_markerScale * 4
-            elif (x/spacing) % 5 == 0 and (z/spacing) % 5 == 0:
+            elif (x / spacing) % 5 == 0 and (z / spacing) % 5 == 0:
                 markerScale = base_markerScale * 2
             localMarkerNode = grid_parent_node.createChildSceneNode(
-                'grid_'+str(index),(x,0,z))
+                'grid_' + str(index), (x, 0, z))
             localMarkerNode.attachObject(markerEnt)
             localMarkerNode.setScale(
-                markerScale,markerScale,markerScale)
+                markerScale, markerScale, markerScale)
 
 
-def camera_orbit( camera, (dx, dy, dz), (tx, ty, tz) ):
+def camera_orbit(camera, (dx, dy, dz), (tx, ty, tz)):
     '''Move while looking at target.  Return new position.
         >>> application = ogre_unit.setup_unittest_application()
         >>> camera = application.camera
@@ -240,8 +240,8 @@ def camera_orbit( camera, (dx, dy, dz), (tx, ty, tz) ):
         >>> camera_orbit(camera, (0.5,0.5,0), (2.5,0,2.5))
         (2.5, 7.5, 5.0)
     '''
-    camera.move( ogre.Vector3(dx, dy, dz) )
-    camera.lookAt( tx, ty, tz )
+    camera.move(ogre.Vector3(dx, dy, dz))
+    camera.lookAt(tx, ty, tz)
     return camera.position.x, camera.position.y, camera.position.z
             
 
@@ -251,13 +251,13 @@ def attach_camera(camera, node):
     camera_node.orientation = camera.orientation
     camera.position = ogre.Vector3.ZERO
     camera.orientation = ogre.Quaternion()
-    camera_node.attachObject( camera )
+    camera_node.attachObject(camera)
     return camera_node
 
 
 def attach_camera_to_node(sceneManager, camera, camera_node_name='Camera'):
     '''Camera is relative to node, which can be moved conveniently.'''
-    camera_node = sceneManager.createSceneNode( camera_node_name )
+    camera_node = sceneManager.createSceneNode(camera_node_name)
     return attach_camera(camera, camera_node)
 
 

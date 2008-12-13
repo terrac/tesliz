@@ -112,10 +112,10 @@ class Response:
 #                if distance(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition()) > abil.range:
 #                    move = Move()
 #                    setStart(move,unit,None,eunit.node.getPosition())
-#                    s.framelistener.addToQueue(unit,move)
+#                    s.framelistener.unitqueue.addToQueue(unit,move)
 #                    
 #                setStart(abil,unit,eunit)
-#                s.framelistener.addToQueue(unit,copy.copy(abil))
+#                s.framelistener.unitqueue.addToQueue(unit,copy.copy(abil))
 #  #              print unit
 #
 # #               print unit.actionqueue
@@ -152,7 +152,7 @@ class Leader(object):
         s.chatbox.add("follow me",unit)
         move = Move()
         setStart(move,unit,None,self.endPos)
-        s.framelistener.addToQueue(unit,move)
+        s.framelistener.unitqueue.addToQueue(unit,move)
         if distance(unit.node.getPosition(),self.endPos) < 3:
             s.mental.broadcast("We are here",unit)
             return False
@@ -191,7 +191,7 @@ class Follower(object):
         
         move = Move()
         setStart(move,unit,self.leader)
-        s.framelistener.addToQueue(unit,move)
+        s.framelistener.unitqueue.addToQueue(unit,move)
         
         return True
 

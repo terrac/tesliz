@@ -25,7 +25,10 @@ import utilities.Console
 from userinterface.MainMenu import MainMenu
 from tactics.OverviewMap import *
 import tactics.Unit
-s = Singleton()
+import tactics.TerrainManager
+
+import tactics.Queue
+
 class OgreNewtonApplication (sf.Application):
     
     currentmap=None
@@ -37,7 +40,7 @@ class OgreNewtonApplication (sf.Application):
         if s.turn:
             s.turn.turnlist = []
         if s.framelistener:
-            s.framelistener.clearUnitQueue()
+            s.framelistener.unitqueue.clearUnitQueue()
             s.framelistener.textlist = []
         
         for unit in s.unitmap.values():
@@ -92,8 +95,9 @@ class OgreNewtonApplication (sf.Application):
 
 
     def parseSceneFile(self,map):
-        dotscene = tactics.dotscenea.Dotscene()
-        self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
+        s.terrainmanager.loadTerrain(map)
+        #dotscene = tactics.dotscenea.Dotscene()
+        #self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
         
 
 
@@ -109,7 +113,7 @@ class OgreNewtonApplication (sf.Application):
 
     
     def _createScene ( self ):
-          
+        self.raySceneQuery = self.sceneManager.createRayQuery(Ogre.Ray())
         # Create all the CEGUI stuff
         self.menus = MainMenu(self.renderWindow, self.sceneManager)
 #        self.initCEGUIStuff()
@@ -118,7 +122,7 @@ class OgreNewtonApplication (sf.Application):
         
         #self.loadScene()
         data.settings.Settings()
-        
+        s.terrainmanager = tactics.TerrainManager.TerrainManager()
         
         self.setupCamera()
       #  "0.481707" y="0.212922" z="0.334251" w="0.781600"/>
@@ -131,7 +135,7 @@ class OgreNewtonApplication (sf.Application):
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
         btn.setText("current")
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.6)))
-        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
+        btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.1)))
         s.framelistener.setCurrentPlayer( s.overviewmap)
         self.onStartup()
 
@@ -157,18 +161,21 @@ class OgreNewtonApplication (sf.Application):
         
         s.app.camera.initialOrientation = None
         #Settings()
-        
+        light = s.app.sceneManager.createLight( "Light1" )
+        light.setType( Ogre.Light.LT_POINT )
+        light.setPosition( Ogre.Vector3(0.0, 100.0, 100.0) )
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = data.aisettings.AIsettings()
         if test:
-            tactics.dotscenea.setupTest(scenename)
+            tactics.TerrainManager.setupTest(scenename)
         if os.path.exists( "media\\scenes\\" +scenename+".scene"):
             self.parseSceneFile(scenename)
         else:
             self.parseSceneFile("begin")
-            tactics.dotscenea.setupOnlyEvents(scenename)
             s.log("parsed begin file as did not find the regular file")
+        tactics.TerrainManager.setupOnlyEvents(scenename)
+
         if s.event:
             s.event.start()
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
@@ -296,6 +303,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.interrupt = []
         self.pauseturns = True
         self.textlist = []
+        self.unitqueue = tactics.Queue.Queue()
+        self.backgroundqueue = tactics.Queue.Queue()
 
 
 
@@ -306,75 +315,6 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     #then you can have both
 
 
-    def addToQueue(self, unit,action):
-        
-        action.running = True
-        unit.actionqueue.append(action)
-        if not unit in self.unitqueues:
-            self.unitqueues.append(unit)
-
-         
-    unitqueues = []   
-    def getActiveQueue(self):
-        return len(self.unitqueues)
-
-    def clearActions(self,unit):
-        #dir([])
-        if unit in self.unitqueues :
-            self.unitqueues.remove(unit)
-        
-        unit.actionqueue = []
-    def clearUnitQueue(self):
-        for x in self.unitqueues:
-            self.clearActions(x)
-            
-    def isActive(self,unit):
-        
-        if len( unit.actionqueue):
-            return True
-        
-                  
-        return False
-    a =       0
-    def runQueue(self,timer):
-        
-        self.a += timer
-        for unit in self.unitqueues:
-            
-            
-            if unit.timeleft > 0:
-                unit.timeleft -= timer
-                continue
-           
-            
-            if len(unit.actionqueue) == 0:
-                self.unitqueues.remove(unit)
-                continue
-            iexecute = unit.actionqueue[0]
-            boo = False
-           
-            boo = iexecute.execute(timer)
-            
-            if not boo and len(unit.actionqueue):
-                if hasattr(unit, "name"):
-                    name = unit.name
-                else:
-                    name = str(unit)
-                s.log("executable done "+ name+" "+str(iexecute),self)
-                unit.actionqueue.pop(0)
-                if hasattr(iexecute, "timeleft"):
-                    
-                    unit.timeleft = iexecute.timeleft
-                    unit.timeleft += random.random()*.1
-                    
-               
-                
-                    
-                    
-                
-            
-            if s.turnbased :   
-                break    
     #turn = Turn()
     updatecamera = None
     def frameStarted(self, frameEvent):
@@ -556,10 +496,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         #    return True
 
         if not self.pauseturns:
-            s.turn.doTurn()        
-            print "aoeu"
+            s.turn.doTurn()   
         
-        self.runQueue(timesincelastframe)
+        self.unitqueue.runQueue(timesincelastframe)
         
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
@@ -623,30 +562,14 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         if CEGUIFrameListener.mousePressed(self,evt,id):
             return
                                              
-        mouse = CEGUI.MouseCursor.getSingleton().getPosition()
-        rend = CEGUI.System.getSingleton().getRenderer()
-        mx = mouse.d_x / rend.getWidth()
-        my = mouse.d_y / rend.getHeight()
-        camray = self.camera.getCameraToViewportRay(mx,my)
 
-        start = camray.getOrigin()
-        end = camray.getPoint( 100.0 )
-
-        self.ray = OgreNewt.BasicRaycast( self.World, start, end )  ## should I keep hold of this?
-        info = self.ray.getFirstHit()
-    
-        #dir(info.mBody).OgreNode.Name)
-       
-        #position =info.mDistance * info.mNormal + start
         
-    
-        if (info.mBody):
-            
-            bodpos, bodorient = info.mBody.getPositionOrientation()
-            position = globalpt = camray.getPoint( 100.0 * info.mDistance )
-            
-            CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
-            self.clickEntity(info.mBody.OgreNode.Name,position)
+                
+        
+        name,position = data.util.fromCameraToMesh()
+
+        CEGUI.WindowManager.getSingleton().getWindow("current").setText(name+"\n"+str(position))
+        self.clickEntity(name,position)
 
     def keyPressed(self, evt):
        CEGUIFrameListener.keyPressed(self,evt)

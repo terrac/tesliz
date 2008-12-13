@@ -32,14 +32,15 @@ def buildUnit(unit,unittype,race,level,playername):
     setupBasic(unit, level)
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
     
-    unit.node.setScale(s.racemap[race].scale)
-    buildPhysics(unit,"Ellipsoid",s.racemap[race].scale)
+    
+    buildPhysics(unit,"Ellipsoid")
     tactics.util.resetAttributes(unit)
     tactics.util.setupMaxPoints(unit)
 #creates a unit given a specific job
 def buildUnitNoNode(name,playername,unittype,level=1):
-    unit = tactics.Unit.Unit(name)
     
+    unit = tactics.Unit.Unit(name)
+    s.unitmap[unit.getName()]=unit
     #s.unitmap[unit.getName()]=unit
     
     
@@ -67,6 +68,7 @@ def resetAttributes(unit):
     unit.affect.setupAll()
     unit.attributes.physical.points = hitpoints
     unit.attributes.magical.points = magicpoints
+    unit.traits["Move"].getClassList()[0].range = unit.attributes.moves
 def setupMaxPoints(unit):
     unit.attributes.physical.points = unit.attributes.physical.maxpoints
     unit.attributes.magical.points = unit.attributes.magical.maxpoints 
@@ -74,7 +76,7 @@ def setupMaxPoints(unit):
 def setupBasic(unit, level):
     
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-    unit.attributes.moves = 5,5
+   
     move = userinterface.traits.Traits([tactics.Move.FFTMove(unit)])
     move.action = False
     unit.traits["Move"] = move
@@ -94,7 +96,7 @@ def buildPhysics(unit,type= None,scale = Ogre.Vector3(1,1,1)):
     #TODO convex hulls -figure out and do
         col = getattr(OgreNewt, type)(s.app.World,Ogre.Vector3(1,1,1))
     else:    
-        col = OgreNewt.Box(s.app.World, Ogre.Vector3(1,3,1))
+        col = OgreNewt.Box(s.app.World, Ogre.Vector3(.5,3,.5))
     body = OgreNewt.Body( s.app.World, col)
       
 

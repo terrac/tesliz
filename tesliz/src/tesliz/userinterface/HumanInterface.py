@@ -8,13 +8,72 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import data.util
+import ogre.physics.OgreNewt as OgreNewt
+import tactics.Unit
+class ShowSelected():
+    def __init__(self,toexecute):
+        self.toexecute = toexecute
+        
+        self.time = 0
+        self.lastlist = []
 
+    def cleanup(self):
+        
+        for last in self.lastlist:
+            last.node.getAttachedObject(0).setMaterialName(last.job.material)
+        self.lastlist = []
+        if self.currentPosShow:
+            s.app.sceneManager.destroySceneNode(self.currentPosShow)
+    def execute(self,timer):
+     
+            
+#        if self.time > 0:
+#            self.time -= timer
+#            return True
+#        self.time = .5
+                                                     
+        name,position =data.util.fromCameraToMesh()
+        curlist = []
+        if name:
+            if data.util.withinRange(self.toexecute.unit1.node.getPosition(),position,self.toexecute.range):
+            
+                for pos in self.toexecute.offset:
+                    x,y,z = pos
+                    x = x + position.x            
+                    y = y + position.y
+                    z = z + position.z
+                    vec = Ogre.Vector3(x,y,z)
+                    if self.toexecute.unittargeting:
+                        obj = data.util.getValidUnit(vec)
+                        if isinstance(obj, tactics.Unit.Unit):
+                            obj.node.getAttachedObject(0).setMaterialName( "Spark/SOLID")
+                            self.lastlist.append(obj)
+                    else:
+                        
+                        vec = data.util.cleanup(data.util.getValidPos(vec))
+                        if vec:
+                            vec.y += 2
+                        self.currentPosShow= data.util.show(vec,"RedMage/SOLID",self.currentPosShow)
+                        
+                    
+                        
+    
+                
+                #if obj:
+                #    data.util.show(vec)
+        
+        if name == "terrain" or name != self.lastname:
+            self.cleanup()
+        self.lastname = name
+        return True
+    currentPosShow = None
+    lastname = None
 class HumanInterface:
     def __init__(self,player):
         self.player = player
         self.actionSelected = False
         self.removeFrom = None
-
+        self.showSelected = None
     
     lastClick = None
     cunit = None
@@ -88,6 +147,7 @@ class HumanInterface:
                 sf.Application.debugText = "Action failed"
                 s.playsound()
                 return
+            
             self.choiceEnd()
             sf.Application.debugText = "Action Succeeded"
             if self.removeFrom:
@@ -117,7 +177,7 @@ class HumanInterface:
                 wind.removeItem(x)
             self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
             self.actionSelected = False
-            s.framelistener.addToQueue(self.cunit,self.iexecute)
+            s.framelistener.unitqueue.addToQueue(self.cunit,self.iexecute)
             self.iexecute = None    
     def additem(self,list,name):        
         item =CEGUI.ListboxTextItem (name)        
@@ -135,6 +195,7 @@ class HumanInterface:
             if CEGUI.WindowManager.getSingleton().isWindowPresent("abilitylist"):
                 CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
             #if hasattr(self.iexecute, "choiceEnd"):
+            
             self.choiceEnd()
               
             item.setText(self.choosing)
@@ -185,7 +246,6 @@ class HumanInterface:
         
     currentTrait = None    
     def handleAbility(self, e):
-        #aoeu dir(e.window.getFirstSelectedItem().getText())
         text = None
         if isinstance(e,str):
             text = e
@@ -198,13 +258,15 @@ class HumanInterface:
         
         setStart(toexecute,self.cunit)
         self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range)
+        self.showSelected = ShowSelected(toexecute)
+        s.framelistener.backgroundqueue.addToQueue(self,self.showSelected)
         if toexecute.needsasecondclick:
             self.iexecute = copy.copy(toexecute)
         else:
             self.actionSelected.setText(self.choosing)
             self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
             self.actionSelected = False
-            s.framelistener.addToQueue(self.cunit,copy.copy(toexecute))
+            s.framelistener.unitqueue.addToQueue(self.cunit,copy.copy(toexecute))
 
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
             
@@ -226,6 +288,9 @@ class HumanInterface:
         self.toremove =data.util.markValid(pos, range, data.util.show)
         
     def choiceEnd(self):
+        s.framelistener.backgroundqueue.clearActions(self)
+        self.showSelected.cleanup()
+        
         if self.toremove:
             for x in self.toremove:
                     

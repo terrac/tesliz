@@ -3,9 +3,8 @@ import data.unittypes
 from tactics.util import *
 import random
 import tactics.Unit
-
+import ogre.renderer.OGRE as Ogre
 from tactics.Singleton import *
-s = Singleton()
 class CreateRandom():
     def __init__(self,ulist=["Squire","Chemist"],player="Player1",pos = Ogre.Vector3(0,0,0),dir = Ogre.Vector3.UNIT_X,levels=1,levele=3):
         self.pos = pos
@@ -57,7 +56,7 @@ class CreateRandom():
                     level = 2
                     buildUnit(unit,unittype,"Human",level,player)
                     setupExtra(unit)
-                    unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
+                    unit.node.getAttachedObject(0).setMaterialName(unit.job.material)
                     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                     if hasattr( s.playermap[player], "setVisualMarker"):
                         s.playermap[player].setVisualMarker(unit)
@@ -126,14 +125,14 @@ class CreateList():
                 
                 buildUnit(unit,unittype,"Human",level,player)
                 setupExtra(unit)
-                unit.node.getAttachedObject(0).setMaterialName(unittype+"/SOLID")
+                unit.node.getAttachedObject(0).setMaterialName(unit.job.material)
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                 if hasattr( s.playermap[player], "setVisualMarker"):
                     s.playermap[player].setVisualMarker(unit)
                
-                print scene_node.position
-                print unittype
-                print player
+                #print scene_node.position
+                #print unittype
+                #print player
     
                 #getattr(unittypes,(unit,rand)
                 #CEGUI.WindowManager.getSingleton().getWindow("current").setText(info.mBody.OgreNode.Name)
@@ -160,15 +159,22 @@ class SetupPlayer():
         for v,unit in zip(self.plist,self.player.unitlist):
 
             start = Ogre.Vector3(v.x,v.y+50,v.z) 
-            end = Ogre.Vector3(v.x,v.y-50,v.z) 
+#            end = Ogre.Vector3(v.x,v.y-50,v.z) 
            # print start
-            self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
-            info = self.ray.getFirstHit()
-            
-            
-            print start
-            print end
-            if (info.mBody):
+            #self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
+            #info = self.ray.getFirstHit()
+            ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
+            result = s.terrainmanager.terrainInfo.rayIntersects(ray)
+            intersects = result[0]
+            ## update pointer's position
+            if (intersects):
+                x = result[1][0]
+                y = result[1][1]
+                z = result[1][2]
+                ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+                position =Ogre.Vector3(x, y, z)
+#            print start
+#            print end
                 
                 #bodpos, bodorient = info.mBody.getPositionOrientation()
                 sceneManager = s.app.sceneManager
@@ -176,22 +182,23 @@ class SetupPlayer():
                  
                 scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
                 
-                dira = (end - start)
-                dira.normalise()
+#                dira = (end - start)
+#                dira.normalise()
                 
-                position = start + ( dira* ( (end - start).length() * info.mDistance ));
-                position.y += 1
+#                position = start + ( dira* ( (end - start).length() * info.mDistance ));
+#                position.y += 1
                 scene_node.position = position 
                 
                 attachMe = sceneManager.createEntity(name,unit.job.mesh)
         
                 scene_node.attachObject(attachMe)
+                scene_node.setScale(Ogre.Vector3(1,.5,1))
              
                 unit.node = scene_node
                 buildPhysics(unit)
 
                 s.unitmap[unit.getName()]=unit
-                
+                unit.node.getAttachedObject(0).setMaterialName(unit.job.material)
                 #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
                 if hasattr( s.playermap[player], "setVisualMarker"):
                     s.playermap[player].setVisualMarker(unit)

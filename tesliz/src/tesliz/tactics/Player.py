@@ -84,7 +84,7 @@ class HumanPlayer(object):
        else:
            if unit.mental:
                for x in unit.mental.list:
-                   s.framelistener.addToQueue(unit,x)
+                   s.framelistener.unitqueue.addToQueue(unit,x)
                    
        
            
@@ -113,7 +113,7 @@ class ComputerPlayer(object):
             return
         if unit.mental:        
             for x in unit.mental.list:
-                s.framelistener.addToQueue(unit,x)
+                s.framelistener.unitqueue.addToQueue(unit,x)
         
         s.turn.pause = False    
         

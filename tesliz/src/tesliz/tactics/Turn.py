@@ -22,7 +22,7 @@ def show(unit):
     size = 1
     scene_node.setScale(Ogre.Vector3(size,size,size))
     
-    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+#    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
     
    
 class Turn(object):
@@ -55,7 +55,7 @@ class Turn(object):
         self.nextUnitTurn()    
     def nextUnitTurn(self):
         
-        if s.framelistener.getActiveQueue():        
+        if s.framelistener.unitqueue.getActiveQueue():        
             return
         if (s.framelistener.timer > 0.0)  or self.pause and not s.AIon:
             return
@@ -104,13 +104,7 @@ class RealTimeTurn(object):
         
         #show(unit)
         self.turnindex += 1
-        #self.pause = False
-#        if len(s.framelistener.unitqueues) == 0:
-#            for player in s.playermap.values():
-#                for unit in player.unitlist:
-#                    unit.startTurn()
-                    #show(unit)
-                    #break
+
     def nextUnitTurn(self):
         pass
         #s.framelistener.setCurrentPlayer( = s.playermap["Player1"]

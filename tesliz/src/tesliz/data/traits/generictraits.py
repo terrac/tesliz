@@ -27,7 +27,7 @@ def show(unit):
     size = 1
     scene_node.scale = Ogre.Vector3(size,size,size)
     
-    scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
+    #scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
     
 
 class ObjectCallback ( OgreNewt.ContactCallback ):
@@ -53,7 +53,7 @@ class ObjectCallback ( OgreNewt.ContactCallback ):
             return 0
 
         
-        if s.unitmap.has_key(object.getOgreNode().getName()):
+        if object.getOgreNode() and s.unitmap.has_key(object.getOgreNode().getName()):
             attack = unit1body.getUserData()
              #s.screenshot()
             attack.onContact(object.getOgreNode().getName())
@@ -261,6 +261,8 @@ class Attack(object):
     sound = "sword.wav"
     needsasecondclick = True
     needsasecondunit = True
+    offset = [(0,0,0)]
+    unittargeting = True
     def getDamage(self,unit):
         return data.damage.weaponPhysical(unit)
     
@@ -344,9 +346,10 @@ class Boost(object):
 
 
 class GridTargeting(object):
+    unittargeting = True
     
-    def __init__(self,relativePos,todo,name,type = "fire"):
-        self.relativePos = relativePos(self)
+    def __init__(self,offset,todo,name,type = "fire"):
+        self.offset = offset(self)
         self.particlename = 'RedTorch'
         self.name=name
         self.value=4     
@@ -373,7 +376,7 @@ class GridTargeting(object):
         if not self.unit1 or  not self.unit1.body or  not self.endPos:
             return
         unitlist = []
-        for pos in self.relativePos:
+        for pos in self.offset:
             x,y,z = pos
             x = x + self.endPos.x            
             y = y + self.endPos.y
@@ -382,6 +385,6 @@ class GridTargeting(object):
             unit = data.util.getValidUnit(vec)
             for to in self.todo:
                 to.execute(self.unit1,unit,vec)
-                
+    
     def __str__( self ):
         return "GridTargeting"+self.name

@@ -120,7 +120,7 @@ class Job(object):
                             joblist.append(copy.deepcopy(ajob))
             
     mesh = "zombie.mesh"
-    material = "Examples/RustySteel"
+    material = "DarkGrey/SOLID"
     def __str__( self ):
         return self.__class__.__name__
 

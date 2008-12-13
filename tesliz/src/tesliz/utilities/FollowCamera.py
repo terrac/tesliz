@@ -88,14 +88,14 @@ class FollowCamera():
         #print s.app.msnCam.getPosition()
         #print s.app.camera.getPosition()
     
-        if self.mLookNode:
-            goallook = self.mLookNode._getDerivedPosition()
-        else:
-            goallook = self.mGoalNode._getDerivedPosition()
+#        if self.mLookNode:
+#            goallook = self.mLookNode._getDerivedPosition()
+#        else:
+#            goallook = self.mGoalNode._getDerivedPosition()
     
-        tolook = (goallook - self.mLookVec) * (10*deltat)
+#        tolook = (goallook - self.mLookVec) * (10*deltat)
     
-        self.mLookVec += tolook
+#        self.mLookVec += tolook
     
         #s.app.camera.lookAt( self.mLookVec )
     

@@ -4,7 +4,7 @@ import data.util
 import data.Affects
 
 import ogre.renderer.OGRE as Ogre
-s = Singleton()
+
 #from math import *
 #def distance(v1,v2):
 #    return sqrt(pow(v1.x - v2.x,2) +pow(v1.y - v2.y,2) +pow(v1.z - v2.z,2))
@@ -131,12 +131,10 @@ class FFTMove():
     type = "move"
     value = -1
     name = "move"
-    
+    offset = [(0,0,0)]
+    unittargeting = False
     def __init__(self,unit = None,endPos = None,speed = 1):
-        if unit:
-            self.range = unit.attributes.moves
-        else:
-            self.range = 500,500
+
             
         self.unit1 = unit
         self.endPos = data.util.getValidPos(endPos)
@@ -162,8 +160,12 @@ class FFTMove():
         
         
         if not self.list:
+            self.range = self.unit1.attributes.moves
             vec1 = self.unit1.body.getOgreNode().getPosition()
             vec2 = self.endPos
+            if not vec2:
+                s.log("vec 2 in move is empty "+str(self.unit1),self)
+                aoue
             self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
             
             #offset to not walk in the ground
@@ -195,6 +197,7 @@ class FFTMove():
             print "end"
             if self.animationState:
                 self.animationState.setTimePosition(0)
+            
             return False
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]
@@ -226,7 +229,8 @@ class FFTMove():
         if distance(self.unit1.node.getPosition(), vec2) < .3:
             self.unit1.body.freeze()    
             self.cur += 1
-
+            if len(self.list) == self.cur:
+                self.unit1.body.setPositionOrientation(vec2,xzsrc.getRotationTo(xzdirection))
             
             predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
             name =data.util.getValidName(vec2, predicate)
