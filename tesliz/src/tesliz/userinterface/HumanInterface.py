@@ -23,7 +23,8 @@ class ShowSelected():
             last.node.getAttachedObject(0).setMaterialName(last.job.material)
         self.lastlist = []
         if self.currentPosShow:
-            s.app.sceneManager.destroySceneNode(self.currentPosShow)
+            if s.app.sceneManager.hasSceneNode(self.currentPosShow):
+                s.app.sceneManager.destroySceneNode(self.currentPosShow)
     def execute(self,timer):
      
             

@@ -172,7 +172,7 @@ class SetupPlayer():
                 y = result[1][1]
                 z = result[1][2]
                 ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
-                position =Ogre.Vector3(x, y, z)
+                position =Ogre.Vector3(x, y+1, z)
 #            print start
 #            print end
                 

@@ -61,8 +61,9 @@ def show(pos, texturename = None ,name = None,size = .3):
     mesh = "box.mesh"
     if not sceneManager.hasSceneNode(name):
         scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
-        attachMe = s.app.sceneManager.createEntity(name,mesh)            
-        scene_node.attachObject(attachMe)
+        createEntity(mesh, scene_node)
+        #attachMe = s.app.sceneManager.createEntity(name,mesh)            
+        #scene_node.attachObject(attachMe)
         #attachMe.setNormaliseNormals(True)
     else:
         scene_node = sceneManager.getSceneNode(name)
