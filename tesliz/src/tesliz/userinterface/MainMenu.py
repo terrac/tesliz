@@ -16,7 +16,7 @@ class JobsMenu:
         if not unit:
             return
         
-        list1 = util.getNewWindow("joblist","Main/Window")
+        list1 = util.getNewWindow("joblist","Main/Window","root_wnd")
                 
         list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
         list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
@@ -85,7 +85,7 @@ class MainMenu:
  #       sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
         
-        mainMenuBackground = util.getNewWindow( "Tesliz/MainMenuBackground", "root_wnd", "TaharezLook/FrameWindow")
+        mainMenuBackground = util.getNewWindow( "Tesliz/MainMenuBackground",  "TaharezLook/FrameWindow","root_wnd")
 #        sheet.addChildWindow(mainMenuBackground)
         mainMenuBackground.setSize(CEGUI.UVector2(CEGUI.UDim(0.25, 0), CEGUI.UDim(0.25, 0)))
         mainMenuBackground.setXPosition(CEGUI.UDim(0, 0))

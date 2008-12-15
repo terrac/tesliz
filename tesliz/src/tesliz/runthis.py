@@ -28,6 +28,8 @@ import tactics.Unit
 import tactics.TerrainManager
 
 import tactics.Queue
+import userinterface.CEGUIManager
+import userinterface.EditGame
 
 class OgreNewtonApplication (sf.Application):
     
@@ -94,8 +96,6 @@ class OgreNewtonApplication (sf.Application):
         s.app.msnCam.setOrientation(Ogre.Quaternion(0.793987, -0.472373, 0.32888, 0.195663))
 
 
-    def parseSceneFile(self,map):
-        s.terrainmanager.loadTerrain(map)
         #dotscene = tactics.dotscenea.Dotscene()
         #self.sceneManager = dotscene.setup_scene(self.sceneManager, map, self)
         
@@ -122,7 +122,8 @@ class OgreNewtonApplication (sf.Application):
         
         #self.loadScene()
         data.settings.Settings()
-        s.terrainmanager = tactics.TerrainManager.TerrainManager()
+        userinterface.CEGUIManager.CEGUIManager()
+        tactics.TerrainManager.TerrainManager()
         
         self.setupCamera()
       #  "0.481707" y="0.212922" z="0.334251" w="0.781600"/>
@@ -170,9 +171,9 @@ class OgreNewtonApplication (sf.Application):
         if test:
             tactics.TerrainManager.setupTest(scenename)
         if os.path.exists( "media\\scenes\\" +scenename+".scene"):
-            self.parseSceneFile(scenename)
+            s.terrainmanager.loadTerrain(scenename)
         else:
-            self.parseSceneFile("begin")
+            s.terrainmanager.loadTerrain("begin")
             s.log("parsed begin file as did not find the regular file")
         tactics.TerrainManager.setupOnlyEvents(scenename)
 
@@ -346,8 +347,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         for x in s.app.animations:
             x.addTime(timesincelastframe)
          
-        self.Keyboard.capture()    
-        self.Mouse.capture()    
+        #self.Keyboard.capture()    
+        #self.Mouse.capture()    
         if self.paused:
             return True
             #if not x.hasEnded():
@@ -511,11 +512,11 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             ##OgreNewt.Debugger.getSingleton().deInit()
             return False
         return True        
-    def clickEntity(self,name,position):
+    def clickEntity(self,name,position,id,evt):
         self.showAttributes(name)                    
         
         if self.cplayer:
-            self.cplayer.clickEntity(name,position)
+            self.cplayer.clickEntity(name,position,id,evt)
             
 
     def showAttributes(self, name):
@@ -560,17 +561,23 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.cplayer = player
     def mousePressed(self, evt, id):
         if CEGUIFrameListener.mousePressed(self,evt,id):
-            return
+            return True
                                              
+        
+        
 
         
-                
-        
-        name,position = data.util.fromCameraToMesh()
 
-        CEGUI.WindowManager.getSingleton().getWindow("current").setText(name+"\n"+str(position))
-        self.clickEntity(name,position)
-
+        return True
+    def mouseReleased(self, evt, id):
+       if CEGUI.System.getSingleton().injectMouseButtonUp(convertButton(id)):
+           return True
+       name,position = data.util.fromCameraToMesh()
+       if CEGUI.WindowManager.getSingleton().isWindowPresent("current"):
+           CEGUI.WindowManager.getSingleton().getWindow("current").setText(str(name)+"\n"+str(position))
+       print position
+       self.clickEntity(name,position,id,evt)
+       return True
     def keyPressed(self, evt):
        CEGUIFrameListener.keyPressed(self,evt)
        s.app.Console.keyPressed(evt)
@@ -583,6 +590,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
               s.app.camera.setOrientation(s.app.camera.initialOrientation)
            s.app.camera.initialOrientation = None
 
+       if OIS.KC_N == evt.key:
+           for unit in s.unitmap.values():
+               unit.setText(unit.getName())
        if OIS.KC_NUMPAD5 == evt.key:
            s.screenshot()
        if OIS.KC_NUMPAD6 == evt.key:
@@ -601,11 +611,18 @@ def startup():
     s.framelistener.pauseturns = False
     s.app.loadScene(sys.argv[1],True)
     pass
+def editOnStart():
+    startup()
+    s.editgame = userinterface.EditGame.EditGame("linderexit")
 if __name__ == '__main__':
 #    try:
         if len(sys.argv) == 1:
-            startup = None
-        application = OgreNewtonApplication(startup)
+            runOnStartup = None
+        if len(sys.argv) == 2:
+            runOnStartup = startup
+        if len(sys.argv) == 3:
+            runOnStartup = editOnStart    
+        application = OgreNewtonApplication(runOnStartup)
         application.go()
 #    except Ogre.OgreException, e:
 #        raise e

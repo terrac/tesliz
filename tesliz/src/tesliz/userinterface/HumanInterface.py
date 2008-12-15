@@ -129,7 +129,7 @@ class HumanInterface:
     listholder = []
         
 
-    def clickEntity(self,name,position):
+    def clickEntity(self,name,position,id,evt):
         position.x = int(position.x)
         position.y = int(position.y)
         position.z = int(position.z)

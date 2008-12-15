@@ -12,9 +12,9 @@ def tempName():
 
 class OgreText(object):
     """Class for displaying text in Ogre above a Movable."""
-    def __init__(self, movable, camera, text=''):
+    def __init__(self, movable, text=''):
         self.movable = movable
-        self.camera = camera
+        self.camera = s.app.camera
         self.text = ''
         self.enabled = True
 

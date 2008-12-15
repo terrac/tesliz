@@ -53,7 +53,7 @@ class Position:
         self.node =data.util.createMesh("cylinder.mesh",self.position,1,self.name)
         tactics.util.buildImmoblePhysics(self,self.node)
         self.setVisited(self.visited)
-        s.framelistener.textlist.append(utilities.OgreText.OgreText(self.node.getAttachedObject(0),s.app.camera,self.name))
+        s.framelistener.textlist.append(utilities.OgreText.OgreText(self.node.getAttachedObject(0),self.name))
         
     def getVec(self):
         x,y,z = self.position
@@ -204,7 +204,7 @@ class OverviewMap:
     def movePlayer(self,pos):
        pass 
    
-    def clickEntity(self,name,position):
+    def clickEntity(self,name,position,id,evt):
        if not self.map.has_key(name):
            return
        

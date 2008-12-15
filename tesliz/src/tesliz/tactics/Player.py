@@ -96,9 +96,9 @@ class HumanPlayer(object):
      #   if click.hookid != hookid:
      #       setupInput()
     
-    def clickEntity(self,name,position):
+    def clickEntity(self,name,position,id,evt):
         
-        self.interface.clickEntity(name,position)        
+        self.interface.clickEntity(name,position,evt)        
 class ComputerPlayer(object):
     
     def __init__(self,name):
@@ -121,7 +121,7 @@ class ComputerPlayer(object):
         
         #go through playremap and find closest enemy.  Set to attack
        # a = 5       
-    def clickEntity(self,name,position):
+    def clickEntity(self,name,position,id,evt):
         if len(self.unitlist) > 0:
             return
         self.endGame()

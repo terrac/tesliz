@@ -15,7 +15,7 @@ class Chatbox:
         otext = unit.getName()+"\n"+text
                 
         try:
-            ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,otext)
+            ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),otext)
         except:# we shouldn't be adding text if the unit is gone
             return
         ogretext.enable(True)

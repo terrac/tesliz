@@ -27,7 +27,7 @@ class ManageDeath():
         self.count = 3
     def execute(self,unit):
         text = str(self.count)
-        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),text)
         ogretext.enable(True)
         unit.setText(ogretext)
         if self.count == 0:
@@ -187,6 +187,8 @@ class Unit(object):
     def setText(self,text):
         if self.text:
             self.text.destroy()
+        if isinstance(text, str):
+            text = utilities.OgreText.OgreText(self.node.getAttachedObject(0),text)
         self.text = text
         
     def __getstate__(self):

@@ -90,6 +90,8 @@ def fromCameraToMesh():
 
     result = s.app.raySceneQuery.execute()
     position = False
+    name = None
+    
     for item in result:
         
         #if item.worldFragment:
@@ -156,7 +158,7 @@ def createMesh(mesh,pos,size=1,name = None):
 missed = "LOOP"
 blocked = "LOOP"
 def update(text,unit):
-    ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),s.app.camera,text)
+    ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),text)
     ogretext.enable(True)
     s.framelistener.addTimed(1,ogretext)
     unit.setText(ogretext)
