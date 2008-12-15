@@ -119,7 +119,8 @@ def fromCameraToMesh():
 
 def createEntity(mesh,node):    
     sceneManager = s.app.sceneManager
-    name = s.app.getUniqueName()         
+    name = s.app.getUniqueName()
+
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     node.attachObject(attachMe)
     #attachMe.setNormaliseNormals(True)
@@ -131,8 +132,10 @@ def createMesh(mesh,pos,size=1,name = None):
     sceneManager = s.app.sceneManager     
     if not name:   
         name = s.app.getUniqueName()
-
-    scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
+    if sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.getSceneNode(name)
+    else:
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     scene_node.attachObject(attachMe)
     meshlist.append(scene_node.getName())

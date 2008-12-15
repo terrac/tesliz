@@ -575,7 +575,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
        name,position = data.util.fromCameraToMesh()
        if CEGUI.WindowManager.getSingleton().isWindowPresent("current"):
            CEGUI.WindowManager.getSingleton().getWindow("current").setText(str(name)+"\n"+str(position))
-       print position
+     
        self.clickEntity(name,position,id,evt)
        return True
     def keyPressed(self, evt):
