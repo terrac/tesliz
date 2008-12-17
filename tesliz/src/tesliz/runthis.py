@@ -30,6 +30,7 @@ import tactics.TerrainManager
 import tactics.Queue
 import userinterface.CEGUIManager
 import userinterface.EditGame
+import tactics.Event
 
 class OgreNewtonApplication (sf.Application):
     
@@ -145,8 +146,10 @@ class OgreNewtonApplication (sf.Application):
         self.reset()
         #data.util.clearMeshes()
         s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
+#        s.unitmap = dict()
+        cplayerunitmap = dict()
         for x in s.cplayer.unitlist:
-            s.unitmap[x.getName()] = x
+            cplayerunitmap[x.getName()] = x
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -170,13 +173,33 @@ class OgreNewtonApplication (sf.Application):
         mental = data.aisettings.AIsettings()
         if test:
             tactics.TerrainManager.setupTest(scenename)
-        if os.path.exists( "media\\scenes\\" +scenename+".scene"):
+        if os.path.exists( s.campaigndir+scenename):
             s.terrainmanager.loadTerrain(scenename)
         else:
             s.terrainmanager.loadTerrain("begin")
             s.log("parsed begin file as did not find the regular file")
-        tactics.TerrainManager.setupOnlyEvents(scenename)
-
+          
+        mapname = "media\\et\\"+ scenename +"\\mapdata.dat"    
+        #refactor
+        #tactics.TerrainManager.setupOnlyEvents(scenename)
+        if os.path.exists(mapname):
+            savedmap = shelve.open(mapname)
+            unitmap = savedmap["unitmap"]
+            positionmap = savedmap["positionmap"]
+ 
+            for name in unitmap.keys():
+                position =positionmap[name]
+                if cplayerunitmap.has_key(name):
+                    unit = cplayerunitmap[name]
+                else:
+                    unit =unitmap[name]
+                
+                tactics.util.showUnit(unit,position)
+                s.unitmap[name] = unitmap[name]
+            scriptmap = savedmap["scriptmap"]
+            for x in scriptmap.values():
+                s.event = tactics.Event.Event( startlist = x)
+        
         if s.event:
             s.event.start()
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
@@ -561,9 +584,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.cplayer = player
     def mousePressed(self, evt, id):
         if CEGUIFrameListener.mousePressed(self,evt,id):
+            
             return True
-                                             
-        
+                            
         
 
         
@@ -572,10 +595,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     def mouseReleased(self, evt, id):
        if CEGUI.System.getSingleton().injectMouseButtonUp(convertButton(id)):
            return True
+ 
        name,position = data.util.fromCameraToMesh()
        if CEGUI.WindowManager.getSingleton().isWindowPresent("current"):
            CEGUI.WindowManager.getSingleton().getWindow("current").setText(str(name)+"\n"+str(position))
-     
+       if not position:
+           return True
        self.clickEntity(name,position,id,evt)
        return True
     def keyPressed(self, evt):
@@ -609,19 +634,21 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 import sys
 def startup():
     s.framelistener.pauseturns = False
-    s.app.loadScene(sys.argv[1],True)
+    s.app.loadScene(sys.argv[2],True)
     pass
 def editOnStart():
     startup()
-    s.editgame = userinterface.EditGame.EditGame("linderexit")
+    s.editgame = userinterface.EditGame.EditGame(sys.argv[2])
 if __name__ == '__main__':
 #    try:
-        if len(sys.argv) == 1:
-            runOnStartup = None
         if len(sys.argv) == 2:
-            runOnStartup = startup
+            runOnStartup = None
         if len(sys.argv) == 3:
-            runOnStartup = editOnStart    
+            runOnStartup = startup
+        if len(sys.argv) == 4:
+            runOnStartup = editOnStart
+        s.campaignname = sys.argv[1]    
+        s.campaigndir = "media/campaigns/"+s.campaignname+"/"
         application = OgreNewtonApplication(runOnStartup)
         application.go()
 #    except Ogre.OgreException, e:

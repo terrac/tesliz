@@ -7,6 +7,9 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import winsound
+import pygame.mixer
+
+
 
 class LoadScene:
     def __init__(self,name):
@@ -118,7 +121,18 @@ class Singleton:
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
         def playsound(self,filename="C:\sound.wav"):
-            winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
+            mixer = pygame.mixer
+
+
+            #choose a desired audio format
+            mixer.init(11025) #raises exception on fail
+
+            sound = mixer.Sound("media\\sounds\\"+filename)
+
+
+            channel = sound.play()
+            
+            #winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
             winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
     

@@ -3,6 +3,7 @@ from tactics.Singleton import *
 import ogre.physics.OgreNewt as OgreNewt
 from tactics.Unit import *
 from tactics.util import *
+from ogre.renderer.OGRE import Vector3
 import random
 
 s = Singleton()
@@ -36,6 +37,15 @@ class ScriptEvent:
         
         if not hasattr(tuple,'__len__'):
             if hasattr(tuple,'unit1') and tuple.unit1:
+                
+                #saved scripts will only have strings
+                if isinstance(tuple.unit1, str):
+                    tuple.unit1 = s.unitmap[tuple.unit1]
+                if hasattr(tuple,'unit2') and tuple.unit1 and isinstance(tuple.unit1, str):
+                    tuple.unit1 = s.unitmap[tuple.unit1]
+                if hasattr(tuple, 'endPos') and isinstance(tuple.endPos, str): 
+                    tuple.endPos = eval(tuple.endPos)
+                    
                 s.framelistener.unitqueue.addToQueue(tuple.unit1,tuple)
             else:
                 tuple.execute(0)
@@ -44,7 +54,10 @@ class ScriptEvent:
             x,y,z = tuple
         else:
             x,y = tuple
-            z = 4                 
+            z = 4       
+        #saved scripts will only have strings
+        if isinstance(x, str):
+            x = s.unitmap[x]                  
         s.chatbox.add(y,x,z)
         self.time = z
         return True

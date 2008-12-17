@@ -164,7 +164,7 @@ class SetupPlayer():
             #self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
             #info = self.ray.getFirstHit()
             ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
-            result = s.terrainmanager.terrainInfo.rayIntersects(ray)
+            result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
             intersects = result[0]
             ## update pointer's position
             if (intersects):

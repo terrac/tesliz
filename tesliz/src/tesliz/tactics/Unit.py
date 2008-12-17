@@ -70,7 +70,7 @@ class Attributes(object):
 
     
 class Unit(object):
-   
+    height = 2
     def __str__( self ):
         return str(self.job)+" "+self.getName()
     def destroy(self):
@@ -185,6 +185,8 @@ class Unit(object):
     def getDeath(self):
         return self.death
     def setText(self,text):
+        if not self.node:
+            return
         if self.text:
             self.text.destroy()
         if isinstance(text, str):

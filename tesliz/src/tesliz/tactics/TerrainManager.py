@@ -53,10 +53,10 @@ class TerrainManager():
         for i in xrange(33):
             for j in xrange(33):
                 heightMapValues.append(float(0.50))
-        self.terrainInfo = ET.TerrainInfo (33, 33, heightMapValues )
+        terrainInfo  =ET.TerrainInfo (33, 33, heightMapValues )
 
         ## save typing self
-        terrainInfo  = self.terrainInfo 
+        
         sceneManager = s.app.sceneManager
         terrainMgr   = self.terrainMgr
 
@@ -100,16 +100,17 @@ class TerrainManager():
         #return
         ## destroy current terrain
         self.terrainMgr.destroyTerrain()
+       
         Ogre.ResourceGroupManager.getSingleton().addResourceLocation(
-"media\\et\\"+name, "FileSystem", "ET"+name); 
+s.campaigndir + name+"/", "FileSystem", "ET"+name); 
         ## load terrain map
         image = Ogre.Image()
         image.load("ETterrain.png", "ET"+name)
         info = ET.TerrainInfo()
         ET.loadHeightmapFromImage(info, image)
-        info.setExtents(Ogre.AxisAlignedBox(-25, 0, -25, 50, 10, 50))
+        info.setExtents(Ogre.AxisAlignedBox(-16, 0, -16, 16, 10, 16))
         self.terrainMgr.createTerrain(info)
-        self.terrainInfo = self.terrainMgr.getTerrainInfo()
+        
 
         ## load splatting maps
         for i in xrange(self.splatMgr.getNumMaps()):
@@ -125,20 +126,18 @@ class TerrainManager():
     def saveTerrain(self, name):
 
         ### There is a bug somewhere in the code, I should be able to use
-        ### self.terrainInfo but the data isn't there  
+        ### self.getTerrainInfo() but the data isn't there  
         ## check data array
-        ##for j in xrange(self.terrainInfo.getHeight()):
-        ##    for i in xrange(self.terrainInfo.getWidth()):
-        ##        if self.terrainInfo.at(i, j)>0.5:
-        ##             print self.terrainInfo.at(i, j)
+        ##for j in xrange(self.getTerrainInfo().getHeight()):
+        ##    for i in xrange(self.getTerrainInfo().getWidth()):
+        ##        if self.getTerrainInfo().at(i, j)>0.5:
+        ##             print self.getTerrainInfo().at(i, j)
 
-        path =self.mediadir + name+"/"
-        ## HACK
-        self.terrainInfo = self.terrainMgr.getTerrainInfo()
+        path =s.campaigndir + name+"/"
 
         ## save terrain map 
         image = Ogre.Image()
-        ET.saveHeightmapToImage(self.terrainInfo, image)
+        ET.saveHeightmapToImage(self.getTerrainInfo(), image)
         image.save( os.path.join(path, "ETterrain.png" ))
 
         ## save the splatting maps
@@ -151,8 +150,8 @@ class TerrainManager():
         ## save light map
         lightmap = Ogre.Image()
         ET.createTerrainLightmap(
-                             self.terrainInfo ,
-                             lightmap, 512, 512 ,
+                             self.getTerrainInfo() ,
+                             lightmap, 64, 64 ,
                              Ogre.Vector3(1, -1, 1) ,
                              Ogre.ColourValue(1 ,1, 1) ,      
                              Ogre.ColourValue(1, 1,  1) )
@@ -165,10 +164,11 @@ class TerrainManager():
         for i in range(6): 
             image = Ogre.Image()
             textures.append(image)
+            
             textures[i].load("splatting%s.%s" %( str(i), "png" ) , "ET")
         ## create the base texture
         baseTexture = Ogre.Image()
-        self.splatMgr.createBaseTexture(baseTexture, 512, 512, textures, 20, 20)
+        self.splatMgr.createBaseTexture(baseTexture, 64, 64, textures, 20, 20)
         baseTexture.save(os.path.join(path,"ETbase.png"))
 
         ## finally create a minimap using the lightmap and the generated base texture
@@ -182,11 +182,10 @@ class TerrainManager():
 
     def updateLightmap(self):
         ## HACK
-        self.terrainInfo = self.terrainMgr.getTerrainInfo()
 
         lightmap = Ogre.Image()
         ET.createTerrainLightmap(
-                             self.terrainInfo ,
+                             self.getTerrainInfo() ,
                              lightmap, 32, 32 ,
                              Ogre.Vector3(1, -1, 1) ,
                              Ogre.ColourValue(1 ,1, 1) ,      
@@ -198,22 +197,26 @@ class TerrainManager():
             return
         l = lightmap.getPixelBox(0, 0)
         tex.getBuffer(0, 0).blitFromMemory(lightmap.getPixelBox(0, 0))
+    
+    def getTerrainInfo(self):
+        return self.terrainMgr.getTerrainInfo()
+        
     def getTerrainVertex(self,x,z):
 
         res =Ogre.Vector3()
        
-        res.x = self.terrainInfo.getOffset().x + self.terrainInfo.getScaling().x * x;
-        res.y = self.terrainInfo.getOffset().y + self.terrainInfo.at(x,z) * self.terrainInfo.getScaling().y;
+        res.x = self.getTerrainInfo().getOffset().x + self.getTerrainInfo().getScaling().x * x;
+        res.y = self.getTerrainInfo().getOffset().y + self.getTerrainInfo().at(x,z) * self.getTerrainInfo().getScaling().y;
     
-        res.z = self.terrainInfo.getOffset().z + self.terrainInfo.getScaling().z * z;
+        res.z = self.getTerrainInfo().getOffset().z + self.getTerrainInfo().getScaling().z * z;
         return res;
 
     def generateTerrainCollision(self):
   
         col = OgreNewt.TreeCollision(s.app.World);
         col.start();
-        for x in range(0,self.terrainInfo.getWidth()-1 ):
-            for z in range(0,self.terrainInfo.getHeight()-1 ):
+        for x in range(0,self.getTerrainInfo().getWidth()-1 ):
+            for z in range(0,self.getTerrainInfo().getHeight()-1 ):
                        
                 v1 = self.getTerrainVertex(x,z);
                 v2 = self.getTerrainVertex(x+1,z);

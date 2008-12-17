@@ -105,7 +105,7 @@ def fromCameraToMesh():
         name = item.movable.Name
         break
     if not position:
-        result = s.terrainmanager.terrainInfo.rayIntersects(camray)
+        result = s.terrainmanager.getTerrainInfo().rayIntersects(camray)
         intersects = result[0]
         ## update pointer's position
         if (intersects):
@@ -113,7 +113,7 @@ def fromCameraToMesh():
             y = result[1][1]
             z = result[1][2]
             ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
-            position =Ogre.Vector3(x, y, z)
+            position =Ogre.Vector3(x, y+1, z)
             name = "terrain"
     return name,position
 
@@ -476,7 +476,7 @@ def getValid(vec,height,xlist , zlist):
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
                 
         ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
-        result = s.terrainmanager.terrainInfo.rayIntersects(ray)
+        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
         intersects = result[0]
         ## update pointer's position
         if (intersects):

@@ -1,6 +1,16 @@
 import ogre.gui.CEGUI as CEGUI
+from tactics.Singleton import *
+rootwindow = "root_wnd"
 
-def getNewWindow( name,type = "TaharezLook/Listbox",winname = None):
+listbox = "TaharezLook/Listbox"
+combobox = "TaharezLook/Combobox"
+frame = "TaharezLook/FrameWindow"
+button = "TaharezLook/Button"
+editbox = "TaharezLook/Editbox"
+statictext = "TaharezLook/StaticText"
+multieditbox = "TaharezLook/MultiLineEditbox"
+
+def getNewWindow( name,type = "TaharezLook/Listbox",winname = None,posx = None,posy = None,sizex = None,sizey= None):
 
     winMgr = CEGUI.WindowManager.getSingleton()
     
@@ -10,18 +20,29 @@ def getNewWindow( name,type = "TaharezLook/Listbox",winname = None):
     
     list = winMgr.createWindow(type, name)
     if winname:
-        sheet = CEGUI.WindowManager.getSingleton().getWindow( winname  )
+        if isinstance(winname, str):            
+            sheet = CEGUI.WindowManager.getSingleton().getWindow( winname  )
+        else:
+            sheet = winname
         sheet.addChildWindow(list)
-    
+    if not posx is None:
+        list.setPosition(CEGUI.UVector2(cegui_reldim(posx), cegui_reldim(posy)))
+    if not sizex is None:
+        list.setSize(CEGUI.UVector2(cegui_reldim(sizex), cegui_reldim( sizey)))
+    list.subscribeEvent(CEGUI.Window.EventMouseClick, s.cegui, "clicked")
     return list
-def addItem(curclass,list,name):        
+def addItem(selfc,list,name,index = None):        
     item =CEGUI.ListboxTextItem (name)        
     item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system
-    if not hasattr(curclass, "listholder") or not curclass.listholder:
-         curclass.listholder = []
-    curclass.listholder.append(item)
+    if not hasattr(selfc, "listholder") or not selfc.listholder:
+         selfc.listholder = []
+    selfc.listholder.append(item)
     item.setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush")
-    list.addItem(item)
+    if index is None:
+        list.addItem(item)
+    else:
+        list.insertItem(item,list.getListboxItemFromIndex(index))
+    
 def destroyWindow(text):
     winMgr = CEGUI.WindowManager.getSingleton()
     winMgr.destroyWindow(text)

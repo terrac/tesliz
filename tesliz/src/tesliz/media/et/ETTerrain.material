@@ -40,22 +40,6 @@ material ETTerrainMaterial
       {
         texture Grass.png
       }
-      texture_unit
-      {
-        texture splatting2.png
-      }
-      texture_unit
-      {
-        texture splatting3.png
-      }
-      texture_unit
-      {
-        texture splatting4.png
-      }
-      texture_unit
-      {
-        texture splatting5.png
-      }
     }
     
     pass

@@ -7,7 +7,12 @@ import ogre.physics.OgreNewt as OgreNewt
 from tactics.Singleton import *
 import util
 import tactics.util
+import data.util
 import shelve
+import tactics.Move
+import utilities.FollowCamera
+import tactics.Unit
+import copy
 
 class EditGame:
     mapname = "media\\et\\"
@@ -21,6 +26,7 @@ class EditGame:
         s.framelistener.unitqueue.clearUnitQueue()
         s.framelistener.pauseturns = True
         s.framelistener.cplayer =self
+        s.editgame = self
         
         savedmap = None
         
@@ -41,22 +47,28 @@ class EditGame:
         #tbc.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.24)))
         tbc.setPosition(CEGUI.UVector2(cegui_reldim(0.75), cegui_reldim( 0.10)))
         tbc.setSize(CEGUI.UVector2(cegui_reldim(0.24), cegui_reldim( 0.74)))
-        tbc.subscribeEvent(CEGUI.Window.EventMouseClick, self, "setCurrentTab")
+        tbc.subscribeEvent(CEGUI.TabControl.EventSelectionChanged, self, "setCurrentTab")
         terrain =s.cegui.winMgr.createWindow("DefaultGUISheet", "Terrain")
         terrain.setText("Terrain")
-        #tbc.addTab(terrain)
-        #self.editterrain = EditTerrain(terrain)
-        #self.currentClick = self.editterrain
-        
+        tbc.addTab(terrain)
+        self.editterrain = EditTerrain(terrain)
+        self.currentClick = self.editterrain
+#        
         tab2 =s.cegui.winMgr.createWindow("DefaultGUISheet", "Units")
         tab2.setText("Units")
         tbc.addTab(tab2)
         self.editunits = EditUnits(tab2,savedmap)
-        self.currentClick = self.editunits
+        #self.currentClick = self.editunits
         
-        tab3 =s.cegui.winMgr.createWindow("DefaultGUISheet", "Meshes")
-        tab3.setText("Meshes")
+        tab3 =s.cegui.winMgr.createWindow("DefaultGUISheet", "Scripts")
+        tab3.setText("Scripts")
         tbc.addTab(tab3)
+        self.editscripts = EditScripts(tab3,savedmap)
+        #self.currentClick = self.editscripts
+        
+        tab4 =s.cegui.winMgr.createWindow("DefaultGUISheet", "Meshes")
+        tab4.setText("Meshes")
+        tbc.addTab(tab4)
 #        mainMenuBackground.addChildWindow(jobButton)
 
         btn = util.getNewWindow("save", "TaharezLook/Button", "root_wnd")
@@ -65,7 +77,13 @@ class EditGame:
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.85)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.05)))
         btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "saveGame")
-             
+
+#        btn = util.getNewWindow("reload", "TaharezLook/Button", "root_wnd")
+#        
+#        btn.setText("reload")
+#        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim( 0.85)))
+#        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.05)))
+#        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "loadGame")             
         if savedmap:
             savedmap.close()
 
@@ -74,12 +92,17 @@ class EditGame:
 
 
     def setCurrentTab(self, e):
-        
+        if not e.window.getActiveChild():
+            return True
         text = str(e.window.getActiveChild().getText())
+        if hasattr(self.currentClick, "close"):
+            self.currentClick.close()
         if text == "Terrain":
             self.currentClick = self.editterrain
         if text == "Units":
             self.currentClick = self.editunits
+        if text == "Scripts":
+            self.currentClick = self.editscripts
         return True
     def saveGame(self,e):
         s.terrainmanager.saveTerrain(self.name)
@@ -90,8 +113,15 @@ class EditGame:
             x.node = None
         savedmap["unitmap"] = self.editunits.unitmap
         savedmap["positionmap"] = self.editunits.positionmap
-        
+        savedmap["scriptmap"] = self.editscripts.scriptmap
         savedmap.close()
+#    def loadGame(self,e = None):
+#        s.terrainmanager.loadTerrain(self.name)
+#        for unit in s.editgame.editunits.unitmap.values():
+#            if unit.node:
+#                position = data.util.getValidPos(unit.node.getPosition())
+#                unit.node.setPosition(position)
+#                s.editgame.editunits.positionmap[unit.node.getName()] = (position.x,position.y,position.z)
 class EditTerrain():
     def __init__(self,pwindow):
                
@@ -179,8 +209,8 @@ class EditTerrain():
     def clickEntity(self,name,position,id,evt):
 
         
-        x = int( s.terrainmanager.terrainInfo.posToVertexX(position.x) )
-        z = int( s.terrainmanager.terrainInfo.posToVertexZ(position.z) )
+        x = int( s.terrainmanager.getTerrainInfo().posToVertexX(position.x) )
+        z = int( s.terrainmanager.getTerrainInfo().posToVertexZ(position.z) )
         dr = -1
         
         if ( id == OIS.MB_Left ):
@@ -188,9 +218,18 @@ class EditTerrain():
         intensity = 1 * dr
         if self.deform:
             s.terrainmanager.terrainMgr.deform(x,z, self.mEditBrush,intensity)
+            s.terrainmanager.terrainMgr.getTerrainInfo()
+            for unit in s.editgame.editunits.unitmap.values():
+                if unit.node:
+                    position = data.util.getValidPos(unit.node.getPosition())
+                    unit.node.setPosition(position)
+                    s.editgame.editunits.positionmap[unit.node.getName()] = (position.x,position.y,position.z)
+
         else:
             s.terrainmanager.splatMgr.paint(self.texlist.index(self.texture), x, z, self.mEditBrush, 1)
-        #s.terrainmanager.generateTerrainCollision()
+            
+            
+        s.terrainmanager.generateTerrainCollision()
 class EditUnits:
     def __init__(self,pwindow,savedmap):    
             
@@ -265,10 +304,13 @@ class EditUnits:
             self.positionmap = savedmap["positionmap"]
         else:
             self.unitmap = dict()
-            self.positionmap = dict() 
-        for name in self.positionmap.keys():
+            self.unitmap["dummy"] = tactics.util.buildUnitNoNode("dummy","Player1", "Squire")
+            
+            self.positionmap = dict()
+            self.positionmap["dummy"] = (0,0,0) 
+        for name in self.unitmap.keys():
             position =self.positionmap[name]
-            self.showUnit(name,position)
+            tactics.util.showUnit(self.unitmap[name],position)
         self.unitlist = unitlist = s.cegui.winMgr.createWindow("TaharezLook/Combobox", "unitlist")
         pwindow.addChildWindow(unitlist)        
         #unitlist.setText("actionlist")
@@ -301,33 +343,137 @@ class EditUnits:
         if not self.unitmap.has_key(name):
             return True
         self.positionmap[name] = (position.x,position.y,position.z)
-        self.showUnit(name, position)
+        tactics.util.showUnit(name, position)
         
-    def showUnit(self, name, position):
-        unit = self.unitmap[name]
-        sceneManager = s.app.sceneManager
-        name = unit.name
-        prevhad = False
-        if sceneManager.hasSceneNode(name):
-            scene_node = sceneManager.getSceneNode(name)
-            prevhad = True
+   
+class EditScripts:
+    def __init__(self,pwindow,savedmap):    
+        self.secondclick = None
+        self.editbox = None
+        self.currentscriptlistbox = None
+        y = 0
+        
+        self.scriptlist =scriptlist = s.cegui.winMgr.createWindow("TaharezLook/Listbox", "scriptlist")
+        pwindow.addChildWindow(scriptlist)        
+        #scriptlist.setText("actionlist")
+        scriptlist.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
+        scriptlist.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.1)))
+        scriptlist.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showScriptList")
+        if savedmap:
+            util.addItem(self, scriptlist, "Script1")
+            self.scriptmap = dict()
+            self.scriptmap["Script1"] = []
         else:
-            scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
-        scene_node.position = position
-        if not prevhad:
-            if s.app.sceneManager.hasEntity(name):
-                attachMe = s.app.sceneManager.getEntity(name)
+            
+            self.scriptmap = savedmap["scriptmap"]
+            for x in self.scriptmap.keys():
+                util.addItem(self,scriptlist, x)
+        self.eventMap = {"Move":tactics.Move.FFTMove(),"FollowCamera": utilities.FollowCamera.FollowCamera()}
+        self.eventMap["Move"].range = 50,50
+        
+        
+    def createScript(self,e):
+        text =str(self.scriptname.getText())
+        util.addItem(self, scriptlist, text)
+    def showScriptList(self,e):
+        if not e.window.getFirstSelectedItem():
+            return
+        text = str(e.window.getFirstSelectedItem().getText())
+        self.currentscriptlistbox = parent =util.getNewWindow("scripteditlistframe", util.frame, util.rootwindow,.0,.2,.2,.5)
+        self.currentscriptlist =scriptlist =util.getNewWindow("scriptlines", util.listbox,parent,0,.1,1,.9)        
+        scriptlist.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showEditBox")
+        for x in self.scriptmap[text]:
+            util.addItem(self, scriptlist, str(x))
+        util.addItem(self, scriptlist, "Empty")
+        self.currentlist = self.scriptmap[text]
+        
+    def showEditBox(self,e):
+        if not e.window.getFirstSelectedItem():
+            return
+        text = str(e.window.getFirstSelectedItem().getText())
+        self.currentEditing = e.window.getFirstSelectedItem()
+        self.editbox =parent =util.getNewWindow("scriptframe", util.frame, util.rootwindow,.2,.2,.5,.5)
+        util.getNewWindow("unitlistlabelchat", util.statictext,parent,0,.4,.2,.1).setText("unit1")
+        self.unit1=util.getNewWindow("chatunitlist", util.combobox,parent,0,.5,.2,.2)
+        if self.unit1.getItemCount() == 0:
+            first = None
+            for x in s.editgame.editunits.unitmap.keys():
+                util.addItem(self, self.unit1, x)
+                if not first:
+                    first = x
+            self.unit1.setText(x)
+            
+       
+        self.chattext =util.getNewWindow("chattext", util.multieditbox, parent,.2,.1,.6,.4)
+        self.chattext.setText("script text here")
+        self.chattime =util.getNewWindow("chattime", util.editbox, parent,.8,.1,.2,.1)
+        self.chattime.setText("4")
+        btn =util.getNewWindow("chatbtn", util.button, parent,.8,.2,.2,.1)
+        btn.setText("addChat")
+        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "addChat")
+        
+        util.getNewWindow("unitlistlabel", util.statictext, parent,.2, .6, .2, .1).setText("eventlist")
+        self.eventlist=util.getNewWindow("eventlist", util.combobox,parent,.2,.7,.4,.4)
+        self.eventlist.subscribeEvent(CEGUI.Combobox.EventTextSelectionChanged, self, "setupEventOptions")
+        
+        btn =util.getNewWindow("objectbtn", util.button, parent,.8,.8,.2,.1)
+        btn.setText("addObject")
+        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "addObject")
+        for x in self.eventMap.keys():
+            util.addItem(self, self.eventlist, x)
+        #util.getNewWindow("time, type, winname)
+        
+    def setupEventOptions(self,e):
+        if not e.window.getSelectedItem():
+            return
+        text = str(e.window.getSelectedItem().getText())
+        event =self.eventMap[text]
+        if event.needsasecondclick:
+            if event.unittargeting:
+                self.unit2=util.getNewWindow("objunitlist", util.combobox,parent,.4,.7,.2,.2)
             else:
-                attachMe = sceneManager.createEntity(name, unit.job.mesh)
-            scene_node.attachObject(attachMe)
-        scene_node.setScale(Ogre.Vector3(1, .5, 1))
-        unit.node = scene_node
-        if not prevhad:
-            tactics.util.buildPhysics(unit)
-        #s.unitmap[unit.getName()]=unit
-        unit.node.getAttachedObject(0).setMaterialName(unit.job.material)
-        #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
-        if hasattr(unit.player, "setVisualMarker"):
-            unit.player.setVisualMarker(unit)
-
+                self.secondclick =util.getNewWindow("secondclick", util.statictext,self.editbox ,.6, .7,.3, .1)
+                self.secondclick.setText("Click on map")
+                
+    def addChat(self,e):
+        tuple = (str(self.unit1.getText()),
+                 str(self.chattext.getText()),
+                 int(str(self.chattime.getText())))
+        self.currentlist.append(tuple)
+        util.addItem(self,self.currentscriptlist,str(tuple),self.currentscriptlist.getItemCount()-1)
+        
+    def addObject(self,e):
+        
+        name = str(self.eventlist.getText())
+        event =copy.copy(self.eventMap[name])
+        self.currentlist.append(event)
+        event.unit1 = str(self.unit1.getText())
+        #need to add unit 2
+        if event.needsasecondclick:
+            if event.unittargeting:
+                event.unit1 = str(self.unit1.getText())
+            else:
+                event.endPos = str(self.secondclick.getText())
+        #add extra to signify specific items
+        util.addItem(self,self.currentscriptlist,name,self.currentscriptlist.getItemCount()-1)        
+    def clickEntity(self,name,position,id,evt):
+        if self.secondclick:
+            self.secondclick.setText(str(position))
+            self.secondclickposition = position
+        pass
+    
+    def close(self):
+        #self.secondclick = None
+        if self.editbox:
+            self.editbox.setVisible(False)
+            
+        if self.currentscriptlistbox:
+            self.currentscriptlistbox.setVisible(False)
+    def open(self):
+        if self.editbox:
+            self.editbox.setVisible(True)
+            
+        if self.currentscriptlistbox:
+            self.currentscriptlistbox.setVisible(True)
+    
         

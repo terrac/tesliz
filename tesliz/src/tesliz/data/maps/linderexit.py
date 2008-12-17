@@ -48,4 +48,4 @@ class Unitdata(object):
         
     def setupTestMap(self):
         unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
-        #unit =buildUnitNoNode("Oath","Player1", "Squire",2)
+       

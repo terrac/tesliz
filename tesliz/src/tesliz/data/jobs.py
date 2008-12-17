@@ -135,6 +135,7 @@ class Squire(Job):
         #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
         abil.range = 5
         trait1 =Traits([abil])
+        abil.learned = True
                 #primary,reaction,support,movement
         return (trait1,None,None,None)
        
@@ -153,6 +154,7 @@ class Chemist(Job):
         abil = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
         abil.range = 50
         trait1 = ItemTraits([abil],unit.player)
+        abil.learned = True
 #        unit.traits["Chemist"] =ItemTraits([trait1],unit.player)
 #        unit.mental = Mind([Combat(unit,self.healing,Combat.isWantedHurt),Combat(unit,Action.Attack,Combat.isWanted)])
         return (trait1,None,None,None)
@@ -164,7 +166,7 @@ class Wizard(Job):
         fireball = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst")
         fireball.range = 5
         trait1 = NumberedTraits([fireball],[50])
-        
+        abil.learned = True
         return (trait1,None,None,None)
 
     required = [Chemist(2)]

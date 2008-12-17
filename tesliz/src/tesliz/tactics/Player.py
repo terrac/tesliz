@@ -51,7 +51,7 @@ class HumanPlayer(object):
 
         
     def setVisualMarker(self,unit):
-        pos = unit.body.getOgreNode().getPosition()
+        pos = unit.node.getPosition()
         sceneManager = s.app.sceneManager        
         #self.startPos =position  
         #self.endPos.y = position.y
@@ -98,7 +98,7 @@ class HumanPlayer(object):
     
     def clickEntity(self,name,position,id,evt):
         
-        self.interface.clickEntity(name,position,evt)        
+        self.interface.clickEntity(name,position,id,evt)        
 class ComputerPlayer(object):
     
     def __init__(self,name):

@@ -160,13 +160,17 @@ class FFTMove():
         
         
         if not self.list:
-            self.range = self.unit1.attributes.moves
+            
             vec1 = self.unit1.body.getOgreNode().getPosition()
-            vec2 = self.endPos
+            vec2 = data.util.cleanup(self.endPos)
             if not vec2:
                 s.log("vec 2 in move is empty "+str(self.unit1),self)
                 aoue
-            self.list =data.util.getShortest(vec1, vec2, self.unit1.attributes.moves)
+            if hasattr(self, "range") and self.range:
+                range = self.range
+            else:
+                range = self.unit1.attributes.moves
+            self.list =data.util.getShortest(vec1, vec2, range)
             
             #offset to not walk in the ground
             for x in self.list:
@@ -177,7 +181,7 @@ class FFTMove():
                 s.log("cant move",self)
                 return False
             self.endPos = self.list[len(self.list)-1]
-            self.cur = 0
+
 #            for x in self.list:
 #                print x
 #            for x in self.list:
@@ -202,6 +206,7 @@ class FFTMove():
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]
         
+        print vec1
         #vec2.y = vec1.y
         direction = vec2-vec1
         direction.normalise()#techincally this shouldn't be necessary if the grid attribute is 1

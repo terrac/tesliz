@@ -3,7 +3,9 @@ from tactics.Singleton import *
 from math import *
 import tactics.Unit
 class FollowCamera():
-    def __init__(self, unit) : 
+    needsasecondclick = True
+    unittargeting = False
+    def __init__(self, unit = None) : 
         self.mDist = 10
         self.mYaw = Ogre.Radian(0, 0)
         self.mPitch = Ogre.Radian(0, 0)
@@ -11,13 +13,15 @@ class FollowCamera():
         self.mMaxDelta = .1
         self.mJustFollow = True 
         self.mCamera = s.app.msnCam
-        self.mGoalNode =unit.node
+        if unit:
+            self.endPos =unit.node
+            self.name = unit.node.getName()
         self.mLookNode = None 
         self.mLookVec = Ogre.Vector3.ZERO
         self.returned = True
         
         self.unit1 = tactics.Unit.Unit()
-        self.name = unit.node.getName()
+        
 
          
     def execute(self, deltat ):
@@ -26,12 +30,12 @@ class FollowCamera():
                 s.followcamera.returned = False        
             s.followcamera = self
         # if no goal node is assigned, we can`t move.
-        if not self.mGoalNode or not s.app.sceneManager.hasSceneNode(self.name):
+        if not self.endPos or not s.app.sceneManager.hasSceneNode(self.name):
             return
     
         mypos = self.mCamera.getPosition()
     
-        goalpos = self.mGoalNode._getDerivedPosition()
+        goalpos = self.endPos
     
         #first get the Y offset and the XZ plane offset from the pitch angle.
 

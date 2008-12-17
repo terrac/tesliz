@@ -195,4 +195,32 @@ def createUnit(position,player,unittype,level=1,name = None,material = None ,mes
     setupExtra(unit, mental)
     return unit
 
+def showUnit(unit, position):
     
+    sceneManager = s.app.sceneManager
+    name = unit.name
+    
+    prevhad = False
+    if sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.getSceneNode(name)
+        prevhad = True
+    else:
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
+    scene_node.position = position
+    if not prevhad:
+        if s.app.sceneManager.hasEntity(name):
+            attachMe = s.app.sceneManager.getEntity(name)
+        else:
+            attachMe = sceneManager.createEntity(name, unit.job.mesh)
+        scene_node.attachObject(attachMe)
+    scene_node.setScale(Ogre.Vector3(1, .5, 1))
+    
+    unit.node = scene_node
+    
+    if not prevhad:
+        tactics.util.buildPhysics(unit)
+    #s.unitmap[unit.getName()]=unit
+    unit.node.getAttachedObject(0).setMaterialName(unit.job.material)
+    #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+    if hasattr(unit.player, "setVisualMarker"):
+        unit.player.setVisualMarker(unit)

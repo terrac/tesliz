@@ -13,6 +13,7 @@ class CEGUIManager:
             #print name
             #win.removeChildWindow(name)
     
+    
     def show(self):
         win =self.winMgr.getWindow("root_wnd")
         for x in range(0,win.ChildCount):
@@ -27,3 +28,6 @@ class CEGUIManager:
 
         staticImg.setProperty("Image", CEGUI.PropertyHelper.imageToString(imageSet.getImage("RttImage")))
         return staticImg
+    def clicked(self,e):
+        #We don't want to click through the cegui
+        return True
