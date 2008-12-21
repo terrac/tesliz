@@ -7,7 +7,7 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import winsound
-import pygame.mixer
+import pygame
 
 
 

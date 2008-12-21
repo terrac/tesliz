@@ -27,7 +27,7 @@ class EditGame:
         return s.campaigndir+self.name +"\\mapdata.dat"
     def __init__(self,name ):
         self.name = name
-        
+        s.app.msnCam.setOrientation(Ogre.Quaternion(-1,0,0,0))
         #destroy and save current layout
         s.cegui.hide()
         s.framelistener.unitqueue.clearUnitQueue()
@@ -331,10 +331,10 @@ class EditUnits:
             self.positionmap = savedmap["positionmap"]
         else:
             self.unitmap = dict()
-            self.unitmap["dummy"] = tactics.util.buildUnitNoNode("dummy","Player1", "Squire")
+            #self.unitmap["dummy"] = tactics.util.buildUnitNoNode("dummy","Player1", "Squire")
             
-            self.positionmap = dict()
-            self.positionmap["dummy"] = (0,0,0)
+            #self.positionmap = dict()
+            #self.positionmap["dummy"] = (0,0,0)
         for name in s.unitmap.keys():
             if not self.unitmap.has_key(name):
                 self.unitmap[name] = s.unitmap[name] 
@@ -378,6 +378,9 @@ class EditUnits:
     def deleteUnit(self,e):
         if self.selectedItem:        
             self.unitlist.removeItem(self.selectedItem)
+            text = str(self.selectedItem.getText())
+            del self.unitmap[text] 
+            del self.positionmap[text] 
     def clickEntity(self,name,position,id,evt):
         name = str(self.selectedunit.getText())
         if not self.unitmap.has_key(name):

@@ -24,7 +24,7 @@ def buildUnit(unit,unittype,race,level,playername):
     
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
-        player.unitlist.append(unit)
+        player.addToUnitlist(unit)
         unit.player = player
         
     else:
@@ -47,7 +47,7 @@ def buildUnitNoNode(name,playername,unittype,level=1):
     
     if s.playermap.has_key(playername):
         player = s.playermap[playername]
-        player.unitlist.append(unit)
+        player.addToUnitlist(unit)
         unit.player = player
     setupBasic(unit, level)
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
@@ -202,7 +202,7 @@ def showUnit(unit, position):
     #we want to override any saved players with the current player
     if s.playermap.has_key(unit.player.name) and not unit in s.playermap[unit.player.name].unitlist :
         player = s.playermap[unit.player.name]        
-        player.unitlist.append(unit)
+        player.addToUnitlist(unit)
         unit.player = player
     
     sceneManager = s.app.sceneManager

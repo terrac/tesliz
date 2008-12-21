@@ -43,8 +43,7 @@ class OgreNewtonApplication (sf.Application):
         if s.turn:
             s.turn.turnlist = []
         if s.framelistener:
-            s.framelistener.unitqueue.clearUnitQueue()
-            s.framelistener.textlist = []
+            s.framelistener.reset()
         
         for unit in s.unitmap.values():
             #removing like this because letting it be removed once there are no references
@@ -55,6 +54,10 @@ class OgreNewtonApplication (sf.Application):
                 unit.node = None
             #the body should dissapear upon all references going away
             unit.body = None
+            
+        #technically this shouldn't be needed, but it will prevent
+        #segmentation errors from other bugs
+
         if self.sceneManager:
             self.sceneManager.destroyAllMovableObjects()
             self.sceneManager.destroyAllEntities()
@@ -147,9 +150,7 @@ class OgreNewtonApplication (sf.Application):
         #data.util.clearMeshes()
         s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
 #        s.unitmap = dict()
-        cplayerunitmap = dict()
-        for x in s.cplayer.unitlist:
-            cplayerunitmap[x.getName()] = x
+
             
         #unit =tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
         # Play Windows exit sound.
@@ -194,11 +195,17 @@ class OgreNewtonApplication (sf.Application):
             positionmap = savedmap["positionmap"]
             scriptmap = savedmap["scriptmap"]
             
+            
             mod =py_compile.compile(s.campaigndir+scenename+"/mapscript.py","mapscript"+scenename+".pyc")
             #import media.campaigns.tesliz.linderenter.mapscript
 
             mod = __import__("mapscript"+scenename)
             mod.addScripts(scriptmap)
+            
+            cplayerunitmap = dict()
+            for x in s.unitmap.values():
+                cplayerunitmap[x.getName()] = x
+            
             for name in unitmap.keys():
                 position =positionmap[name]
                 if cplayerunitmap.has_key(name):
@@ -581,12 +588,12 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             return
         unit = s.unitmap[name]
         winMgr = CEGUI.WindowManager.getSingleton()
-        if not winMgr.isWindowPresent("attributes"):
-            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributes")
+        if not winMgr.isWindowPresent("attributescurrent"):
+            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributescurrent")
             sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
             sheet.addChildWindow(btn)
         else:
-            btn = winMgr.getWindow("attributes")
+            btn = winMgr.getWindow("attributescurrent")
         text = "\n"+str(unit.attributes)
         #text += "\n"+str(unit.node.getPosition())    
         btn.setText(str(unit)+text)
@@ -653,7 +660,10 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
     def reset(self):
         #pass
         self.bodies = []
-
+        s.cegui.destroy("attributes")
+        s.cegui.destroy("attributescurrent")
+        s.framelistener.unitqueue.clearUnitQueue()
+        s.framelistener.textlist = []
 import sys
 def startup():
     s.framelistener.pauseturns = False
@@ -661,7 +671,8 @@ def startup():
     
     pass
 def editOnStart():
-    startup()
+    #startup()
+    s.app.reset()
     s.editgame = userinterface.EditGame.EditGame(sys.argv[2])
 if __name__ == '__main__':
 #    try:

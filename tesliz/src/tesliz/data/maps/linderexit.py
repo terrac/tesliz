@@ -47,5 +47,6 @@ class Unitdata(object):
 #            
 #        
     def setupTestMap(self):
-        unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
+        pass
+        #unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
        

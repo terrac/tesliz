@@ -31,6 +31,11 @@ class PlayerItemHolder():
     
 class HumanPlayer(object):
 
+    def addToUnitlist(self,unit):
+        for x in self.unitlist:
+            if x.name == unit.name:
+                raise Exception("unit already in list")
+        self.unitlist.append(unit)
     def __getstate__(self):
         return {"name":self.name,"items":self.items,"unitlist":self.unitlist}
     def __setstate__(self,dict):
@@ -100,7 +105,11 @@ class HumanPlayer(object):
         
         self.interface.clickEntity(name,position,id,evt)        
 class ComputerPlayer(object):
-    
+    def addToUnitlist(self,unit):
+        for x in self.unitlist:
+            if x.name == unit.name:
+                raise Exception("unit already in list")
+        self.unitlist.append(unit)
     def __init__(self,name):
         self.name = name    
         self.unitlist = []

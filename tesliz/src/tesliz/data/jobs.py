@@ -49,6 +49,7 @@ class Job(object):
         self.setupStats(unit)        
         unit.traits.Primary = self.getTraits(unit)
         unit.mental = self.getMental(unit)
+        unit.job = self
         #else:
             
         #unit.traits[self.getName()] =traits

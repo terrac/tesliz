@@ -13,18 +13,20 @@ import data.jobs
 
 
 class JobsMenu:
-    def setup(self,unit):
+    def setup(self,unit,pwindow):
         if not unit:
             return
         
-        self.joblist =list1 =util.getNewWindow("joblist", util.listbox, "Main/Window", .6,.5,.1,.3)             
-
+        
+        self.joblist =list1 =util.getNewWindow("joblist", util.listbox, pwindow, .6,.5,.1,.3)             
+        self.jobname = util.getNewWindow("jobname", util.statictext, pwindow,.6, .4, .1, .1, unit.job.getName())
         self.unit = unit
         for job in unit.joblist:
             util.addItem(self,list1,job.getName())
         list1.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleJobsSelection")
     def teardown(self):
         self.joblist.setVisible(False)
+        self.jobname.setVisible(False)
     def handleJobsSelection(self, e):
         lbox = e.window
         if lbox.getFirstSelectedItem():
@@ -37,8 +39,8 @@ class JobsMenu:
             if self.unit != None and self.unit.job.getName() != jobNameText:
                 for x in self.unit.joblist:
                     if x.getName() == jobNameText:
-                        changeTo(self.unit, x)
-                    
+                        x.changeTo(self.unit)
+            self.jobname.setText(self.unit.job.getName())
             #cs = CEGUI.String()
             #cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
             #winMgr = CEGUI.WindowManager.getSingleton()
@@ -46,14 +48,15 @@ class JobsMenu:
 
         return True
 class ItemsMenu:
-    def setup(self,unit):
+    def setup(self,unit,pwindow):
         pass
     def teardown(self):
         pass
 class AbilitiesMenu:
-    def setup(self,unit):
+    def setup(self,unit,pwindow):
         self.unit = unit
-        self.abilheld =util.getNewWindow("abilitiesheld", util.listbox, "Main/Window", .5,.1,.2,.4)
+        util.getNewWindow("abilityjobname", util.statictext,pwindow, .5, .1, .2, .1, self.unit.job.getName())
+        self.abilheld =util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5,.2,.2,.3)
         util.addItem(self, self.abilheld,"Secondary" )
         util.addItem(self, self.abilheld,"Reaction" )
         util.addItem(self, self.abilheld,"Support" )
@@ -125,6 +128,7 @@ class AbilitiesMenu:
     def teardown(self):
         self.abilheld.setVisible(False)
         self.abiltohold.setVisible(False)
+        
 class MainMenu:
     
     def __init__(self, renderWindow, sceneManager):
@@ -191,6 +195,7 @@ class MainMenu:
 
 
     def createEditMenu(self):
+
         sheet = CEGUI.System.getSingleton().getGUISheet()
         winMgr = CEGUI.WindowManager.getSingleton()
         
@@ -254,6 +259,8 @@ class MainMenu:
         self.setupStartMenu()
         
     def handleEditMenuCreation(self, e):
+        if not s.cplayer.unitlist:
+            return
         util.destroyWindow("Tesliz/MainMenuBackground")
         self.createEditMenu()
         
@@ -278,7 +285,7 @@ class MainMenu:
             etext = str(lbox.getFirstSelectedItem().getText())
             if self.prevedit:
                 self.prevedit.teardown()
-            self.editmap[etext].setup(self.unit)
+            self.editmap[etext].setup(self.unit,"Main/Window")
             self.prevedit = self.editmap[etext]
             
             

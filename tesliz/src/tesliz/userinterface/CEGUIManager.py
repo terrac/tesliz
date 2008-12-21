@@ -33,10 +33,13 @@ class CEGUIManager:
     def clicked(self,e):
         #We don't want to click through the cegui
         #e.window.captureInput()
-        self.num+=1
-        print self.num
-        return False
+#        self.num+=1
+#        print self.num
+        return True
     def closeClicked(self,e):
         winMgr = CEGUI.WindowManager.getSingleton()
         winMgr.destroyWindow(e.window)
         return True    
+    def destroy(self,windowname):
+        if self.winMgr.isWindowPresent(windowname):
+            self.winMgr.destroyWindow(windowname)

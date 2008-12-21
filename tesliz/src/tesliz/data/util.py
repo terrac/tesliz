@@ -14,6 +14,9 @@ s = Singleton()
 
 def cleanup(key):
 
+    if not key:
+        return key
+    
     if int(key.x) + .50 > key.x:
         key.x = int(key.x)
     else:

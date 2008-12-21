@@ -96,13 +96,15 @@ class TerrainManager():
 #        self.mEditBrush = ET.loadBrushFromImage(image)
 
         ## camera
+    map = dict()
     def loadTerrain(self,name):
         #return
         ## destroy current terrain
         self.terrainMgr.destroyTerrain()
-       
-        Ogre.ResourceGroupManager.getSingleton().addResourceLocation(
-s.campaigndir + name+"/", "FileSystem", "ET"+name); 
+        if not self.map.has_key("ET"+name):
+            Ogre.ResourceGroupManager.getSingleton().addResourceLocation(
+                s.campaigndir + name+"/", "FileSystem", "ET"+name);
+        self.map["ET"+name] = "blah"
         ## load terrain map
         image = Ogre.Image()
         image.load("ETterrain.png", "ET"+name)

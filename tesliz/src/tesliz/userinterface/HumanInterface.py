@@ -55,7 +55,7 @@ class ShowSelected():
                         vec = data.util.cleanup(data.util.getValidPos(vec))
                         if vec:
                             vec.y += 2
-                        self.currentPosShow= data.util.show(vec,"RedMage/SOLID",self.currentPosShow)
+                            self.currentPosShow= data.util.show(vec,"RedMage/SOLID",self.currentPosShow)
                         
                     
                         
@@ -266,7 +266,7 @@ class HumanInterface:
 
     def endTurn(self):
         CEGUI.WindowManager.getSingleton().destroyWindow("actionlist")
-        CEGUI.WindowManager.getSingleton().destroyWindow("mentallist")
+        #CEGUI.WindowManager.getSingleton().destroyWindow("mentallist")
         self.actionSelected = False
         if self.cunit:
             self.cunit.player.endTurn()
@@ -285,3 +285,6 @@ class HumanInterface:
                     
                 s.app.sceneManager.getRootSceneNode().removeChild(x)
         self.toremove = None
+    def endGame(self):
+        s.cegui.destroy("actionlist")
+        s.cegui.destroy("abilitylist")
