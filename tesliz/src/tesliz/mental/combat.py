@@ -20,7 +20,7 @@ def getClose(unit,isWanted):
     lodis = 999
     lounit = None
     for eunit in s.unitmap.values():            
-        if isWanted(eunit,unit) and not eunit.getDeath() and eunit.node: #will probably need to meove this once raise
+        if isWanted(eunit,unit) and not eunit.getDeath() and eunit.node and unit.node: #will probably need to meove this once raise
             
             
             dis =utilities.physics.distance(eunit.node.getPosition(),unit.node.getPosition())
@@ -33,27 +33,29 @@ def getClose(unit,isWanted):
 def getBest(unit,isValid):
     bestl = []
     best = None
-    for trait in unit.traits.values():
-       for ability in trait.getAbilities().values():
-           if isValid(ability):
-               if not best:
-                   best = ability
-                   bestl.append(best)                
-               elif best.value <ability.value:
-                   best = ability
-                   bestl.append(best)
+    for trait in unit.traits.getUsable():
+       if trait:
+           for ability in trait.getAbilities().values():
+               if isValid(ability):
+                   if not best:
+                       best = ability
+                       bestl.append(best)                
+                   elif best.value <ability.value:
+                       best = ability
+                       bestl.append(best)
                    
     return bestl
 
 def getWithinRange(unit,eunit,isValid):
     best = None
-    for trait in unit.traits.values():
-       for ability in trait.getClassList():
-           if isValid(ability):
-               if not best:
-                   best = ability                
-               elif best.value <ability.value and data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), ability.range):
-                   best = ability
+    for trait in unit.traits.getUsable():
+       if trait:
+           for ability in trait.getClassList():
+               if isValid(ability):
+                   if not best:
+                       best = ability                
+                   elif best.value <ability.value and data.util.withinRange(eunit.body.getOgreNode().getPosition(), unit.body.getOgreNode().getPosition(), ability.range):
+                       best = ability
                    
     return best
 

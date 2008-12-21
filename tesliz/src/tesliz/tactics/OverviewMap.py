@@ -119,7 +119,7 @@ class OverviewMap:
         s.overviewmap = self
         self.overviewtrade = data.overviewtrade.OverviewTrade()
         
-        if os.path.exists(self.filename) and not self.newgame:
+        if os.path.exists(s.campaigndir+self.filename) and not self.newgame:
             positionmap = shelve.open(self.filename)
             #self.map = positionmap["map"]
             self.root,self.cpos = positionmap["mapdata"]
@@ -165,6 +165,7 @@ class OverviewMap:
         #positionmap["currentplayer"] = s.cplayer.name
         positionmap["placetoscene"] = self.placetoscene
         #print s.cplayer
+        
         positionmap["unitdata"] =  s.playermap["Player1"]
         #positionmap["map"] = self.map
         self.overviewtrade.save(positionmap)
@@ -213,7 +214,7 @@ class OverviewMap:
            self.loadScene(self.placetoscene[exitname])
            self.exitscene = exitname
            return
-       self.move = tactics.Move.FFTMove()
+       self.move = data.traits.basictraits.FFTMove()
        self.move.unit1 = self.unit
        self.move.endPos = position
        self.move.list = self.getMoveList(self.cpos,self.map[name])

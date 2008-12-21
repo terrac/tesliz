@@ -1,9 +1,11 @@
 from tactics.Singleton import *
 import tactics.Affect
 import tactics.AffectHolder
-import data.jobs 
+
 import ogre.physics.OgreNewt as OgreNewt
-import utilities.OgreText 
+import utilities.OgreText
+import data.UnitTraits
+import data.Stats 
 
 #import tesliz.runthis
 
@@ -80,8 +82,9 @@ class Unit(object):
         if self.text:
             self.text.destroy()
     def __init__(self,name = "blah"):
+        self.level = 0
         self.attributes = Attributes()
-        self.traits = dict()
+        self.traits = data.UnitTraits.UnitTraits(self)
         self.affect = tactics.AffectHolder.AffectHolder(self)
         self.items = tactics.AffectHolder.AffectHolder(self)        
         self.mental = None
@@ -194,9 +197,11 @@ class Unit(object):
         self.text = text
         
     def __getstate__(self):
-        return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"mental":self.mental,"job":self.job,"level":self.level,"player":self.player,"joblist":self.joblist}
+        return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"job":self.job,"level":self.level,"player":self.player,"joblist":self.joblist}
     def __setstate__(self,dict):
         self.__dict__ = dict
-        self.traits = {}
+#        self.traits = {}
+        self.traits = data.UnitTraits.UnitTraits(self)
+        
         tactics.util.resetAttributes(self)
         self.reset()

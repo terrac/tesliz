@@ -1,6 +1,6 @@
 
 from tactics.Singleton import *
-from data.jobs import *
+
 from tactics.Unit import Unit
 import ogre.gui.CEGUI as CEGUI
 import util
@@ -8,6 +8,7 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.renderer.OGRE as Ogre
 s = Singleton()
+import data.jobs
 
 
 
@@ -16,15 +17,14 @@ class JobsMenu:
         if not unit:
             return
         
-        list1 = util.getNewWindow("joblist","Main/Window","root_wnd")
-                
-        list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
-        list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        self.joblist =list1 =util.getNewWindow("joblist", util.listbox, "Main/Window", .6,.5,.1,.3)             
 
         self.unit = unit
         for job in unit.joblist:
             util.addItem(self,list1,job.getName())
         list1.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleJobsSelection")
+    def teardown(self):
+        self.joblist.setVisible(False)
     def handleJobsSelection(self, e):
         lbox = e.window
         if lbox.getFirstSelectedItem():
@@ -48,10 +48,83 @@ class JobsMenu:
 class ItemsMenu:
     def setup(self,unit):
         pass
+    def teardown(self):
+        pass
 class AbilitiesMenu:
     def setup(self,unit):
+        self.unit = unit
+        self.abilheld =util.getNewWindow("abilitiesheld", util.listbox, "Main/Window", .5,.1,.2,.4)
+        util.addItem(self, self.abilheld,"Secondary" )
+        util.addItem(self, self.abilheld,"Reaction" )
+        util.addItem(self, self.abilheld,"Support" )
+        util.addItem(self, self.abilheld,"Movement")
+        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+        self.abiltohold =util.getNewWindow("abilitiestohold", util.listbox, "Main/Window", .7,.1,.2,.4)
+        #util.addItem(self, self.abiltohold,"Try" )
+        util.addItem(self, self.abiltohold,"Learn" )
+        self.abiltohold.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "doAbil")
+        
+    def doAbil(self,e):
+        if not e.window.getFirstSelectedItem():
+            return
+        text = str(e.window.getFirstSelectedItem().getText())
+        if text == "Learn":
+            self.setupLearning()
+            
+    def setupLearning(self):
+        self.learnwindow =util.getNewWindow("learnwindow", util.frame, util.rootwindow, .2,.2,.8,.8)
+        self.joblist =util.getNewWindow("joblist", util.listbox, self.learnwindow, .2,.2,.3,.8)
+        self.learnwindow.setAlwaysOnTop(True)
+        for job in self.unit.joblist:
+             util.addItem(self, self.joblist,job.getName())
+        self.joblist.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "getAbilList")
+    def getAbilList(self,e):
+        if isinstance(e, str):
+            text = e
+        else: 
+            if not e.window.getFirstSelectedItem():
+                return
+            text = str(e.window.getFirstSelectedItem().getText())
+        self.jobselected = util.getNewWindow("jobselected", util.statictext,self.learnwindow, .5,.2,.2,.1)
+        self.jobselected.setText(text)
+        self.jobexp = util.getNewWindow("jobexp", util.statictext,self.learnwindow, .8,.2,.1,.1)
+        
+        self.abillist =util.getNewWindow("abillist", util.listbox, self.learnwindow, .2,.3,.5,.8)
+        self.learnedlist =util.getNewWindow("learnedlist", util.listbox, self.learnwindow, .7,.3,.2,.8)
+        #eventally create tabs for the reaction and so on abilities
+        for x in self.unit.joblist:
+            if x.getName() == text:
+                learnednames= x.learnedabilitynames
+                self.currentjob = x
+                self.jobexp.setText(str(x.exp))
+        for x in data.jobs.jobabilitymap[text].getClassList():
+             util.addItem(self,self.abillist,x.name )
+             learnedDisplay = "False" + str(x.jobpoints)
+             if x.name in learnednames:
+                 learnedDisplay = "True"
+                 
+                 
+             util.addItem(self, self.learnedlist, learnedDisplay)
+        self.abillist.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "learnAbility")
+    
+    def learnAbility(self,e):
+        if not e.window.getFirstSelectedItem():
+            return
+        text = str(e.window.getFirstSelectedItem().getText())
+        jobtype = str(self.jobselected.getText())
+        for x in data.jobs.jobabilitymap[jobtype].getClassList():
+            if text == x.name:
+                self.currentability = x
+        if self.currentjob.exp > self.currentability.jobpoints:
+            self.currentjob.learnedabilitynames.append(text)
+            self.currentjob.exp -= self.currentability.jobpoints
+        self.getAbilList(jobtype)
+        #self.unit.job.changeTo(self.unit)
+    def showTraits(self,e):
         pass
-
+    def teardown(self):
+        self.abilheld.setVisible(False)
+        self.abiltohold.setVisible(False)
 class MainMenu:
     
     def __init__(self, renderWindow, sceneManager):
@@ -61,6 +134,7 @@ class MainMenu:
             s.initCEGUI = True
         self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilitiesMenu()}
         self.unit = None
+        self.prevedit = None
 
 
     def initCEGUIStuff(self, renderWindow, sceneManager):
@@ -126,7 +200,14 @@ class MainMenu:
 
         # load some demo windows and attach to the background 'root'
         sheet.addChildWindow (winMgr.loadWindowLayout ("edit.layout", False))
-        
+        s.cegui.inputcaptured = True
+#        pframe =util.getNewWindow("Main/Window", util.frame, "root_wnd", .1, .11, .8, .8, "MainMenu")
+#        #util.getNewWindow("Main/StaticBack",util.multieditbox, pframe, .0, 0, 1, 1)
+#        util.getNewWindow("Main/FontSample",util.multieditbox, pframe, .05, .11, .4, .4)
+#        util.getNewWindow("Main/PartyList", util.listbox, pframe, .05, .55, .15, .30)
+#        util.getNewWindow("Main/EditList", util.listbox, pframe, .25, .55, .15, .30)
+#        util.getNewWindow("cmdBackToMenu", util.button, pframe, .3, .9, .1, .07,"back")
+        #util.recursiveSet(sheet, util.setLayoutCallbacks)
         # REFACTOR - Set up the callbacks for the buttons loaded by the layout
         backButton = sheet.getChild("cmdBackToMenu")
         backButton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleDeleteEditCreateStartMenu")
@@ -146,7 +227,7 @@ class MainMenu:
         if len(s.cplayer.unitlist) > 0:
             item = lbox.getListboxItemFromIndex(0)
             item.setSelected(True)
-            self.unit = s.unitmap[str(item.getText())]
+            self.unit = s.cplayer.unitlist[0]
         lbox = winMgr.getWindow ("Main/EditList")
         
         
@@ -168,7 +249,7 @@ class MainMenu:
     
     
     def handleDeleteEditCreateStartMenu(self, e):
-
+        s.cegui.inputcaptured = False
         util.destroyWindow("editmenu")
         self.setupStartMenu()
         
@@ -195,9 +276,10 @@ class MainMenu:
         lbox = e.window
         if lbox.getFirstSelectedItem():
             etext = str(lbox.getFirstSelectedItem().getText())
-            
+            if self.prevedit:
+                self.prevedit.teardown()
             self.editmap[etext].setup(self.unit)
-
+            self.prevedit = self.editmap[etext]
             
             
 

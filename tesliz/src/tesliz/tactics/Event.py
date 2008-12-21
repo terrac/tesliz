@@ -5,14 +5,27 @@ from tactics.Unit import *
 from tactics.util import *
 from ogre.renderer.OGRE import Vector3
 import random
+import utilities.FollowCamera
 
 s = Singleton()
 
-class PauseTurns:
-    def __init__(self, bool):
-        self.bool = bool
+class UnpauseTurnsOnEnd:
+#    def __init__(self, bool):
+#        self.bool = bool
     def execute(self,timer):
-        s.framelistener.pauseturns = self.bool
+        
+        if s.framelistener.unitqueue.getActiveQueue():
+            for x in s.framelistener.unitqueue.getUnitList():
+                if isinstance(x, UnpauseTurnsOnEnd):
+                    continue
+                if isinstance(x, utilities.FollowCamera.FollowCamera):
+                    continue
+                #not done
+                return True
+        
+        s.framelistener.pauseturns = False
+        
+        
 class ScriptEvent:
     def __init__(self,text,unit = None):
         if isinstance(text, list):
@@ -29,6 +42,8 @@ class ScriptEvent:
             self.time -= timer
             return True
         if not self.tlist:
+
+            
             return
 
         tuple = self.tlist.pop(0)
@@ -96,14 +111,15 @@ class Event:
             exe = self.turnmap[unit][self.turncount[unit]]
             s.framelistener.pauseturns = True
             s.framelistener.unitqueue.addToQueue(unit,exe)
-            s.framelistener.unitqueue.addToQueue(unit,PauseTurns(False))
+            #s.framelistener.backgroundqueue.addToQueue(unit,UnpauseTurnsOnEnd())
             
     def start(self):
         unit = Unit()
         s.framelistener.pauseturns = True
         #for exe in self.startlist:
         s.framelistener.unitqueue.addToQueue(unit,self.startlist)
-        #s.framelistener.unitqueue.addToQueue(unit,PauseTurns(False))
+        unpause = UnpauseTurnsOnEnd()
+        s.framelistener.unitqueue.addToQueue(unpause,unpause)
         
         
     def end(self):

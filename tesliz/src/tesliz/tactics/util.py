@@ -11,6 +11,7 @@ import data.jobs
 import data.util
 import userinterface.traits
 import mental.mind
+import data.joblist
 s = Singleton()
 
 
@@ -61,14 +62,16 @@ def resetAttributes(unit):
     except:
         hitpoints = 0
         magicpoints = 0
-        #if they don't exist yet then ignore 
+        #if they don't exist yet then ignore
+        # the 0s should only be called in an unimportant part I think so don't worry about them
     setupBasic(unit, unit.level)
-    unit.job.changeTo(unit)
+    if unit.job:
+        unit.job.changeTo(unit)
     unit.items.setupAll()
     unit.affect.setupAll()
     unit.attributes.physical.points = hitpoints
     unit.attributes.magical.points = magicpoints
-    unit.traits["Move"].getClassList()[0].range = unit.attributes.moves
+    unit.traits.Move.getClassList()[0].range = unit.attributes.moves
 def setupMaxPoints(unit):
     unit.attributes.physical.points = unit.attributes.physical.maxpoints
     unit.attributes.magical.points = unit.attributes.magical.maxpoints 
@@ -77,11 +80,11 @@ def setupBasic(unit, level):
     
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
    
-    move = userinterface.traits.Traits([tactics.Move.FFTMove(unit)])
-    move.action = False
-    unit.traits["Move"] = move
-    attack = userinterface.traits.Traits([data.traits.generictraits.Attack()])
-    unit.traits["Attack"] = attack
+#    move = userinterface.traits.Traits([data.traits.basictraits.FFTMove(unit)])
+#    move.action = False
+#    unit.traits["Move"] = move
+#    attack = userinterface.traits.Traits([data.traits.generictraits.Attack()])
+#    unit.traits["Attack"] = attack
     unit.level = level
         
     
@@ -162,13 +165,13 @@ def setupExtra(unit, mentalstate = None):
         if s.fog and player.name == "Computer1":
             unit.setVisible(False)
     
-    if not mentalstate:
-        mentalstate = mental.mind.Mind([mental.combat.Combat(unit,mental.action.Attack,combat.isWanted)])    
+#    if not mentalstate:
+#        mentalstate = mental.mind.Mind([mental.combat.Combat(unit,mental.action.Attack,combat.isWanted)])    
         #mental.state = {"angry":0,"happy":0}
-    has = hasattr(unit,"mental")
-    if has and not unit.mental or not has:
-        unit.mental = mentalstate
-    data.jobs.setupJobList(unit)
+#    has = hasattr(unit,"mental")
+#    if has and not unit.mental or not has:
+#        unit.mental = mentalstate
+    data.joblist.setupJobList(unit)
     return unit
 def createUnit(position,player,unittype,level=1,name = None,material = None ,mesh = None ,mental = None):
     player = s.playermap[player]
@@ -196,6 +199,11 @@ def createUnit(position,player,unittype,level=1,name = None,material = None ,mes
     return unit
 
 def showUnit(unit, position):
+    #we want to override any saved players with the current player
+    if s.playermap.has_key(unit.player.name) and not unit in s.playermap[unit.player.name].unitlist :
+        player = s.playermap[unit.player.name]        
+        player.unitlist.append(unit)
+        unit.player = player
     
     sceneManager = s.app.sceneManager
     name = unit.name
@@ -224,3 +232,33 @@ def showUnit(unit, position):
     #unit.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
     if hasattr(unit.player, "setVisualMarker"):
         unit.player.setVisualMarker(unit)
+        
+def showBuilding(building, position):
+    
+    sceneManager = s.app.sceneManager
+    name = building.name
+    
+    prevhad = False
+    if sceneManager.hasSceneNode(name):
+        scene_node = sceneManager.getSceneNode(name)
+        prevhad = True
+    else:
+        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
+    scene_node.position = position
+    if not prevhad:
+        if s.app.sceneManager.hasEntity(name):
+            attachMe = s.app.sceneManager.getEntity(name)
+        else:
+            attachMe = sceneManager.createEntity(name, building.mesh)
+        scene_node.attachObject(attachMe)
+    scene_node.setScale(Ogre.Vector3(1, 1, 1))
+    
+    building.node = scene_node
+    
+#    if not prevhad:
+#        tactics.util.buildPhysics(building)
+    #s.buildingmap[building.getName()]=building
+    #building.node.getAttachedObject(0).setMaterialName(building.job.material)
+    #building.node.getAttachedObject(0).setMaterialName("Examples/RustySteel")
+    
+

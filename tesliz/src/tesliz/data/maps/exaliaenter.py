@@ -58,14 +58,14 @@ class Unitdata(object):
 
         
         convo1 =[
-            tactics.Move.FFTMove(balla,Ogre.Vector3(40,0,17),.5),
-             tactics.Move.FFTMove(fighter1,Ogre.Vector3(35,0,18),.5),
-              tactics.Move.FFTMove(fighter2,Ogre.Vector3(35,0,18),.5),
+            data.traits.basictraits.FFTMove(balla,Ogre.Vector3(40,0,17),.5),
+             data.traits.basictraits.FFTMove(fighter1,Ogre.Vector3(35,0,18),.5),
+              data.traits.basictraits.FFTMove(fighter2,Ogre.Vector3(35,0,18),.5),
                  
                  (balla,"You will never catch me!"),
          (balla,"Yoink (you might feel that your purse is a bit lighter)"),
          (alluvia,"Hey you come back here"),
-          tactics.Move.FFTMove(alluvia,Ogre.Vector3(30,0,18),.5),
+          data.traits.basictraits.FFTMove(alluvia,Ogre.Vector3(30,0,18),.5),
          (fighter1,"Now theres someone with a serious kleptomania problem"),
          (fighter2,"I feel undervalued.  Did she not think that us chasing her was enough?"),
          (balla,"Hey Oath, wanna help me fight for this bag of gil I just got?"),

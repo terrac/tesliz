@@ -1,35 +1,37 @@
 from tactics.Singleton import *
 import random
+
+
 class Queue:
+    unitmap = dict()
+    def getUnitList(self):
+        return self.unitmap.keys()
     def addToQueue(self, unit,action):
         
         action.running = True
-        if not hasattr(unit, "actionqueue"):
-            unit.actionqueue = []
+        
         if not hasattr(unit, "timeleft"):
             unit.timeleft = 0
-        unit.actionqueue.append(action)
-        if not unit in self.unitqueues:
-            self.unitqueues.append(unit)
+        if not self.unitmap.has_key(unit):
+            self.unitmap[unit] = [] 
+        self.unitmap[unit].append(action)
+#        if not unit in self.unitqueues:
+#            self.unitqueues.append(unit)
 
          
-    unitqueues = []   
+ #   unitqueues = []   
     def getActiveQueue(self):
-        return len(self.unitqueues)
+        return len(self.unitmap)
 
     def clearActions(self,unit):
         #dir([])
-        if unit in self.unitqueues :
-            self.unitqueues.remove(unit)
-        
-        unit.actionqueue = []
+        del self.unitmap[unit]
     def clearUnitQueue(self):
-        for x in self.unitqueues:
-            self.clearActions(x)
+        self.unitmap = dict()
             
     def isActive(self,unit):
         
-        if len( unit.actionqueue):
+        if self.unitmap.has_key(unit):
             return True
         
                   
@@ -38,7 +40,7 @@ class Queue:
     def runQueue(self,timer):
         
         self.a += timer
-        for unit in self.unitqueues:
+        for unit in self.unitmap.keys():
             
             
             if unit.timeleft > 0:
@@ -46,21 +48,21 @@ class Queue:
                 continue
            
             
-            if len(unit.actionqueue) == 0:
-                self.unitqueues.remove(unit)
+            if len(self.unitmap[unit]) == 0:
+                del self.unitmap[unit]
                 continue
-            iexecute = unit.actionqueue[0]
+            iexecute = self.unitmap[unit][0]
             boo = False
            
             boo = iexecute.execute(timer)
             
-            if not boo and len(unit.actionqueue):
+            if not boo and len(self.unitmap[unit]):
                 if hasattr(unit, "name"):
                     name = unit.name
                 else:
                     name = str(unit)
                 s.log("executable done "+ name+" "+str(iexecute),self)
-                unit.actionqueue.pop(0)
+                self.unitmap[unit].pop(0)
                 if hasattr(iexecute, "timeleft"):
                     
                     unit.timeleft = iexecute.timeleft

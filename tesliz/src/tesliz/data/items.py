@@ -25,3 +25,6 @@ class Broadsword(Item):
     power = 4
     type = "weapon"
     
+class Dagger(Item):
+    power = 2
+    type = "weapon"

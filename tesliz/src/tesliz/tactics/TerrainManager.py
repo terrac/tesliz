@@ -250,9 +250,12 @@ def setupOnlyEvents(filename):
     map = getattr(module,filename).Unitdata()
     map.setupEvents()
 def setupTest(filename):
-    module = __import__("data.maps."+filename)
-    module = getattr(module,'maps')
-    map = getattr(module,filename).Unitdata()
-    map.setupTestMap()
+    try:
+        module = __import__("data.maps."+filename)
+        module = getattr(module,'maps')
+        map = getattr(module,filename).Unitdata()
+        map.setupTestMap()
+    except Exception,e:
+        print e
     
     

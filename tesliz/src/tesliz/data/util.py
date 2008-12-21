@@ -115,6 +115,8 @@ def fromCameraToMesh():
             ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
             position =Ogre.Vector3(x, y+1, z)
             name = "terrain"
+    if position:
+        cleanup(position)
     return name,position
 
 def createEntity(mesh,node):    
@@ -250,7 +252,7 @@ def damageHitpoints(getDamage,unit1,unit2):
     
     #    if they are s
     
-    unit2.attributes.physical.points = unit2.attributes.physical.points - number 
+    unit2.attributes.physical.points = unit2.attributes.physical.points - number *s.damagemultiplier 
     update(str(number), unit2)
     experienceAccrued(unit1, unit2)
     s.log(str(unit1)+" damages "+str(unit2)+" for "+ str(number)+"with type:"+type+" :")
@@ -471,9 +473,15 @@ def getClosestValid(pos,pos2,height):
 def getValid(vec,height,xlist , zlist):
     validpos = []
     for a in range(0, len(xlist)):
+        
+        
+        
         x = xlist[a]
         z = zlist[a]
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
+        
+        if getValidUnit(start, height):
+            continue
                 
         ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
         result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
@@ -485,6 +493,39 @@ def getValid(vec,height,xlist , zlist):
             z = result[1][2]
             ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
             position =Ogre.Vector3(x, y, z)   
+            
+
+            
+            validpos.append(position)
+        
+    
+    return validpos
+
+def getPositions(vec,height = 50,xlist = [0] , zlist= [0]):
+    validpos = []
+    for a in range(0, len(xlist)):
+        
+        
+        
+        x = xlist[a]
+        z = zlist[a]
+        start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
+        
+        
+                
+        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
+        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
+        intersects = result[0]
+        ## update pointer's position
+        if (intersects):
+            x = result[1][0]
+            y = result[1][1]
+            z = result[1][2]
+            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+            position =Ogre.Vector3(x, y, z)   
+            
+
+            
             validpos.append(position)
         
     

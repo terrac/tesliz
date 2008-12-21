@@ -1,4 +1,4 @@
-import tactics.util 
+
 import tactics.Material
 import utilities.SampleFramework as sf
 import math
@@ -7,25 +7,11 @@ import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import utilities.physics 
 import data.util 
-import data.damage 
+import data.damage
+import basictraits 
 s = Singleton()
 
-def show(unit):
-    pos = unit.body.getOgreNode().getPosition()
-    sceneManager = s.app.sceneManager        
-    name = "turncircle"
-    mesh = "cylinder.mesh"
-    if not sceneManager.hasSceneNode(name):
-        scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
-        attachMe = s.app.sceneManager.createEntity(name,mesh)            
-        scene_node.attachObject(attachMe)
-        #attachMe.setNormaliseNormals(True)
-    else:
-        scene_node = sceneManager.getSceneNode(name)
-    scene_node.position = Ogre.Vector3(pos.x,pos.y+5,pos.z)
-    
-    size = 1
-    scene_node.scale = Ogre.Vector3(size,size,size)
+
     
     #scene_node.rotate(Ogre.Quaternion(Ogre.Degree(90), Ogre.Vector3.UNIT_Z))
     
@@ -250,46 +236,7 @@ class JumpAttack(object):
         return False
              
      
-class Attack(object):
-
-    name = "Attack"
-    value= 5     
-    timeleft = 3
-    range=1,1
-    animation = "LOOP"
-    type = "bludgeon"
-    sound = "sword.wav"
-    needsasecondclick = True
-    needsasecondunit = True
-    offset = [(0,0,0)]
-    unittargeting = True
-    def getDamage(self,unit):
-        return data.damage.weaponPhysical(unit)
-    
-
-    def execute(self,timer):
-        
-     
-   
-        if not self.unit1.body or not self.unit2.body:
-
-            return
-        
-        show (self.unit1)
-        
-        
-        direction = self.unit2.body.getOgreNode().getPosition() - self.unit1.body.getOgreNode().getPosition()
-        
-        self.unit1.animate(self.animation)
-           
-        s.playsound(self.sound)    
-        #self.unit2.body.setVelocity(direction )        
-        unittobehit =s.unitmap[self.unit2.body.getOgreNode().getName()]
-    #lambda self,unit2: damageHitpoints(damage.basicPhysical,self.unit1,unit2)
-        data.util.damageHitpoints(self.getDamage, self.unit1, unittobehit)
-
-        return False
-class DoubleAttack(Attack):
+class DoubleAttack(basictraits.Attack):
     def __init__(self):
         
         self.times = 2
@@ -345,46 +292,3 @@ class Boost(object):
 #class SummonUnit(object):    
 
 
-class GridTargeting(object):
-    unittargeting = True
-    
-    def __init__(self,offset,todo,name,type = "fire"):
-        self.offset = offset(self)
-        self.particlename = 'RedTorch'
-        self.name=name
-        self.value=4     
-        self.range = 10,10
-        self.type = type
-        self.unit2 = None
-        self.timeleft = 3
-        self.needsasecondclick = True
-        self.sound = "fireball.wav"
-        self.todo = todo
-        
-    def offset1(self):
-        x = 0,0,0
-        return [x]
-    def offset2(self):
-        a = 0,0,0
-        b = 1,0,0
-        c = 0,0,1
-        d = -1,0,0
-        e = 0,0,-1
-        return [a,b,c,d,e]
-    def execute(self,timer):
-        print self
-        if not self.unit1 or  not self.unit1.body or  not self.endPos:
-            return
-        unitlist = []
-        for pos in self.offset:
-            x,y,z = pos
-            x = x + self.endPos.x            
-            y = y + self.endPos.y
-            z = z + self.endPos.z
-            vec = Ogre.Vector3(x,y,z)
-            unit = data.util.getValidUnit(vec)
-            for to in self.todo:
-                to.execute(self.unit1,unit,vec)
-    
-    def __str__( self ):
-        return "GridTargeting"+self.name

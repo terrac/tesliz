@@ -38,6 +38,10 @@ class Singleton:
            self.app = None
            self.turnbased = True
            
+           #self.mixer = pygame.mixer
+           #self.mixer.init(11025)
+           #self.soundset = set()
+           #self.channelset = set()
            #makes things based on timesincelast frame move faster or slower
            self.speed = 1
            #current player for functions like changing jobs 
@@ -121,18 +125,18 @@ class Singleton:
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
         def playsound(self,filename="C:\sound.wav"):
-            mixer = pygame.mixer
-
+            
 
             #choose a desired audio format
-            mixer.init(11025) #raises exception on fail
-
-            sound = mixer.Sound("media\\sounds\\"+filename)
-
-
-            channel = sound.play()
+             #raises exception on fail
             
-            #winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
+            #sound = self.mixer.Sound("media\\sounds\\"+filename)
+            #self.soundset.add(sound)
+            
+            #self.channelset.add(sound.play())
+            
+            #I can't figure this out and I really don't care
+            winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
             winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
     
@@ -163,3 +167,22 @@ def printlist(x):
     for z in x:
         y += str(z)
     return y
+def debugpickle(obj,tofind = Ogre.Vector3,depth = 0):
+    print obj
+    depth +=1
+    if depth > 10:
+        return
+    if isinstance(obj, tofind):
+        return obj
+    if hasattr(obj, "__getstate__"):
+        
+        for x in obj.__getstate__().values():
+            debugpickle(x,tofind,depth)
+    elif hasattr(obj, "__dict__"):
+        
+        for x in obj.__dict__.values():
+            debugpickle(x,tofind,depth)      
+    elif hasattr(obj, "__iter__"):
+        for x in obj:
+            debugpickle(x, tofind,depth)  
+    

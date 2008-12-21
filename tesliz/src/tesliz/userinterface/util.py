@@ -10,7 +10,7 @@ editbox = "TaharezLook/Editbox"
 statictext = "TaharezLook/StaticText"
 multieditbox = "TaharezLook/MultiLineEditbox"
 
-def getNewWindow( name,type = "TaharezLook/Listbox",winname = None,posx = None,posy = None,sizex = None,sizey= None):
+def getNewWindow( name,type = "TaharezLook/Listbox",winname = None,posx = None,posy = None,sizex = None,sizey= None, text = None):
 
     winMgr = CEGUI.WindowManager.getSingleton()
     
@@ -29,8 +29,21 @@ def getNewWindow( name,type = "TaharezLook/Listbox",winname = None,posx = None,p
         list.setPosition(CEGUI.UVector2(cegui_reldim(posx), cegui_reldim(posy)))
     if not sizex is None:
         list.setSize(CEGUI.UVector2(cegui_reldim(sizex), cegui_reldim( sizey)))
-    list.subscribeEvent(CEGUI.Window.EventMouseClick, s.cegui, "clicked")
+    setLayoutCallbacks(list)
+    if text:
+        list.setText(text)
     return list
+
+def setLayoutCallbacks(window):
+    window.subscribeEvent(CEGUI.Window.EventMouseClick, s.cegui, "clicked")
+    if isinstance(window, CEGUI.FrameWindow):
+        window.subscribeEvent(CEGUI.FrameWindow.EventCloseClicked,s.cegui,"closeClicked")
+def recursiveSet(window,function):
+    print window.getName()
+    function(window)
+    for x in range(0,window.getChildCount()):
+        child = window.getChildAtIdx(x)
+        recursiveSet(child,function)
 def addItem(selfc,list,name,index = None):        
     item =CEGUI.ListboxTextItem (name)        
     item.AutoDeleted = False     # Fix to ensure that items are not deleted by the CEGUI system
@@ -46,4 +59,3 @@ def addItem(selfc,list,name,index = None):
 def destroyWindow(text):
     winMgr = CEGUI.WindowManager.getSingleton()
     winMgr.destroyWindow(text)
-    

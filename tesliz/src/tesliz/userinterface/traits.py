@@ -1,3 +1,4 @@
+import copy
 class Traits():
     def __init__ ( self,listclasses):
         self.listclasses = listclasses
@@ -20,6 +21,14 @@ class Traits():
         return abil.name
     def useAbility(self,abil):
         return True
+    def getLearned(self,learnednames,unit):
+        learned = []
+        for x in self.getClassList():
+            if x.name in learnednames:
+                learned.append(x)
+        trait =copy.copy(self)
+        trait.listclasses = learned        
+        return trait
 
 class NumberedTraits(Traits):
     
@@ -45,7 +54,7 @@ class NumberedTraits(Traits):
 class ItemTraits(Traits):
     
     
-    def __init__ ( self,listclasses,player):
+    def __init__ ( self,listclasses,player = None):
         self.listclasses = listclasses
         self.player = player
         
@@ -60,6 +69,11 @@ class ItemTraits(Traits):
         if self.player.items.itemNum(i.name):
             self.player.items.removeItem(i.name)
             return True
+    def getLearned(self,learnednames,unit):
+        trait = Traits.getLearned(self, learnednames, unit)
+        trait.player = unit.player
+        return trait 
+        
         
 class MagicTraits(Traits):
     

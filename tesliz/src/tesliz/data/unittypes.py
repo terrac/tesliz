@@ -15,7 +15,7 @@ from data.actionlist import *
 from data.items import *
 import data.jobs
 import damage
-import mental.combat as combat
+import data.joblist
 s = Singleton()
 
 
@@ -164,24 +164,24 @@ class Unittypes(object):
         setupStats(unit, level, 4, 50, 10,5,5)
     def Poet(self,unit,level):
         #setupBasic(unit, level)
-        unit.job = data.jobs.Poet()
+        unit.job = data.joblist.Poet()
         unit.items.add(LeatherArmor())
         unit.items.add(ClothCap())
         unit.items.add(Broadsword())
     def Wizard(self,unit,level):
         #setupBasic(unit, level)
-        unit.job = data.jobs.Wizard()
+        unit.job = data.joblist.Wizard()
  
         
         unit.items.add(ClothCap())
- 
-        #fireball = data.traits.generictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
+        unit.items.add(Dagger())
+        #fireball = data.traits.basictraits.GridTargeting(data.traits.generictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(20,"fire")],"Fireball")
         #range = NumberedTraits([fireball],[5])
         #unit.traits["FireMagic"] = range
                         
     def Squire(self,unit,level):
         #setupBasic(unit, level)
-        unit.job = data.jobs.Squire()
+        unit.job = data.joblist.Squire()
  
         unit.items.add(LeatherArmor())
         unit.items.add(ClothCap())
@@ -192,7 +192,7 @@ class Unittypes(object):
     
     def Chemist(self,unit,level):
         #setupBasic(unit, level)
-        unit.job = data.jobs.Chemist()
+        unit.job = data.joblist.Chemist()
  
         unit.items.add(LeatherArmor())
         unit.items.add(ClothCap())

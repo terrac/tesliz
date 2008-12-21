@@ -5,7 +5,11 @@ import tactics.Unit
 class FollowCamera():
     needsasecondclick = True
     unittargeting = False
-    def __init__(self, unit = None) : 
+    background = True
+    def __init__(self, unit2 = None) : 
+        self.unit1 = tactics.Unit.Unit()
+        self.unit2 = unit2
+        self.started = False
         self.mDist = 10
         self.mYaw = Ogre.Radian(0, 0)
         self.mPitch = Ogre.Radian(0, 0)
@@ -13,29 +17,31 @@ class FollowCamera():
         self.mMaxDelta = .1
         self.mJustFollow = True 
         self.mCamera = s.app.msnCam
-        if unit:
-            self.endPos =unit.node
-            self.name = unit.node.getName()
+        if self.unit2:
+            self.endPos =self.unit2.node.getPosition()
+            self.name = self.unit2.getName()
+        
         self.mLookNode = None 
         self.mLookVec = Ogre.Vector3.ZERO
         self.returned = True
-        
-        self.unit1 = tactics.Unit.Unit()
-        
+        self.started = True        
 
          
     def execute(self, deltat ):
+
+        #self.endPos = Ogre.Vector3(4,5,5)
+        
         if self.returned:
             if hasattr(s, "followcamera") and self != s.followcamera:
                 s.followcamera.returned = False        
             s.followcamera = self
         # if no goal node is assigned, we can`t move.
-        if not self.endPos or not s.app.sceneManager.hasSceneNode(self.name):
+        if not self.endPos or not self.unit2.node:
             return
-    
+        self.endPos =self.unit2.node.getPosition()
         mypos = self.mCamera.getPosition()
     
-        goalpos = self.endPos
+        goalpos = self.endPos * 1
     
         #first get the Y offset and the XZ plane offset from the pitch angle.
 
@@ -88,7 +94,8 @@ class FollowCamera():
         #s.app.msnCam.translate(mypos - )
         #self.mGoalNode = None
         #return
-        print mypos
+#        print self.endPos
+#        print mypos
         #print s.app.msnCam.getPosition()
         #print s.app.camera.getPosition()
     

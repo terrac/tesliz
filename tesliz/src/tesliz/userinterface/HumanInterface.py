@@ -10,6 +10,7 @@ import utilities.SampleFramework as sf
 import data.util
 import ogre.physics.OgreNewt as OgreNewt
 import tactics.Unit
+import util
 class ShowSelected():
     def __init__(self,toexecute):
         self.toexecute = toexecute
@@ -75,32 +76,21 @@ class HumanInterface:
         self.actionSelected = False
         self.removeFrom = None
         self.showSelected = None
+        self.toremove = None
     
     lastClick = None
     cunit = None
     iexecute = None
-    def getNewWindow(self, name):
-        winMgr = CEGUI.WindowManager.getSingleton()
-        if winMgr.isWindowPresent(name):
-            CEGUI.WindowManager.getSingleton().destroyWindow(name)
-        #    list = winMgr.getWindow(name)
-        #    list.resetList()
-        #else:
-        
-        list = winMgr.createWindow("TaharezLook/Listbox", name)
-        return list
+
 
     def displayActions(self):
-        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
+        
         
         
         name = "actionlist"
-        winMgr = CEGUI.WindowManager.getSingleton()
-        list = self.getNewWindow(name)
-        sheet.addChildWindow(list)
-        list.setText(name)
-        list.setPosition(CEGUI.UVector2(cegui_reldim(0.735), cegui_reldim( 0.5)))
-        list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        
+        list = util.getNewWindow(name, util.listbox, "root_wnd", .735,.5, .1, .3,name)
+      
         #list.setAlwaysOnTop(True)
         
         self.listmap = dict()
@@ -109,30 +99,31 @@ class HumanInterface:
 #        self.additem(list,"Move")
 #        self.additem(list,"Attack")
 
-        for trait in self.cunit.traits:
-            self.additem(list,trait)
+        for trait in self.cunit.traits.getUsable():
+            if trait:
+                self.additem(list,trait.name)
         self.additem(list,"EndTurn")            
         list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleAction")
         
-        if self.cunit.mental:
-            list = self.getNewWindow( "mentallist")
-            sheet.addChildWindow(list)
-            list.setText("list")
-            list.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( .4)))
-            list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
-            #list.setAlwaysOnTop(True)
-            #display mental
-            
-            for x in self.cunit.mental.getMentalCommands():
-                self.additem(list,x.name) 
-            list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleMental")   
+#        if self.cunit.mental:
+#            list = self.getNewWindow( "mentallist")
+#            sheet.addChildWindow(list)
+#            list.setText("list")
+#            list.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( .4)))
+#            list.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+#            #list.setAlwaysOnTop(True)
+#            #display mental
+#            
+#            for x in self.cunit.mental.getMentalCommands():
+#                self.additem(list,x.name) 
+#            list.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "handleMental")   
     listholder = []
         
 
     def clickEntity(self,name,position,id,evt):
-        position.x = int(position.x)
-        position.y = int(position.y)
-        position.z = int(position.z)
+        #position.x = int(position.x)
+        #position.y = int(position.y)
+        #position.z = int(position.z)
         if not s.turnbased and s.unitmap.has_key(name) and not s.framelistener.pauseturns:
             if s.unitmap[name] in self.player.unitlist:
             
@@ -165,7 +156,7 @@ class HumanInterface:
             for x in range(0,wind.getItemCount()):
                 item = wind.getListboxItemFromIndex(x)
                 key = str(item.getText())
-                if not self.cunit.traits.has_key(key):
+                if not self.cunit.traits[key]:
                     continue
                 trait =self.cunit.traits[key]
                 cisaction = True
@@ -229,13 +220,9 @@ class HumanInterface:
         if len(list) ==1:
             self.handleAbility(list[0])
             return
-        sheet = CEGUI.WindowManager.getSingleton().getWindow(  "root_wnd" )
-        winMgr = CEGUI.WindowManager.getSingleton()
-        list1 = self.getNewWindow("abilitylist")
-        sheet.addChildWindow(list1)
-        list1.setText("abilitylist")
-        list1.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.5)))
-        list1.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.3)))                
+        name = "abilitylist"
+        list1 = util.getNewWindow(name, util.listbox, "root_wnd", .835,.5, .1, .3,name)
+                
         #list1.setAlwaysOnTop(True)
         
         self.listmap = dict()
@@ -260,7 +247,7 @@ class HumanInterface:
         setStart(toexecute,self.cunit)
         self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range)
         self.showSelected = ShowSelected(toexecute)
-        s.framelistener.backgroundqueue.addToQueue(self,self.showSelected)
+        s.framelistener.unitqueue.addToQueue(self,self.showSelected)
         if toexecute.needsasecondclick:
             self.iexecute = copy.copy(toexecute)
         else:
@@ -289,8 +276,9 @@ class HumanInterface:
         self.toremove =data.util.markValid(pos, range, data.util.show)
         
     def choiceEnd(self):
-        s.framelistener.backgroundqueue.clearActions(self)
-        self.showSelected.cleanup()
+        s.framelistener.unitqueue.clearActions(self)
+        if self.showSelected:
+            self.showSelected.cleanup()
         
         if self.toremove:
             for x in self.toremove:

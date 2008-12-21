@@ -4,7 +4,7 @@
 #   Demo01_TheBasics - basic demo that shows a simple OgreNewt world, and how
 #   to setup basic rigid bodies.
 # 
-
+import py_compile
 import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.io.OIS as OIS
@@ -150,6 +150,8 @@ class OgreNewtonApplication (sf.Application):
         cplayerunitmap = dict()
         for x in s.cplayer.unitlist:
             cplayerunitmap[x.getName()] = x
+            
+        #unit =tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
         # Play Windows exit sound.
         #winsound.PlaySound("SystemExit", winsound.SND_ALIAS)
         
@@ -173,20 +175,30 @@ class OgreNewtonApplication (sf.Application):
         mental = data.aisettings.AIsettings()
         if test:
             tactics.TerrainManager.setupTest(scenename)
-        if os.path.exists( s.campaigndir+scenename):
+        if os.path.exists( s.campaigndir+scenename+"/ETterrain.png"):
             s.terrainmanager.loadTerrain(scenename)
         else:
             s.terrainmanager.loadTerrain("begin")
             s.log("parsed begin file as did not find the regular file")
           
-        mapname = "media\\et\\"+ scenename +"\\mapdata.dat"    
+        mapname = s.campaigndir+ scenename +"/mapdata.dat"    
         #refactor
-        #tactics.TerrainManager.setupOnlyEvents(scenename)
+        try:
+            tactics.TerrainManager.setupOnlyEvents(scenename)
+        except Exception,e:
+            print e
+    
         if os.path.exists(mapname):
             savedmap = shelve.open(mapname)
             unitmap = savedmap["unitmap"]
             positionmap = savedmap["positionmap"]
- 
+            scriptmap = savedmap["scriptmap"]
+            
+            mod =py_compile.compile(s.campaigndir+scenename+"/mapscript.py","mapscript"+scenename+".pyc")
+            #import media.campaigns.tesliz.linderenter.mapscript
+
+            mod = __import__("mapscript"+scenename)
+            mod.addScripts(scriptmap)
             for name in unitmap.keys():
                 position =positionmap[name]
                 if cplayerunitmap.has_key(name):
@@ -196,9 +208,14 @@ class OgreNewtonApplication (sf.Application):
                 
                 tactics.util.showUnit(unit,position)
                 s.unitmap[name] = unitmap[name]
-            scriptmap = savedmap["scriptmap"]
+                
+
             for x in scriptmap.values():
                 s.event = tactics.Event.Event( startlist = x)
+        
+        for unit in s.unitmap.values():
+            unit.attributes.physical.points = unit.attributes.physical.maxpoints
+            unit.attributes.magical.points = unit.attributes.magical.maxpoints    
         
         if s.event:
             s.event.start()
@@ -328,7 +345,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         self.pauseturns = True
         self.textlist = []
         self.unitqueue = tactics.Queue.Queue()
-        self.backgroundqueue = tactics.Queue.Queue()
+        #self.backgroundqueue = tactics.Queue.Queue()
 
 
 
@@ -523,7 +540,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             s.turn.doTurn()   
         
         self.unitqueue.runQueue(timesincelastframe)
-        
+        #self.backgroundqueue.runQueue(timesincelastframe)
         if (self.Keyboard.isKeyDown(OIS.KC_F3)):
             if self.Debug:
                 self.Debug = False
@@ -536,6 +553,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             return False
         return True        
     def clickEntity(self,name,position,id,evt):
+        
         self.showAttributes(name)                    
         
         if self.cplayer:
@@ -596,6 +614,8 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
        if CEGUI.System.getSingleton().injectMouseButtonUp(convertButton(id)):
            return True
  
+       if s.cegui.inputcaptured:
+           return True
        name,position = data.util.fromCameraToMesh()
        if CEGUI.WindowManager.getSingleton().isWindowPresent("current"):
            CEGUI.WindowManager.getSingleton().getWindow("current").setText(str(name)+"\n"+str(position))
@@ -618,6 +638,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
        if OIS.KC_N == evt.key:
            for unit in s.unitmap.values():
                unit.setText(unit.getName())
+       if OIS.KC_H == evt.key:
+           for unit in s.unitmap.values():
+               unit.setText(str(unit.player))               
        if OIS.KC_NUMPAD5 == evt.key:
            s.screenshot()
        if OIS.KC_NUMPAD6 == evt.key:
@@ -635,6 +658,7 @@ import sys
 def startup():
     s.framelistener.pauseturns = False
     s.app.loadScene(sys.argv[2],True)
+    
     pass
 def editOnStart():
     startup()

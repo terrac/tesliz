@@ -101,22 +101,22 @@ class StatSet:
     
             
         
-class TraitAffect:
-    def __init__(self,traitmap , color = None):
-        self.color = color
-        if not self.color:
-            self.color = 0,255,0 
-        self.traits  = set(traitmap.items())
-        
-    def setup(self,unit):
-        
-        for x in self.traitmap.keys():
-            self.inter = dict.fromkeys(unit.traits.items().intersect(self.traits))
-            unit.traits + self.inter 
-            
-
-        
-    def teardown(self,unit):
-        
-        for x in self.traitmap.keys():
-            unit.traits - self.inter
+#class TraitAffect:
+#    def __init__(self,traitmap , color = None):
+#        self.color = color
+#        if not self.color:
+#            self.color = 0,255,0 
+#        self.traits  = set(traitmap.items())
+#        
+#    def setup(self,unit):
+#        
+#        for x in self.traitmap.keys():
+#            self.inter = dict.fromkeys(unit.traits.items().intersect(self.traits))
+#            unit.traits + self.inter 
+#            
+#
+#        
+#    def teardown(self,unit):
+#        
+#        for x in self.traitmap.keys():
+#            unit.traits - self.inter

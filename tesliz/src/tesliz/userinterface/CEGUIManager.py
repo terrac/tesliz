@@ -5,6 +5,7 @@ class CEGUIManager:
     def __init__(self):
         s.cegui = self
         self.winMgr = CEGUI.WindowManager.getSingleton()
+        self.inputcaptured = False
         
     def hide(self):
         win =self.winMgr.getWindow("root_wnd")
@@ -28,6 +29,14 @@ class CEGUIManager:
 
         staticImg.setProperty("Image", CEGUI.PropertyHelper.imageToString(imageSet.getImage("RttImage")))
         return staticImg
+    num = 0
     def clicked(self,e):
         #We don't want to click through the cegui
-        return True
+        #e.window.captureInput()
+        self.num+=1
+        print self.num
+        return False
+    def closeClicked(self,e):
+        winMgr = CEGUI.WindowManager.getSingleton()
+        winMgr.destroyWindow(e.window)
+        return True    

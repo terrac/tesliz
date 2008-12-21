@@ -5,6 +5,7 @@ import random
 import tactics.Unit
 import ogre.renderer.OGRE as Ogre
 from tactics.Singleton import *
+import data.util
 class CreateRandom():
     def __init__(self,ulist=["Squire","Chemist"],player="Player1",pos = Ogre.Vector3(0,0,0),dir = Ogre.Vector3.UNIT_X,levels=1,levele=3):
         self.pos = pos
@@ -158,21 +159,17 @@ class SetupPlayer():
     
         for v,unit in zip(self.plist,self.player.unitlist):
 
-            start = Ogre.Vector3(v.x,v.y+50,v.z) 
+            start = Ogre.Vector3(v.x,v.y+10,v.z) 
 #            end = Ogre.Vector3(v.x,v.y-50,v.z) 
            # print start
             #self.ray = OgreNewt.BasicRaycast( s.app.World, start,end )
             #info = self.ray.getFirstHit()
-            ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
-            result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
-            intersects = result[0]
+            position = data.util.getValidPos(start)
             ## update pointer's position
-            if (intersects):
-                x = result[1][0]
-                y = result[1][1]
-                z = result[1][2]
+            if (position):
+
                 ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
-                position =Ogre.Vector3(x, y+1, z)
+                position.y +=1
 #            print start
 #            print end
                 

@@ -13,11 +13,18 @@ import tactics.Move
 import utilities.FollowCamera
 import tactics.Unit
 import copy
+import tactics.Building
+
+def getFromFile(filename):
+    module = __import__("data.maps."+filename)
+    module = getattr(module,'maps')
+    map = getattr(module,filename).Unitdata()
+    return map.getEvents()
 
 class EditGame:
     mapname = "media\\et\\"
     def getMapName(self):
-        return self.mapname + self.name +"\\mapdata.dat"
+        return s.campaigndir+self.name +"\\mapdata.dat"
     def __init__(self,name ):
         self.name = name
         
@@ -32,6 +39,20 @@ class EditGame:
         
         if os.path.exists(self.getMapName()):
             savedmap = shelve.open(self.getMapName())
+#        else:
+#        
+#            savedmap = shelve.open(self.getMapName())
+#            map,convo = getFromFile(name)
+#            savedmap["unitmap"] =map
+#            positionmap = dict()
+#            for x in map:
+#                if map[x].node:
+#                    positionmap[x] = map[x].node.getPosition()
+#            savedmap["positionmap"] = positionmap
+#            
+#            scriptmap = dict()
+#            scriptmap["script01"] = convo
+#            savedmap["scriptmap"] = scriptmap 
             
         #create cegui layout
         
@@ -68,8 +89,9 @@ class EditGame:
         
         tab4 =s.cegui.winMgr.createWindow("DefaultGUISheet", "Meshes")
         tab4.setText("Meshes")
+        
         tbc.addTab(tab4)
-#        mainMenuBackground.addChildWindow(jobButton)
+        self.editmeshes = EditMeshes(tab4,savedmap)    
 
         btn = util.getNewWindow("save", "TaharezLook/Button", "root_wnd")
         
@@ -103,6 +125,8 @@ class EditGame:
             self.currentClick = self.editunits
         if text == "Scripts":
             self.currentClick = self.editscripts
+        if text == "Meshes":
+            self.currentClick = self.editmeshes
         return True
     def saveGame(self,e):
         s.terrainmanager.saveTerrain(self.name)
@@ -111,6 +135,7 @@ class EditGame:
         
         for x in self.editunits.unitmap.values():
             x.node = None
+            x.body = None
         savedmap["unitmap"] = self.editunits.unitmap
         savedmap["positionmap"] = self.editunits.positionmap
         savedmap["scriptmap"] = self.editscripts.scriptmap
@@ -221,7 +246,7 @@ class EditTerrain():
             s.terrainmanager.terrainMgr.getTerrainInfo()
             for unit in s.editgame.editunits.unitmap.values():
                 if unit.node:
-                    position = data.util.getValidPos(unit.node.getPosition())
+                    position = data.util.getPositions(unit.node.getPosition())[0]
                     unit.node.setPosition(position)
                     s.editgame.editunits.positionmap[unit.node.getName()] = (position.x,position.y,position.z)
 
@@ -231,6 +256,7 @@ class EditTerrain():
             
         s.terrainmanager.generateTerrainCollision()
 class EditUnits:
+    selectedItem = None
     def __init__(self,pwindow,savedmap):    
             
         y = 0
@@ -258,7 +284,7 @@ class EditUnits:
         pwindow.addChildWindow(unittypes)        
         #unittypes.setText("actionlist")
         unittypes.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
-        unittypes.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.1)))
+        unittypes.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.4)))
         
         util.addItem(self, unittypes, "Squire")
         util.addItem(self, unittypes, "Chemist")
@@ -271,7 +297,7 @@ class EditUnits:
         pwindow.addChildWindow(unitplayers)        
         #unitplayers.setText("actionlist")
         unitplayers.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
-        unitplayers.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.1)))
+        unitplayers.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.4)))
         util.addItem(self, unitplayers, "Player1")
         util.addItem(self, unitplayers, "Computer1")        
         unitplayers.setText("Player1")
@@ -299,6 +325,7 @@ class EditUnits:
         btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "createUnit")  
         
         y += .1
+          
         if savedmap:
             self.unitmap = savedmap["unitmap"]
             self.positionmap = savedmap["positionmap"]
@@ -307,10 +334,14 @@ class EditUnits:
             self.unitmap["dummy"] = tactics.util.buildUnitNoNode("dummy","Player1", "Squire")
             
             self.positionmap = dict()
-            self.positionmap["dummy"] = (0,0,0) 
+            self.positionmap["dummy"] = (0,0,0)
+        for name in s.unitmap.keys():
+            if not self.unitmap.has_key(name):
+                self.unitmap[name] = s.unitmap[name] 
         for name in self.unitmap.keys():
-            position =self.positionmap[name]
-            tactics.util.showUnit(self.unitmap[name],position)
+            if self.positionmap.has_key(name):
+                position =self.positionmap[name]
+                tactics.util.showUnit(self.unitmap[name],position)
         self.unitlist = unitlist = s.cegui.winMgr.createWindow("TaharezLook/Combobox", "unitlist")
         pwindow.addChildWindow(unitlist)        
         #unitlist.setText("actionlist")
@@ -320,6 +351,11 @@ class EditUnits:
             util.addItem(self, unitlist, x)
         unitlist.subscribeEvent(CEGUI.Combobox.EventTextSelectionChanged, self, "setCurrentName")
 
+        y += .1
+        
+        btn =util.getNewWindow("deleteunit", util.button,pwindow, .2, y, .5, .1, "delete")
+        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "deleteUnit")
+        
 
         
         
@@ -329,6 +365,7 @@ class EditUnits:
         text = str(e.window.getSelectedItem().getText())
         item =e.window.getSelectedItem()
         self.selectedunit.setText(text)
+        self.selectedItem = item
     def createUnit(self,e):
         text =str(self.unitname.getText())
         type = str(self.unittype.getText())
@@ -338,12 +375,15 @@ class EditUnits:
         self.unitmap[text] =tactics.util.buildUnitNoNode(text,player, type,)
         self.selectedunit.setText(text)
         
+    def deleteUnit(self,e):
+        if self.selectedItem:        
+            self.unitlist.removeItem(self.selectedItem)
     def clickEntity(self,name,position,id,evt):
         name = str(self.selectedunit.getText())
         if not self.unitmap.has_key(name):
             return True
         self.positionmap[name] = (position.x,position.y,position.z)
-        tactics.util.showUnit(name, position)
+        tactics.util.showUnit(self.unitmap[name], position)
         
    
 class EditScripts:
@@ -359,7 +399,7 @@ class EditScripts:
         scriptlist.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
         scriptlist.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.1)))
         scriptlist.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showScriptList")
-        if savedmap:
+        if not savedmap:
             util.addItem(self, scriptlist, "Script1")
             self.scriptmap = dict()
             self.scriptmap["Script1"] = []
@@ -368,7 +408,7 @@ class EditScripts:
             self.scriptmap = savedmap["scriptmap"]
             for x in self.scriptmap.keys():
                 util.addItem(self,scriptlist, x)
-        self.eventMap = {"Move":tactics.Move.FFTMove(),"FollowCamera": utilities.FollowCamera.FollowCamera()}
+        self.eventMap = {"Move":data.traits.basictraits.FFTMove(),"FollowCamera": utilities.FollowCamera.FollowCamera()}
         self.eventMap["Move"].range = 50,50
         
         
@@ -476,4 +516,108 @@ class EditScripts:
         if self.currentscriptlistbox:
             self.currentscriptlistbox.setVisible(True)
     
+class EditMeshes:
+    def __init__(self,pwindow,savedmap):    
+            
+        y = 0
+        self.selectedmeshes =tex = util.getNewWindow("selectedmesh", "TaharezLook/StaticText")
+        tex.setText("")
+        tex.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim(y)))
+        tex.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim(0.08)))
+        pwindow.addChildWindow(tex)
         
+        y += .1
+        self.meshesname =eb = s.cegui.winMgr.createWindow("TaharezLook/Editbox", "meshesname")
+        pwindow.addChildWindow(eb)
+        eb.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( y)))
+        #eb.setMaxSize(CEGUI.UVector2(cegui_reldim(1.0), cegui_reldim( 0.04)))
+        eb.setSize(CEGUI.UVector2(cegui_reldim(0.50), cegui_reldim( 0.08)))
+        eb.setText("namehere")
+        tex = util.getNewWindow("meshesnamedesc", "TaharezLook/StaticText")
+        tex.setText("meshesName")
+        tex.setPosition(CEGUI.UVector2(cegui_reldim(.5), cegui_reldim(y)))
+        tex.setSize(CEGUI.UVector2(cegui_reldim(.5), cegui_reldim(0.08)))
+        pwindow.addChildWindow(tex)
+        
+        y += .1
+        self.meshestype =meshestypes = s.cegui.winMgr.createWindow("TaharezLook/Combobox", "meshestypes")
+        pwindow.addChildWindow(meshestypes)        
+        #meshestypes.setText("actionlist")
+        meshestypes.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
+        meshestypes.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.1)))
+        
+        util.addItem(self, meshestypes, "box")
+        util.addItem(self, meshestypes, "ellipsoid")
+        
+        meshestypes.setText("box")
+        
+        
+        y += .1
+        self.meshesscale =eb = s.cegui.winMgr.createWindow("TaharezLook/Editbox", "scale")
+        pwindow.addChildWindow(eb)
+        eb.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( y)))
+        #eb.setMaxSize(CEGUI.UVector2(cegui_reldim(1.0), cegui_reldim( 0.04)))
+        eb.setSize(CEGUI.UVector2(cegui_reldim(0.50), cegui_reldim( 0.08)))
+        eb.setText("1")
+        
+        tex = util.getNewWindow("scaledesc", "TaharezLook/StaticText")
+        tex.setText("scale")
+        tex.setPosition(CEGUI.UVector2(cegui_reldim(.5), cegui_reldim(y)))
+        tex.setSize(CEGUI.UVector2(cegui_reldim(.5), cegui_reldim(0.08)))
+        pwindow.addChildWindow(tex)
+         
+        y +=.1
+        btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "createmeshes")
+        pwindow.addChildWindow(btn)
+        btn.setText("Create")
+        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim(y)))
+        btn.setSize(CEGUI.UVector2(cegui_reldim(0.5), cegui_reldim( .1)))
+        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "createmeshes")  
+        
+        y += .1
+        if savedmap and savedmap.has_key("meshesmap"):
+            self.meshesmap = savedmap["meshesmap"]
+            self.positionmap = savedmap["positionmap"]
+        else:
+            self.meshesmap = dict()
+            self.meshesmap["dummy"] = tactics.Building.Building()
+            
+            self.positionmap = dict()
+            self.positionmap["dummy"] = (0,0,0) 
+        for name in self.meshesmap.keys():
+            position =self.positionmap[name]
+            tactics.util.showBuilding(self.meshesmap[name],position)
+        self.mesheslist = mesheslist = s.cegui.winMgr.createWindow("TaharezLook/Combobox", "mesheslist")
+        pwindow.addChildWindow(mesheslist)        
+        #mesheslist.setText("actionlist")
+        mesheslist.setPosition(CEGUI.UVector2(cegui_reldim(0), cegui_reldim( y)))
+        mesheslist.setSize(CEGUI.UVector2(cegui_reldim(1), cegui_reldim( 0.2)))
+        for x in self.meshesmap.keys():
+            util.addItem(self, mesheslist, x)
+        mesheslist.subscribeEvent(CEGUI.Combobox.EventTextSelectionChanged, self, "setCurrentName")
+
+
+        
+        
+    def setCurrentName(self,e):
+        if not e.window.getSelectedItem():
+            return
+        text = str(e.window.getSelectedItem().getText())
+        item =e.window.getSelectedItem()
+        self.selectedmeshes.setText(text)
+        
+    def createmeshes(self,e):
+        text =str(self.meshesname.getText())
+        type = str(self.meshestype.getText())
+        scale = int(str(self.meshesscale.getText()))
+        
+        util.addItem(self, self.mesheslist, text)
+        self.meshesmap[text] =tactics.Building.Building()
+        self.selectedmeshes.setText(text)
+        
+    def clickEntity(self,name,position,id,evt):
+        name = str(self.selectedmeshes.getText())
+        if not self.meshesmap.has_key(name):
+            return True
+        self.positionmap[name] = (position.x,position.y,position.z)
+        tactics.util.showBuilding(self.meshesmap[name], position)
