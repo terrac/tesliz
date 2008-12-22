@@ -5,6 +5,8 @@ class Item():
     def setup(self,unit):
         if hasattr(self, "affects"):
             self.affects.setup(unit)
+    def getName(self):
+        return self.__class__.__name__
 class Potion(Item):
     affects = Affects(StatAffect(["physical","points"],30),"       hitpoints") 
     allowed = ["all"]

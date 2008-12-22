@@ -27,3 +27,5 @@ class AffectHolder():
     def get(self,type):
         if self.itemmap.has_key(type):
             return self.itemmap[type]
+    def getMap(self):
+        return self.itemmap

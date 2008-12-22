@@ -47,21 +47,66 @@ class JobsMenu:
             #winMgr.getWindow("Main/FontSample").setText(cs)
 
         return True
-class ItemsMenu:
+class AbilityMenu:
+    
+    list = ["Secondary","Reaction","Support","Movement"]
+
+    def setupMenu(self, pwindow):
+        util.getNewWindow("abilityjobname", util.statictext, pwindow, .5, .1, .2, .1, self.unit.job.getName())
+        self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5, .2, .2, .3)
+
+        
+    def getMap(self,unit):
+        
+        self.map = unit.traits.getMap()
     def setup(self,unit,pwindow):
+        
+        self.getMap(unit)
+        self.setupMenu(pwindow)
+        for x in self.list:
+            util.addItem(self, self.abilheld,self.list)
+        
+        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+    def showTraits(self,e):
+        if not e.window.getFirstSelectedItem(e.window.getFirstSelectedItem()):
+            return
+        self.typeindex = e.window.getItemIndex()
+        self.type =text = self.list[self.typeindex]
+        self.listtype =util.getNewWindow("listtype", util.listbox, pwindow, .5,.2,.2,.3)
+        self.typelist = self.getList(text)
+        for x in self.typelist:
+            util.addItem(self, self.listtype,x.getName() )
+        self.listtype.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "setType")    
+    
+    def getList(self,type):
         pass
+    def setType(self,e):
+        if not e.window.getFirstSelectedItem(e.window.getFirstSelectedItem()):
+            return
+        toadd = self.typelist[e.window.getItemIndex()]
+        self.map[self.type] = toadd
+        self.abilheld[self.typeindex] = toadd.getName()
+        self.listtype.setVisible(False)
+        
     def teardown(self):
+        s.cegui.destroy(self.abilheld)
+        s.cegui.destroy(self.listtype)
         pass
-class AbilitiesMenu:
+class ItemsMenu:
+    list = ["head","body","weapon"]
+    def setupMenu(self, pwindow):
+        
+        self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5, .2, .2, .3)
+        
+    def getMap(self,unit):
+        self.map = unit.items.getMap()
+    def getList(self,type):
+        pass
+        
+class LearnMenu:
     def setup(self,unit,pwindow):
         self.unit = unit
-        util.getNewWindow("abilityjobname", util.statictext,pwindow, .5, .1, .2, .1, self.unit.job.getName())
-        self.abilheld =util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5,.2,.2,.3)
-        util.addItem(self, self.abilheld,"Secondary" )
-        util.addItem(self, self.abilheld,"Reaction" )
-        util.addItem(self, self.abilheld,"Support" )
-        util.addItem(self, self.abilheld,"Movement")
-        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+        
         self.abiltohold =util.getNewWindow("abilitiestohold", util.listbox, "Main/Window", .7,.1,.2,.4)
         #util.addItem(self, self.abiltohold,"Try" )
         util.addItem(self, self.abiltohold,"Learn" )
@@ -123,10 +168,9 @@ class AbilitiesMenu:
             self.currentjob.exp -= self.currentability.jobpoints
         self.getAbilList(jobtype)
         #self.unit.job.changeTo(self.unit)
-    def showTraits(self,e):
-        pass
+    
     def teardown(self):
-        self.abilheld.setVisible(False)
+        
         self.abiltohold.setVisible(False)
         
 class MainMenu:
@@ -136,7 +180,7 @@ class MainMenu:
         if s.initCEGUI != True:
             self.initCEGUIStuff(renderWindow, sceneManager)
             s.initCEGUI = True
-        self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilitiesMenu()}
+        self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilityMenu(),"Learn":LearnMenu()}
         self.unit = None
         self.prevedit = None
 
