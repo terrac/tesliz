@@ -40,6 +40,9 @@ class CEGUIManager:
         winMgr = CEGUI.WindowManager.getSingleton()
         winMgr.destroyWindow(e.window)
         return True    
-    def destroy(self,windowname):
+    def destroy(self,windowname):                    
         if self.winMgr.isWindowPresent(windowname):
             self.winMgr.destroyWindow(windowname)
+    def getWindow(self,windowname):
+        if self.winMgr.isWindowPresent(windowname):
+            return self.winMgr.getWindow(windowname)

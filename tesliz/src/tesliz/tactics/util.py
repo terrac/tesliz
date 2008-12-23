@@ -69,6 +69,7 @@ def resetAttributes(unit):
         unit.job.changeTo(unit)
     unit.items.setupAll()
     unit.affect.setupAll()
+    unit.traits.setupAll(unit)
     unit.attributes.physical.points = hitpoints
     unit.attributes.magical.points = magicpoints
     unit.traits.Move.getClassList()[0].range = unit.attributes.moves

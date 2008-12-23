@@ -1,4 +1,4 @@
-
+\
 #from data.actionlist import * 
 #from data.items import *
 import userinterface.traits 
@@ -20,8 +20,13 @@ import data.Stats
 #        self.job = job
 
 requiredexp =[0,200,400,700,1100,1600,2000,2500]
+choosablemap ={"Reaction":dict(),"Movement":dict()}
 
 jobabilitymap = dict()
+
+    
+    
+
 class Job(object):
     level = 1
     exp = 60
@@ -35,7 +40,18 @@ class Job(object):
             jobabilitymap[self.getName()]=self.getAbilities()
             jobabilitymap[self.getName()].name = self.getName()
             #jobreactionmap[self.getName()]=self.getReactionAbilities()
-        
+            
+            for x in choosablemap.keys():
+                if hasattr(self, "get"+x):
+                    #map = getattr(jobs, ")
+                    map = choosablemap[x]
+                    if not map.has_key(self.getName()):
+                        map[self.getName()] = getattr(self,"get"+x)()
+                        
+                        #automatically sets the types
+                        for y in map[self.getName()]:
+                            y.type = x
+                #map[self.getName()].name = x
     def getName(self):
         return self.__class__.__name__
  
@@ -53,7 +69,10 @@ class Job(object):
         #else:
             
         #unit.traits[self.getName()] =traits
-            
+    
+    
+        
+    
     def getTraits(self,unit):
         
         trait =jobabilitymap[self.getName()]

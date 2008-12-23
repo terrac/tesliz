@@ -1,6 +1,9 @@
 from tactics.Singleton import *
 #import tactics.util
 #import data.util
+class Affect:
+    def getName(self):
+        return self.name
 
 class Affects:
     def __init__(self,obj,type = None):
@@ -50,12 +53,14 @@ class AffectsLight:
 
 
 class StatAffect:
-    def __init__(self,statsup,amount , color = None):
+    def __init__(self,statsup,amount ,name = None, type = None,color = None):
         self.color = color
         if not self.color:
             self.color = 255,0,0 
         self.statsup = statsup
         self.amount = amount
+        self.type = type
+        self.name = name
         
     def setup(self,unit):
         
@@ -98,9 +103,41 @@ class StatSet:
         
         #return [str(unit.name)+"'s "+ self.stat.join(" ")+" set to "+ str(self.amount)]
         
-    
-            
+class MoveAdder:
+    def __init__(self,moves,height):
+        self.moves = moves
+        self.height = height
+    def execute(self,object,name):
+        x,y = getattr(object, name)
+        x += self.moves
+        y += self.height
+        tuple = x,y
+        setattr(object, name, tuple)
         
+class ClassAffect(Affect):
+    def __init__(self,stat,name,toexecute):
+        self.stat = stat
+        self.name = name
+        self.toexecute =toexecute
+        
+    def setup(self,unit):
+        if isinstance(self.stat, str):
+            self.toexecute.execute(unit.attributes,self.stat)
+        elif len(self.stat) == 2:
+            obj = getattr(unit.attributes, self.stat[0])
+            self.toexecute.execute(obj,self.stat[1])
+            
+#        last = self.stat[len(self.stat)-1]
+#        obj = unit.attributes
+#        for x in self.stat:
+#            if x == last:
+#                self.toexecute.execute(obj,last)                                                                
+#                break
+#            obj = getattr(obj,x)
+#            
+                    
+        
+
 #class TraitAffect:
 #    def __init__(self,traitmap , color = None):
 #        self.color = color

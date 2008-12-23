@@ -67,7 +67,8 @@ class Attributes(object):
                 "\nmp: "+str(self.magical.points)+"/"+str(self.magical.maxpoints)+
                 "\nct: "+str(self.curMovement)+"/100"+
                 "\nlevel:"+str(self.level)+ 
-                "\nexp: "+str(self.exp)+""
+                "\nexp: "+str(self.exp)+
+                "\nmoves:"+str(self.moves)
                 )
 
     

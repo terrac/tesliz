@@ -7,10 +7,12 @@ import util
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import ogre.renderer.OGRE as Ogre
+import data.jobs
 s = Singleton()
 import data.jobs
+import tactics.util
 
-
+    
 
 class JobsMenu:
     def setup(self,unit,pwindow):
@@ -45,7 +47,7 @@ class JobsMenu:
             #cs.assign( self.getJobsDict().values()[idx].encode("utf-8") )
             #winMgr = CEGUI.WindowManager.getSingleton()
             #winMgr.getWindow("Main/FontSample").setText(cs)
-
+        s.mainmenu.updateDisplay()
         return True
 class AbilityMenu:
     
@@ -60,39 +62,56 @@ class AbilityMenu:
         
         self.map = unit.traits.getMap()
     def setup(self,unit,pwindow):
-        
+        self.pwindow = pwindow
+        self.unit = unit
         self.getMap(unit)
         self.setupMenu(pwindow)
         for x in self.list:
-            util.addItem(self, self.abilheld,self.list)
+            util.addItem(self, self.abilheld,x)
         
         self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
     def showTraits(self,e):
-        if not e.window.getFirstSelectedItem(e.window.getFirstSelectedItem()):
+        if not e.window.getFirstSelectedItem():
             return
-        self.typeindex = e.window.getItemIndex()
+        self.itemselected = e.window.getFirstSelectedItem()
+        self.typeindex = e.window.getItemIndex(e.window.getFirstSelectedItem())
         self.type =text = self.list[self.typeindex]
-        self.listtype =util.getNewWindow("listtype", util.listbox, pwindow, .5,.2,.2,.3)
+        self.listtype =util.getNewWindow("listtype", util.listbox, self.pwindow, .7,.2,.2,.3)
         self.typelist = self.getList(text)
         for x in self.typelist:
             util.addItem(self, self.listtype,x.getName() )
         self.listtype.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "setType")    
     
     def getList(self,type):
-        pass
+        valid = []
+        for x in self.unit.joblist:
+            typemap = data.jobs.choosablemap[type]
+            if typemap.has_key(x.getName()):
+                x.getTraits(self.unit)
+                list =typemap[x.getName()]
+                for y in list:
+                    if y.getName() in x.learnedabilitynames:
+                        valid.append(y)
+        return valid
     def setType(self,e):
-        if not e.window.getFirstSelectedItem(e.window.getFirstSelectedItem()):
+        if not e.window.getFirstSelectedItem():
             return
-        toadd = self.typelist[e.window.getItemIndex()]
-        self.map[self.type] = toadd
-        self.abilheld[self.typeindex] = toadd.getName()
+        toadd = self.typelist[e.window.getItemIndex(e.window.getFirstSelectedItem())]
+        #this should be the ability map on the unit trait so it could alse be self.unit.traits.map0self.type] = toadd
+        #self.map[self.type] = toadd
+        self.unit.traits.map[self.type] = toadd
+        self.itemselected.setText(toadd.getName())
+        tactics.util.resetAttributes(self.unit)
         self.listtype.setVisible(False)
         
+        
+        s.mainmenu.updateDisplay()
+        
     def teardown(self):
-        s.cegui.destroy(self.abilheld)
-        s.cegui.destroy(self.listtype)
+        self.abilheld.setVisible(False)
+        self.listtype.setVisible(False)
         pass
-class ItemsMenu:
+class ItemsMenu(AbilityMenu):
     list = ["head","body","weapon"]
     def setupMenu(self, pwindow):
         
@@ -183,6 +202,7 @@ class MainMenu:
         self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilityMenu(),"Learn":LearnMenu()}
         self.unit = None
         self.prevedit = None
+        s.mainmenu = self
 
 
     def initCEGUIStuff(self, renderWindow, sceneManager):
@@ -277,6 +297,7 @@ class MainMenu:
             item = lbox.getListboxItemFromIndex(0)
             item.setSelected(True)
             self.unit = s.cplayer.unitlist[0]
+            self.updateDisplay()
         lbox = winMgr.getWindow ("Main/EditList")
         
         
@@ -330,9 +351,13 @@ class MainMenu:
             if self.prevedit:
                 self.prevedit.teardown()
             self.editmap[etext].setup(self.unit,"Main/Window")
+            self.updateDisplay()
             self.prevedit = self.editmap[etext]
             
             
 
         return True
+    def updateDisplay(self):
+        text = "\n"+str(self.unit.attributes)
+        s.cegui.getWindow("Main/Display").setText(str(self.unit)+text)
   

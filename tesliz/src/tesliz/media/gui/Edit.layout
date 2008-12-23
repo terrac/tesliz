@@ -9,7 +9,7 @@
         <Property Name="Text" Value="Editing characters" />
         <Property Name="Tooltip" Value="This is a simple demonstration of what the font subsystem can do." />
 
-        <Window Type="TaharezLook/MultiLineEditbox" Name="Main/FontSample">
+        <Window Type="TaharezLook/MultiLineEditbox" Name="Main/Display">
             <Property Name="UnifiedAreaRect" Value="{{0.05,0},{0.1,0},{0.40,0},{0.40,0}}" />
             <Property Name="Tooltip" Value="This window shows a sample of the selected font" />
 			<Property Name="WordWrap" Value="True" />
