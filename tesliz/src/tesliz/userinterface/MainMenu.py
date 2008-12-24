@@ -11,7 +11,7 @@ import data.jobs
 s = Singleton()
 import data.jobs
 import tactics.util
-
+import data.items 
     
 
 class JobsMenu:
@@ -50,6 +50,19 @@ class JobsMenu:
         s.mainmenu.updateDisplay()
         return True
 class AbilityMenu:
+
+    def setupAbil(self):
+        for x in self.list:
+            if self.map.has_key(x) and self.map[x]:
+                x = self.map[x].getName()
+            
+            util.addItem(self, self.abilheld, x)
+        
+        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+
+
+
+
     
     list = ["Secondary","Reaction","Support","Movement"]
 
@@ -58,48 +71,54 @@ class AbilityMenu:
         self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5, .2, .2, .3)
 
         
-    def getMap(self,unit):
-        
+    def getMap(self,unit):        
         self.map = unit.traits.getMap()
+    
+    
+        
     def setup(self,unit,pwindow):
+        self.listtype = None
         self.pwindow = pwindow
         self.unit = unit
         self.getMap(unit)
         self.setupMenu(pwindow)
-        for x in self.list:
-            util.addItem(self, self.abilheld,x)
-        
-        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+        self.setupAbil()
     def showTraits(self,e):
         if not e.window.getFirstSelectedItem():
             return
         self.itemselected = e.window.getFirstSelectedItem()
         self.typeindex = e.window.getItemIndex(e.window.getFirstSelectedItem())
         self.type =text = self.list[self.typeindex]
-        self.listtype =util.getNewWindow("listtype", util.listbox, self.pwindow, .7,.2,.2,.3)
-        self.typelist = self.getList(text)
+        
+        self.setupList(text)    
+        
+    def setupList(self, type):
+        self.listtype =util.getNewWindow("listtype", util.listbox, self.pwindow, .7,.2,.2,.3)    
+        self.typelist = self.getList(type)
         for x in self.typelist:
-            util.addItem(self, self.listtype,x.getName() )
-        self.listtype.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "setType")    
+            util.addItem(self, self.listtype, x.getName())
+        
+        self.listtype.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "setType")
     
     def getList(self,type):
         valid = []
         for x in self.unit.joblist:
-            typemap = data.jobs.choosablemap[type]
-            if typemap.has_key(x.getName()):
-                x.getTraits(self.unit)
-                list =typemap[x.getName()]
-                for y in list:
-                    if y.getName() in x.learnedabilitynames:
-                        valid.append(y)
+            if data.jobs.choosablemap.has_key(type):
+                typemap = data.jobs.choosablemap[type]
+                if typemap.has_key(x.getName()):
+                    x.getTraits(self.unit)
+                    list =typemap[x.getName()]
+                    for y in list:
+                        if y.getName() in x.learnedabilitynames:
+                            valid.append(y)
         return valid
     def setType(self,e):
         if not e.window.getFirstSelectedItem():
             return
         toadd = self.typelist[e.window.getItemIndex(e.window.getFirstSelectedItem())]
         #this should be the ability map on the unit trait so it could alse be self.unit.traits.map0self.type] = toadd
-        #self.map[self.type] = toadd
-        self.unit.traits.map[self.type] = toadd
+        self.map[self.type] = toadd
+        #self.unit.traits.map[self.type] = toadd
         self.itemselected.setText(toadd.getName())
         tactics.util.resetAttributes(self.unit)
         self.listtype.setVisible(False)
@@ -109,18 +128,42 @@ class AbilityMenu:
         
     def teardown(self):
         self.abilheld.setVisible(False)
-        self.listtype.setVisible(False)
+        if self.listtype:
+            self.listtype.setVisible(False)
         pass
 class ItemsMenu(AbilityMenu):
     list = ["head","body","weapon"]
     def setupMenu(self, pwindow):
         
         self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, pwindow, .5, .2, .2, .3)
+        self.removeitem = util.getNewWindow("removeitem", util.button, pwindow, .5, .5, .2, .1, "removeItem")
+        self.removeitem.subscribeEvent(CEGUI.PushButton.EventClicked, self, "removeItem")
+        self.typelist = []
         
+    def removeItem(self,e):
+        if  not self.abilheld.getFirstSelectedItem():
+            return
+        item =self.abilheld.getFirstSelectedItem()
+        text = str(item.getText())
+        if text in self.list:
+            return
+        self.unit.player.items.add(text)
+        type = self.list[self.abilheld.getItemIndex(self.abilheld.getFirstSelectedItem())]
+        self.setupList(type)
+        item.setText(type)
+        self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, self.pwindow, .5, .2, .2, .3)
+        self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
+        self.setupAbil()
     def getMap(self,unit):
         self.map = unit.items.getMap()
     def getList(self,type):
-        pass
+        valid = []
+        itemmap =self.unit.player.items.getMap()
+        for x in itemmap.keys():
+            item =getattr(data.items, x)
+            if item.type == type:
+                valid.append(item())
+        return valid
         
 class LearnMenu:
     def setup(self,unit,pwindow):

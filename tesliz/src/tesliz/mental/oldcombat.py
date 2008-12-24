@@ -1,5 +1,5 @@
 from tactics.Singleton import *
-import tactics.util
+from tactics.util import *
 import utilities.physics
 import data.util
 import tactics.datautil
@@ -14,21 +14,37 @@ def isWantedHurt(eunit,unit):
 def isWanted(eunit,unit):
     return eunit.player !=unit.player 
 
+def getClose(unit,isWanted):
 
+    
+    lodis = 999
+    lounit = None
+    for eunit in s.unitmap.values():            
+        if isWanted(eunit,unit) and not eunit.getDeath() and eunit.node and unit.node: #will probably need to meove this once raise
+            
+            
+            dis =utilities.physics.distance(eunit.node.getPosition(),unit.node.getPosition())
+            if dis < lodis:
+                lodis =dis
+                lounit = eunit
 
+    return lounit
 
-def getBestList(unit,isValid):
+def getBest(unit,isValid):
     bestl = []
     best = None
-    traitlist = []
-    for trait in unit.traits.getUsable():        
+    for trait in unit.traits.getUsable():
        if trait:
-           for ability in trait.getAbilities().values():               
+           for ability in trait.getAbilities().values():
                if isValid(ability):
-                   traitlist.append((ability.value,ability))
+                   if not best:
+                       best = ability
+                       bestl.append(best)                
+                   elif best.value <ability.value:
+                       best = ability
+                       bestl.append(best)
                    
-    traitlist.sort()
-    return traitlist
+    return bestl
 
 def getWithinRange(unit,eunit,isValid):
     best = None
@@ -43,26 +59,10 @@ def getWithinRange(unit,eunit,isValid):
                    
     return best
 
-
-def getCloseList(unit,isWanted):
-
-    
-    lodis = 999
-    lounit = None
-    position = unit.node.getPosition()
-    tuplelist = []
-    for unit2 in s.unitmap.values():
-        if isWanted(unit2,unit) and not unit2.getDeath() and unit2.node:
-            tuple = utilities.physics.distance(unit2.node.getPosition(),position),unit2
-            tuplelist.append(tuple)
-    tuplelist.sort()
-    
-    return tuplelist
-
 class Combat(object):
     
     
-    def __init__(self,unit,isValid, isWanted,cautious = False):
+    def __init__(self,unit,isValid, isWanted):
         self.unit =unit
         self.isValid = isValid
         self.running = True
@@ -72,7 +72,6 @@ class Combat(object):
 #            self.getClose combat.getClose
         self.state = "start"    
         self.wait = 0
-        self.cautious = cautious
         
 
     def setupMove(self):
@@ -129,35 +128,15 @@ class Combat(object):
         return True
 
 
-    def chooseBest(self,unit):
-        bestabilitieslist = getBestList(unit, self.isValid)
-        unitlist = getClose(unit,self.isWanted)
-        for ability in bestabilitieslist:
-            for unit in unitlist:
-                #test range
-                xm, ym = unit.attributes.moves.range
-                xa, ya = ability.range
-                
-                #might need to reverse
-                ability.offset.sort()
-                #add the x and y as the extension of the offset range
-                xo,xa,notused = ability.offset[0]
-                
-                range = xm+xa+xo,ym+ya+yo
-                tactics.util.
-                #find best offset and set
-                
-                
+
     
     def execute(self,timer):
         #aoeu
         if self.wait > 0:
             self.wait -= timer
             return True
-        
         unit = self.unit
-        if not unit.node:
-            return False
+
 
         
         

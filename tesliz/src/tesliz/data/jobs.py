@@ -20,7 +20,7 @@ import data.Stats
 #        self.job = job
 
 requiredexp =[0,200,400,700,1100,1600,2000,2500]
-choosablemap ={"Reaction":dict(),"Movement":dict()}
+choosablemap ={"Reaction":dict(),"Movement":dict(),"Support":dict()}
 
 jobabilitymap = dict()
 

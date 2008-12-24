@@ -13,12 +13,12 @@ class PlayerItemHolder():
         
     def __init__(self):
         self.map = dict()
-    def addItem(self,itemname):
+    def add(self,itemname):
         if self.map.has_key(itemname):
             self.map[itemname] += 1
         self.map[itemname] = 1
     
-    def removeItem(self,itemname):
+    def remove(self,itemname):
         if self.map.has_key(itemname):
             self.map[itemname] -= 1
             return True
@@ -28,6 +28,8 @@ class PlayerItemHolder():
         return 0
     def __str__( self ):
         return str(self.map)
+    def getMap(self):
+        return self.map
     
 class HumanPlayer(object):
 

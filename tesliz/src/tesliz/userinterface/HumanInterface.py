@@ -98,7 +98,7 @@ class HumanInterface:
         
 #        self.additem(list,"Move")
 #        self.additem(list,"Attack")
-
+        self.additem(list,self.cunit.traits.Move.name)
         for trait in self.cunit.traits.getUsable():
             if trait:
                 self.additem(list,trait.name)
