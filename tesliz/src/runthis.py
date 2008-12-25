@@ -26,6 +26,7 @@ from userinterface.MainMenu import MainMenu
 from tactics.OverviewMap import *
 import tactics.Unit
 import tactics.TerrainManager
+import manager.gridmap
 
 import tactics.Queue
 import userinterface.CEGUIManager
@@ -128,7 +129,7 @@ class OgreNewtonApplication (sf.Application):
         data.settings.Settings()
         userinterface.CEGUIManager.CEGUIManager()
         tactics.TerrainManager.TerrainManager()
-        
+        manager.gridmap.Gridmap()
         self.setupCamera()
       #  "0.481707" y="0.212922" z="0.334251" w="0.781600"/>
         ## sky box.

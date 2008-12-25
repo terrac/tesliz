@@ -146,8 +146,17 @@ class Combat(object):
                 range = xm+xa+xo,ym+ya+yo
 #                tactics.util.
                 #find best offset and set
-                
-                
+                position2 = unit2.node.getPosition()
+                position1 = unit1.node.getPosition()
+                if data.util.withinRange(position1,position2,range):
+                    for offset in ability.offset:
+                        #get from position2 to the place that would be chosen
+                        tohit = position2 - offset
+                        #calculate damage from this hit
+                        for off in ability.offset:
+                            unit =data.util.getValidUnit(tohit + offset, range[1])
+                            if unit:
+                                data.util.getChanceToHitAndDamage(number, type, unit1, unit2)
     
     def execute(self,timer):
         #aoeu

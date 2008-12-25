@@ -130,6 +130,7 @@ class FFTMove(Trait):
             self.cur += 1
             if len(self.list) == self.cur:
                 self.unit1.body.setPositionOrientation(vec2,xzsrc.getRotationTo(xzdirection))
+                s.gridmap[vec2] = self.unit1
             
             predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
             name =data.util.getValidName(vec2, predicate)

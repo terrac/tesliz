@@ -9,7 +9,7 @@ import damage
 s = Singleton()
 import copy
 import data.Affects
-class Particle():
+class Particle:
     def __init__(self, name,time = 5,turns = False):
         self.particlename = name
         self.time = time

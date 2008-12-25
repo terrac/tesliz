@@ -14,6 +14,7 @@ import utilities.FollowCamera
 import tactics.Unit
 import copy
 import tactics.Building
+import manager.gridmap
 
 def getFromFile(filename):
     module = __import__("data.maps."+filename)
@@ -246,7 +247,7 @@ class EditTerrain():
             s.terrainmanager.terrainMgr.getTerrainInfo()
             for unit in s.editgame.editunits.unitmap.values():
                 if unit.node:
-                    position = data.util.getPositions(unit.node.getPosition())[0]
+                    position = manager.gridmap.getPositions(unit.node.getPosition())[0]
                     unit.node.setPosition(position)
                     s.editgame.editunits.positionmap[unit.node.getName()] = (position.x,position.y,position.z)
 

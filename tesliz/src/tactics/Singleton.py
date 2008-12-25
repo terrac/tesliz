@@ -57,6 +57,7 @@ class Singleton:
            self.unitmap = dict()
            # state variable saying whether CEGUI has been initialized or not, default None (False)
            self.initCEGUI = None
+           self.gridmap = None
            
         
         def removeUnit(self,unit):

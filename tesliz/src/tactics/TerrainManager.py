@@ -21,7 +21,7 @@ from tactics.Singleton import *
 
 
 
-class TerrainManager():
+class TerrainManager:
     mediadir    = "media/ET/"
     def __init__(self):
         self.terrainMgr =  ET.TerrainManager(s.app.sceneManager)

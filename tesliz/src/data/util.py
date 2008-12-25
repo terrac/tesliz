@@ -266,42 +266,43 @@ def damageHitpoints(getDamage,unit1,unit2):
 
 
 
-def getChanceToHitAndDamage(number,type,unit1,unit2):
+def getChanceToHitAndDamageForAttack(number,type,unit1,unit2):
     
-    dir1 = unit1.getDirection()
-    dir2 = unit2.getDirection()
+
     
         
     #determine chance to hit
-    returned  = 1
+    chancetohit  = 1
     if type == "physical":
+        dir1 = unit1.getDirection()
+        dir2 = unit2.getDirection()
         tohit = unit1.attributes.physical.tohit/100 
         ce =unit1.attributes.physical.classevade / 100
         se =unit1.attributes.physical.shieldevade / 100
         ae =unit1.attributes.physical.accessoryevade / 100 
         
-        returned = tohit
+        chancetohit = tohit
     #    if both pointing in same direction then 100% as one is behind the other
         if dir1 == dir2:
-            returned *=tohit * ae
+            chancetohit *=tohit * ae
         # if both are absolutely pointing the the same direction then they are facing each other
         elif math.fabs(dir1.x) == math.fabs(dir2.x) or math.fabs(dir1.z) == math.fabs(dir2.z):
-            returned *= tohit * ae * se * ce
+            chancetohit *= tohit * ae * se * ce
         else: #on the side
-            returned *= tohit * ae * se
+            chancetohit *= tohit * ae * se
             
         brav1 = unit1.attributes.bravery
         brav2 = unit2.attributes.bravery    
         #a higher bravery than opponent adds damage
         number += ((brav1 - brav2) / 100) * number 
     else: #magical
-        returned *= tohit * ae * se * ce
+        chancetohit *= tohit * ae * se * ce
         
         faith1 = unit1.attributes.faith
         faith2 = unit2.attributes.faith    
         #high faith adds damage, but opponents lower faith reduces total damage so a faith of 0 cannot recieve magical damage or healing
         number += ((faith1  / 100) * number) * (faith2  / 100) 
-    return returned,number 
+    return chancetohit,number 
 #def getDamage(number,type):
 #for say a spell you would give a high jump
 
@@ -351,6 +352,7 @@ def withinRange(vec1,vec2,range):
         return True
     return False
 
+xzlist = [(0,-1),(0,1),(1,0),(-1,0)]
 def markValid(vec1,range,mark,names = None, prevfound=None):
     if not names:
         names = set()
@@ -362,12 +364,11 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     else:
         moves = range
         jump = 50
-    xlist = [0,0,1,-1]
-    zlist = [-1,1,0,0]
+    
     #xlist = []
     #zlist = []
     list = []
-    xzlist = [(0,-1),(0,1),(1,0),(-1,0)]
+    
     for x,z in xzlist:
         cvec = Ogre.Vector3(vec1.x+ x,vec1.y,vec1.z+z)
         if not( prevfound.has_key(cvec) and moves < prevfound[cvec]):
@@ -482,78 +483,28 @@ def getValid(vec,height,xlist , zlist):
         x = xlist[a]
         z = zlist[a]
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
-        
-        if getValidUnit(start, height):
-            continue
-                
-        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
-        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
-        intersects = result[0]
-        ## update pointer's position
-        if (intersects):
-            x = result[1][0]
-            y = result[1][1]
-            z = result[1][2]
-            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
-            position =Ogre.Vector3(x, y, z)   
-            
-
-            
-            validpos.append(position)
-        
-    
+        if not s.gridmap.has_key(start):
+            s.gridmap.generate(start)
+        if not s.gridmap.hasUnit(start):
+            validpos.append(s.gridmap[start])
     return validpos
 
-def getPositions(vec,height = 50,xlist = [0] , zlist= [0]):
-    validpos = []
-    for a in range(0, len(xlist)):
-        
-        
-        
-        x = xlist[a]
-        z = zlist[a]
-        start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
-        
-        
-                
-        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
-        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
-        intersects = result[0]
-        ## update pointer's position
-        if (intersects):
-            x = result[1][0]
-            y = result[1][1]
-            z = result[1][2]
-            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
-            position =Ogre.Vector3(x, y, z)   
-            
 
-            
-            validpos.append(position)
-        
-    
-    return validpos
 def getValidPos(vec, height = 50):
     if not vec:
         return 
-    vlist = getValid(vec, height, [0], [0])
-    if vlist:
-        return vlist[0]
+    if not s.gridmap.has_key(vec):
+        s.gridmap.generate(vec)
+    if not s.gridmap.hasUnit(vec):
+        return s.gridmap[vec]
     
 def getValidName(vec,predicate,height=5):
-
-
-    start = Ogre.Vector3(vec.x , vec.y + height, vec.z )
-    end = Ogre.Vector3(vec.x , vec.y - height, vec.z )
-    ray = OgreNewt.BasicRaycast(s.app.World, start, end)
-    
-    for x in range(0,ray.getHitCount()):
-        info = ray.getInfoAt(x)
-        
-        if (info.mBody and info.mBody.getOgreNode()):
-            name = info.mBody.getOgreNode().getName()
-            if predicate(name):
-                return name
+    if not s.gridmap.has_key(vec):
+        s.gridmap.generate(vec)
+    if s.gridmap.hasMesh(vec):
+        name = s.gridmap.getName(vec) 
+        if predicate(name):
+            return name
 def getValidUnit(vec,height = 5):
     predicate = lambda name:s.unitmap.has_key(name)
     name = getValidName(vec, predicate, height)
