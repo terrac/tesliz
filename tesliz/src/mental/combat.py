@@ -144,7 +144,7 @@ class Combat(object):
                 xo,xa,notused = ability.offset[0]
                 
                 range = xm+xa+xo,ym+ya+yo
-                tactics.util.
+#                tactics.util.
                 #find best offset and set
                 
                 
