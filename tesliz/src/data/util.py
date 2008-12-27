@@ -443,34 +443,84 @@ def getValid(vec,height,xlist , zlist):
         x = xlist[a]
         z = zlist[a]
         start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
-        if not s.gridmap.has_key(start):
-            s.gridmap.generate(start)
-        if not s.gridmap.hasUnit(start):
-            validpos.append(s.gridmap[start])
+        
+        if getValidUnit(start, height):
+            continue
+                
+        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
+        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
+        intersects = result[0]
+        ## update pointer's position
+        if (intersects):
+            x = result[1][0]
+            y = result[1][1]
+            z = result[1][2]
+            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+            position =Ogre.Vector3(x, y, z)   
+            
+
+            
+            validpos.append(position)
+        
+    
     return validpos
 
+def getPositions(vec,height = 50,xlist = [0] , zlist= [0]):
+    validpos = []
+    for a in range(0, len(xlist)):
+        
+        
+        
+        x = xlist[a]
+        z = zlist[a]
+        start = Ogre.Vector3(vec.x + x, vec.y + height, vec.z + z)
+        
+        
+                
+        ray =  Ogre.Ray(start,Ogre.Vector3(0,-1,0))
+        result = s.terrainmanager.getTerrainInfo().rayIntersects(ray)
+        intersects = result[0]
+        ## update pointer's position
+        if (intersects):
+            x = result[1][0]
+            y = result[1][1]
+            z = result[1][2]
+            ## Application.debugText("Intersect %f, %f, %f " % ( x, y, z) )
+            position =Ogre.Vector3(x, y, z)   
+            
 
+            
+            validpos.append(position)
+        
+    
+    return validpos
 def getValidPos(vec, height = 50):
     if not vec:
         return 
-    if not s.gridmap.has_key(vec):
-        s.gridmap.generate(vec)
-    if not s.gridmap.hasUnit(vec):
-        return s.gridmap[vec]
+    vlist = getValid(vec, height, [0], [0])
+    if vlist:
+        return vlist[0]
     
 def getValidName(vec,predicate,height=5):
-    if not s.gridmap.has_key(vec):
-        s.gridmap.generate(vec)
-    if s.gridmap.hasMesh(vec):
-        name = s.gridmap.getName(vec) 
-        if predicate(name):
-            return name
+
+
+    start = Ogre.Vector3(vec.x , vec.y + height, vec.z )
+    end = Ogre.Vector3(vec.x , vec.y - height, vec.z )
+    ray = OgreNewt.BasicRaycast(s.app.World, start, end)
+    
+    for x in range(0,ray.getHitCount()):
+        info = ray.getInfoAt(x)
+        
+        if (info.mBody and info.mBody.getOgreNode()):
+            name = info.mBody.getOgreNode().getName()
+            if predicate(name):
+                return name
 def getValidUnit(vec,height = 5):
     predicate = lambda name:s.unitmap.has_key(name)
     name = getValidName(vec, predicate, height)
     if name:
         return s.unitmap[name]
-    
+
 
     #unit.attributes.hitpoints = 500 * level
     #unit.attributes.damage = 50 * level
