@@ -166,7 +166,13 @@ s = Singleton()
 def printlist(x):
     y = ""
     for z in x:
-        y += str(z)
+        if isinstance(z, tuple):
+            y += "("
+            for w in z:
+                y += str(w)
+            y += ")"
+        else:
+            y += str(z)
     return y
 def debugpickle(obj,tofind = Ogre.Vector3,depth = 0):
     print obj

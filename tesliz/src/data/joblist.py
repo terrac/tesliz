@@ -35,12 +35,12 @@ def setupJobList(unit):
 class Squire(data.jobs.Job):
     
     def getAbilities(self):
-        throw = Throw("cylinder.mesh")
-        abil = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset1,[throw],"Stone","physical",)
+        throw = Throw("cylinder.mesh",data.damage.halfBasicPhysical)
+        abil = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset1,[throw],"Stone","physical",(5,5),4)
         
-        throw.do = lambda self,unit2: data.util.damageHitpoints(data.damage.halfBasicPhysical,self.unit1,unit2)
+        
         #throw.do = lambda self,unit2: damageHitpoints(data.damage.test,self.unit1,unit2)
-        abil.range = 5
+        
         trait1 =Traits([abil])
         
                 #primary,reaction,support,movement
@@ -67,7 +67,7 @@ class Chemist(data.jobs.Job):
         set(unit,28,3,7,4,5,5,(3,3))
     def getAbilities(self):
         abil = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset1,[Throw(Potion())],"Potion","healing",)
-        abil.range = 50
+        abil.range = 5,5
         abil.jobpoints = 50
         trait1 = ItemTraits([abil])
         
@@ -81,9 +81,9 @@ class Wizard(data.jobs.Job):
     def setupStats(self,unit):        
         set(unit,27,3,25,6,9,5,(3,3))
     def getAbilities(self):
-        fireball = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst")
-        fireball.range = 5
-        fireball.value = 20
+        fireball = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst","fire",(5,5),20)
+        
+        
         trait1 = NumberedTraits([fireball],[50])
         fireball.learned = True
         return trait1

@@ -12,6 +12,8 @@ s = Singleton()
 class UnpauseTurnsOnEnd:
 #    def __init__(self, bool):
 #        self.bool = bool
+    def __init__(self,oldspeed = None):
+        self.oldspeed = oldspeed
     def execute(self,timer):
         
         if s.framelistener.unitqueue.getActiveQueue():
@@ -22,7 +24,8 @@ class UnpauseTurnsOnEnd:
                     continue
                 #not done
                 return True
-        
+        if self.oldspeed:
+            s.speed = self.oldspeed
         s.framelistener.pauseturns = False
         
         
@@ -113,12 +116,18 @@ class Event:
             s.framelistener.unitqueue.addToQueue(unit,exe)
             #s.framelistener.backgroundqueue.addToQueue(unit,UnpauseTurnsOnEnd())
             
-    def start(self):
+    def start(self,test = False):
+        oldspeed = 0
+        if test:
+            oldspeed = s.speed
+            s.speed = 50
+        
         unit = Unit()
         s.framelistener.pauseturns = True
         #for exe in self.startlist:
+       
         s.framelistener.unitqueue.addToQueue(unit,self.startlist)
-        unpause = UnpauseTurnsOnEnd()
+        unpause = UnpauseTurnsOnEnd(oldspeed)
         s.framelistener.unitqueue.addToQueue(unpause,unpause)
         
         

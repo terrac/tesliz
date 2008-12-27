@@ -6,7 +6,7 @@ import ogre.gui.CEGUI as CEGUI
 import exceptions, random, os
 #from CEGUI_framework import *   ## we need the OIS version of the framelistener etc
 import ogre.physics.OgreNewt as OgreNewt
-
+import util
 
 from tactics.Singleton import *
 
@@ -107,7 +107,7 @@ class Gridmap(dict):
         dict.__init__(self)
         
     def generate(self,key):
-        
+        key = util.cleanup(key)
         pos =getValidPos(key, 50)
         if not pos:
             pos = getValidUnit(key,50)
@@ -117,31 +117,38 @@ class Gridmap(dict):
         #false if nothing there, eventually will need to add meshes I think
         self[key] = pos
     def hasUnit(self,key):
+        key = util.cleanup(key)
         key =str(key)
         #don't want to really inherit too much here to avoid loops
         #realistically the unit class should be smaller
         if self[key].__class__.__name__ == "Unit":
             return True
     def hasMesh(self,key):
+        key = util.cleanup(key)
         key =str(key)
         if not isinstance(self[key], Ogre.Vector3):
             return True
-    def getName(self,key):        
+    def getName(self,key):
+        key = util.cleanup(key)        
         return self[key].getName()
             
     def __getitem__(self, key):
+        key = util.cleanup(key)
         key =str(key)
         return dict.__getitem__(self,key)
         
     def __setitem__(self, key, value):
+        key = util.cleanup(key)
         key =str(key)
         dict.__setitem__(self,key, value)
     
     def __delitem__(self, key):
+        key = util.cleanup(key)
         key =str(key)
         
         dict.__delitem__(key)
     def has_key(self,key):
+        key = util.cleanup(key)
         key =str(key)
         return dict.has_key(self,key)
         

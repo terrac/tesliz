@@ -27,7 +27,7 @@ def getBestList(unit,isValid):
                if isValid(ability):
                    traitlist.append((ability.value,ability))
                    
-    traitlist.sort()
+    traitlist.sort(reverse=True)
     return traitlist
 
 def getWithinRange(unit,eunit,isValid):
@@ -129,19 +129,25 @@ class Combat(object):
         return True
 
 
-    def chooseBest(self,unit):
-        bestabilitieslist = getBestList(unit, self.isValid)
-        unitlist = getClose(unit,self.isWanted)
-        for ability in bestabilitieslist:
-            for unit in unitlist:
+    def chooseBest(self,unit1):
+        bestabilitieslist = getBestList(unit1, self.isValid)
+   
+        unitlist = getCloseList(unit1,self.isWanted)
+        if not unitlist:
+            return False
+        for notused,ability in bestabilitieslist:
+            
+            getDamage = ability.getDamage
+            valuelist = []
+            for notused,unit2 in unitlist:
                 #test range
-                xm, ym = unit.attributes.moves.range
+                xm, ym = unit1.attributes.moves
                 xa, ya = ability.range
                 
                 #might need to reverse
                 ability.offset.sort()
                 #add the x and y as the extension of the offset range
-                xo,xa,notused = ability.offset[0]
+                xo,yo,notused = ability.offset[0]
                 
                 range = xm+xa+xo,ym+ya+yo
 #                tactics.util.
@@ -153,10 +159,28 @@ class Combat(object):
                         #get from position2 to the place that would be chosen
                         tohit = position2 - offset
                         #calculate damage from this hit
+                        value = 0
                         for off in ability.offset:
-                            unit =data.util.getValidUnit(tohit + offset, range[1])
+                            unit =data.util.getValidUnit(tohit + off, range[1])
                             if unit:
-                                data.util.getChanceToHitAndDamage(number, type, unit1, unit2)
+                                chance, number =data.util.getChanceToHitAndDamage(getDamage, unit1, unit2)
+                                
+                                if unit1.player != unit.player:
+                                    value += chance * number
+                                else:
+                                    value -= chance * number
+                        valuelist.append((value,tohit))
+         
+            valuelist.sort()
+            if valuelist:
+                value,position = valuelist.pop()
+                self.endabil = ability
+                self.endvec = position
+                self.eunit = unitlist[0][1]
+                
+                break;
+        
+        return True
     
     def execute(self,timer):
         #aoeu
@@ -171,35 +195,36 @@ class Combat(object):
         
         
         if self.state == "start": 
-            if not self.setupMove():
+            self.move = unit.traits["Move"].getClassList()[0]
+            if not self.chooseBest(self.unit):
                 return False
             self.state = "showmoves"
         if self.state == "showmoves":
             self.nlist = []
-            for vec in self.vlist:
+            vlist = data.util.getAllValid(unit.body.getOgreNode().getPosition(), unit.attributes.moves)
+            for vec in vlist:
                 self.nlist.append(data.util.show(vec))
                 
             self.wait = 2
             self.state ="showchoice"
             return True
         if self.state == "showchoice":  #show choices for now
-            for x in self.nlist:                    
-                s.app.sceneManager.getRootSceneNode().removeChild(x)
-            self.nlist = []
-            for vec in self.validvecs:
-                self.nlist.append(data.util.show(vec,"BlueMage/SOLID"))
-            if self.endvec:
-                self.nlist.append(data.util.show(self.endvec + Ogre.Vector3(0,1,0),"RedMage/SOLID"))
-            self.wait = 2
+#            for x in self.nlist:                    
+#                s.app.sceneManager.getRootSceneNode().removeChild(x)
+#            self.nlist = []
+#            for vec in self.validvecs:
+#                self.nlist.append(data.util.show(vec,"BlueMage/SOLID"))
+#            if self.endvec:
+#                self.nlist.append(data.util.show(self.endvec + Ogre.Vector3(0,1,0),"RedMage/SOLID"))
+#            self.wait = 2
             self.state ="addactions"
             return True
         if self.state == "addactions":
             for x in self.nlist:                    
                 s.app.sceneManager.getRootSceneNode().removeChild(x)
-            if not self.endvec:
-                self.endvec = self.eunit.body.getOgreNode().getPosition()
-            tactics.datautil.setStart(self.move,unit,None,self.endvec)
-            s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.move))
+            if self.endvec:
+                tactics.datautil.setStart(self.move,unit,None,self.endvec)
+                s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.move))
             if self.endabil:
                 tactics.datautil.setStart(self.endabil,unit,self.eunit)              
                 s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.endabil))

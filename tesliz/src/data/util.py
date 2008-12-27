@@ -11,48 +11,7 @@ import userinterface.traits
 #import tactics.trait
 import ogre.gui.CEGUI as CEGUI
 s = Singleton()
-
-def cleanup(key):
-
-    if not key:
-        return key
-    
-    if int(key.x) + .50 > key.x:
-        key.x = int(key.x)
-    else:
-        key.x = int(key.x) + 1
-    if int(key.y) + .50 > key.y:
-        key.y = int(key.y)
-    else:
-        key.y = int(key.y) + 1
-    if int(key.z) + .50 > key.z:
-        key.z = int(key.z)
-    else:
-        key.z = int(key.z) + 1        
-
-    return key
-class VectorMap(dict):
-    
-   
-    def __getitem__(self, key):
-        key =cleanup(key)
-        key = str(key)
-        return dict.__getitem__(self,key)
-        
-    def __setitem__(self, key, value):
-        key =cleanup(key)
-        key = str(key)
-        dict.__setitem__(self,key, value)
-    
-    def __delitem__(self, key):
-              
-        key = str(key)  
-        dict.__delitem__(key)
-    def has_key(self,key):
-        key =cleanup(key)
-        key = str(key)
-        return dict.has_key(self,key)
-
+import manager.util
 
 def show(pos, texturename = None ,name = None,size = .3):
     
@@ -119,7 +78,7 @@ def fromCameraToMesh():
             position =Ogre.Vector3(x, y+1, z)
             name = "terrain"
     if position:
-        cleanup(position)
+        manager.util.cleanup(position)
     return name,position
 
 def createEntity(mesh,node):    
@@ -266,8 +225,8 @@ def damageHitpoints(getDamage,unit1,unit2):
 
 
 
-def getChanceToHitAndDamageForAttack(number,type,unit1,unit2):
-    
+def getChanceToHitAndDamage(getDamage,unit1,unit2):
+    number,type = getDamage(unit1)
 
     
         
@@ -291,15 +250,16 @@ def getChanceToHitAndDamageForAttack(number,type,unit1,unit2):
         else: #on the side
             chancetohit *= tohit * ae * se
             
-        brav1 = unit1.attributes.bravery
-        brav2 = unit2.attributes.bravery    
+        brav1 = unit1.attributes.physical.belief
+        brav2 = unit2.attributes.physical.belief
         #a higher bravery than opponent adds damage
         number += ((brav1 - brav2) / 100) * number 
     else: #magical
-        chancetohit *= tohit * ae * se * ce
+        ae =(100-unit1.attributes.physical.accessoryevade) / 100  
+        chancetohit *= 1 * ae
         
-        faith1 = unit1.attributes.faith
-        faith2 = unit2.attributes.faith    
+        faith1 = unit1.attributes.magical.belief
+        faith2 = unit2.attributes.magical.belief    
         #high faith adds damage, but opponents lower faith reduces total damage so a faith of 0 cannot recieve magical damage or healing
         number += ((faith1  / 100) * number) * (faith2  / 100) 
     return chancetohit,number 
@@ -357,7 +317,7 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     if not names:
         names = set()
     if not prevfound:
-        prevfound = VectorMap()
+        prevfound = manager.util.VectorMap()
     
     if hasattr(range,'__iter__'):
         moves,jump = range
@@ -390,7 +350,7 @@ def getAllValid(vec1,range,valid = None, prevfound=None):
     if not valid:
         valid = []
     if not prevfound:
-        prevfound = VectorMap()
+        prevfound = manager.util.VectorMap()
     
     moves,jump = range
     xlist = [0,0,1,-1]
@@ -412,7 +372,7 @@ def getAllValid(vec1,range,valid = None, prevfound=None):
 
 def getShortest(vec1,vec2,range, prevfound=None):
     if not prevfound:
-        prevfound = VectorMap()
+        prevfound = manager.util.VectorMap()
     if hasattr(range,'__iter__'):
         moves,jump = range
     else:

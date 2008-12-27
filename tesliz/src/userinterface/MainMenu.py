@@ -1,4 +1,3 @@
-
 from tactics.Singleton import *
 
 from tactics.Unit import Unit
@@ -102,15 +101,20 @@ class AbilityMenu:
     
     def getList(self,type):
         valid = []
-        for x in self.unit.joblist:
-            if data.jobs.choosablemap.has_key(type):
-                typemap = data.jobs.choosablemap[type]
-                if typemap.has_key(x.getName()):
-                    x.getTraits(self.unit)
-                    list =typemap[x.getName()]
-                    for y in list:
-                        if y.getName() in x.learnedabilitynames:
-                            valid.append(y)
+        if type == "Secondary":
+            for x in self.unit.joblist:
+                if x != self.unit.job:
+                    valid.append(x)
+        else:    
+            for x in self.unit.joblist:
+                if data.jobs.choosablemap.has_key(type):
+                    typemap = data.jobs.choosablemap[type]
+                    if typemap.has_key(x.getName()):
+                        x.getTraits(self.unit)
+                        list =typemap[x.getName()]
+                        for y in list:
+                            if y.getName() in x.learnedabilitynames:
+                                valid.append(y)
         return valid
     def setType(self,e):
         if not e.window.getFirstSelectedItem():
@@ -149,8 +153,9 @@ class ItemsMenu(AbilityMenu):
             return
         self.unit.player.items.add(text)
         type = self.list[self.abilheld.getItemIndex(self.abilheld.getFirstSelectedItem())]
+        self.unit.items.remove(type)
         self.setupList(type)
-        item.setText(type)
+        
         self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, self.pwindow, .5, .2, .2, .3)
         self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
         self.setupAbil()

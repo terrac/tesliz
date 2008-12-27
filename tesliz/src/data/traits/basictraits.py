@@ -2,6 +2,7 @@ import data.util
 import utilities.physics
 from tactics.Singleton import *
 import ogre.renderer.OGRE as Ogre
+import manager.util
 
 def show(unit):
     pos = unit.body.getOgreNode().getPosition()
@@ -70,7 +71,12 @@ class FFTMove(Trait):
         if not self.list:
             
             vec1 = self.unit1.body.getOgreNode().getPosition()
-            vec2 = data.util.cleanup(self.endPos)
+            vec2 = manager.util.cleanup(self.endPos)
+            for x in s.gridmap.values():
+                if isinstance(x, self.unit1.__class__):
+                    print x
+            s.gridmap[vec1] = vec1 
+            
             if not vec2:
                 s.log("vec 2 in move is empty "+str(self.unit1),self)
                 aoue
@@ -85,6 +91,9 @@ class FFTMove(Trait):
                 x.y +=1
             
             self.list.pop(0)
+            size = len(self.list)
+            if size and data.util.getValidUnit(self.list[len(self.list)-1], 50):
+                self.list.pop()
             if not self.list:
                 s.log("cant move",self)
                 return False
@@ -131,7 +140,7 @@ class FFTMove(Trait):
             if len(self.list) == self.cur:
                 self.unit1.body.setPositionOrientation(vec2,xzsrc.getRotationTo(xzdirection))
                 s.gridmap[vec2] = self.unit1
-            
+                
             predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
             name =data.util.getValidName(vec2, predicate)
             if name:                                
@@ -188,18 +197,23 @@ class Attack(Trait):
 class GridTargeting(Trait):
     
     
-    def __init__(self,offset,todo,name,type = "fire"):
+    def __init__(self,offset,todo,name,type="physical",range=(1,1),value = 4):
         self.offset = offset(self)
         self.particlename = 'RedTorch'
         self.name=name
-        self.value=4     
-        self.range = 10,10
-        self.type = type
+        self.value = value
+        
+        self.range = range
+        #elf.type = type#
         
         self.timeleft = 3
         
         self.sound = "fireball.wav"
         self.todo = todo
+        for action in todo:
+            if hasattr(action, "getDamage"):
+                self.getDamage = action.getDamage
+                break
         
     def offset1(self):
         x = 0,0,0

@@ -225,8 +225,9 @@ class OgreNewtonApplication (sf.Application):
             unit.attributes.physical.points = unit.attributes.physical.maxpoints
             unit.attributes.magical.points = unit.attributes.magical.maxpoints    
         
-        if s.event:
-            s.event.start()
+        if s.event:            
+            s.event.start(test)
+         
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
 #        winMgr = CEGUI.WindowManager.getSingleton() 
 #        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")

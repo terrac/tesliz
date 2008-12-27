@@ -134,7 +134,8 @@ class Unit(object):
     def setVisible(self,bool):
         self.node.setVisible(bool)
         self.visible = bool
-
+    def getDirection(self):
+        return self.node.getOrientation()
     def getName(self):
         return self.name
     def increment(self):
@@ -206,3 +207,4 @@ class Unit(object):
         
         tactics.util.resetAttributes(self)
         self.reset()
+    

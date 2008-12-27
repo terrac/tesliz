@@ -27,14 +27,16 @@ class Particle:
 
 
 class Throw():
-    def __init__(self, item = None):
+    def __init__(self, item = None,getDamage = None):
         self.run = False
         self.item = item
         if isinstance(item, str):
             self.mesh = item
+            self.getDamage = getDamage
+            self.do = lambda self,unit2: data.util.damageHitpoints(getDamage,self.unit1,unit2)
         else:
             self.mesh = item.mesh
-        self.do = lambda self,unit2: unit2.items.do(self.item.affects)
+            self.do = lambda self,unit2: unit2.items.do(self.item.affects)
         
     
     
@@ -217,20 +219,20 @@ class RibbonTrail():
         
 class DamagePhysical():
     def __init__(self,damage,type):
-        self.damage = damage
+        self.getDamage = damage
         self.type = type
     def execute(self,unit1,unit,endpos):
-        damage = unit1.attributes.bravery * self.damage         
+        damage = unit1.attributes.bravery * self.getDamage         
         unit.damageHitpoints(damage,self.type,unit1)
         
 class DamageMagic():
     def __init__(self,damage,type = None):
-        self.damage = damage
+        self.getDamage = damage
     
     def execute(self,unit1,unit,endpos):    
         if unit:    
-            data.util.damageHitpoints(self.damage, unit1, unit)
-            #unit.damageHitpoints(self.damage,self.type,unit1)
+            data.util.damageHitpoints(self.getDamage, unit1, unit)
+            #unit.damageHitpoints(self.getDamage,self.type,unit1)
     
         
 class AffectOther():
