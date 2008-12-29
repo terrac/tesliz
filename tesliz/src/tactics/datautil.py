@@ -32,8 +32,8 @@ def setStart(ability,unit1,unit2=None,position=None):
     if hasattr(ability, "unit1") and hasattr(ability, "endPos") and not data.util.withinRange(ability.endPos, ability.unit1.body.getOgreNode().getPosition(),ability.range):
         return False
 
-    if hasattr(ability, "needsasecondunit"):
-        if ability.needsasecondunit:
+    if hasattr(ability, "unittargeting"):
+        if ability.unittargeting:
             if not( hasattr(ability, "unit2") and  ability.unit2):
                 return False
  
