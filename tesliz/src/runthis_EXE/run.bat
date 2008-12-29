@@ -1,2 +1,2 @@
-runthis.exe
+runthis.exe tesliz
 pause
