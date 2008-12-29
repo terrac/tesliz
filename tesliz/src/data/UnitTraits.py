@@ -1,5 +1,5 @@
 import data.traits.generictraits
-import tactics.Move
+ 
 import userinterface.traits  
 
 class UnitTraits():

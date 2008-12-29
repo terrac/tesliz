@@ -2,7 +2,7 @@ from tactics.util import *
 
 from tactics.Event import *
 from tactics.createunits import *
-import tactics.Move
+ 
 import utilities.FollowCamera
 import ogre.renderer.OGRE as Ogre
 
@@ -70,6 +70,6 @@ def addScripts(scriptmap):
     s.app.msnCam.setOrientation(Ogre.Quaternion(-1,0,0,0))
     s.app.setTurnbased(False)
     s.framelistener.pauseturns = True
-    scriptmap["Script1"] = convo1
+    scriptmap["start"] = convo1
     
     

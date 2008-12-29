@@ -11,8 +11,8 @@ def weaponPhysical(unit):
     dam = wp.power * (fs.power * fs.belief/100)
     return dam,"physical" 
 def basicMagical(unit):
-    fs = unit.attributes.magical
-    dam =fs.power * (fs.power * fs.belief/100)
+    fs = unit.attributes.magical 
+    dam =fs.power * (fs.power * fs.belief/100) 
     return dam,"magical"
 
 def test(unit):

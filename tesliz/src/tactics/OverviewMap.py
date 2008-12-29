@@ -5,7 +5,7 @@ import dbhash
 import anydbm
 import data.util
 import tactics.util
-import tactics.Move
+ 
 import time
 import data.overviewtrade
 from tactics.Singleton import *
@@ -117,6 +117,7 @@ class OverviewMap:
         self.exitscene = None
         
         s.overviewmap = self
+        s.framelistener.setCurrentPlayer( s.overviewmap)
         self.overviewtrade = data.overviewtrade.OverviewTrade()
         
         if os.path.exists(s.campaigndir+self.filename) and not self.newgame:
@@ -132,7 +133,8 @@ class OverviewMap:
             positionmap.close()
            # self.createLocations(self.root)
         else:
-            s.settings.setupDefaultPositions(self)            
+            if not s.editgame:
+                s.settings.setupDefaultPositions(self)            
 
             #AddPos(self.root, self)
         #if file text exists then load positions from file

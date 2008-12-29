@@ -152,11 +152,12 @@ class FFTMove(Trait):
                 
         return True
 class Attack(Trait):
-
+    def __init__(self):
+        pass
     name = "Attack"
     value= 5     
     timeleft = 3
-    range=1,1
+    range=1,10
     animation = "LOOP"
     type = "bludgeon"
     sound = "sword.wav"
@@ -170,13 +171,12 @@ class Attack(Trait):
 
     def execute(self,timer):
         
-     
-   
+  
         if not self.unit1.body or not self.unit2.body:
 
             return
         
-        
+
         show(self.unit1)
         
         

@@ -12,7 +12,7 @@ import utilities.physics
 import tactics.dotscenea 
 import tactics.Turn 
 import tactics.Player 
-import tactics.Move 
+  
 import data.settings 
 import data.aisettings 
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
@@ -136,14 +136,15 @@ class OgreNewtonApplication (sf.Application):
         
 
         self.createFrame()
-        OverviewMap("Terra.player")
+        if not self.onStartup():
+            OverviewMap("Terra.player")
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "current")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
         btn.setText("current")
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.6)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.1)))
-        s.framelistener.setCurrentPlayer( s.overviewmap)
-        self.onStartup()
+        
+        #self.onStartup()
 
     def loadScene(self,scenename, test = False):
         #scenename = "media\\scenes\\" + scenename
@@ -218,15 +219,15 @@ class OgreNewtonApplication (sf.Application):
                 s.unitmap[name] = unitmap[name]
                 
 
-            for x in scriptmap.values():
-                s.event = tactics.Event.Event( startlist = x)
+            
+            s.event = tactics.Event.Event( scriptmap)
         
         for unit in s.unitmap.values():
             unit.attributes.physical.points = unit.attributes.physical.maxpoints
             unit.attributes.magical.points = unit.attributes.magical.maxpoints    
         
         if s.event:            
-            s.event.start(test)
+            s.event.startEvent(test)
          
 #        sheet = CEGUI.System.getSingleton().getGUISheet()
 #        winMgr = CEGUI.WindowManager.getSingleton() 
@@ -671,11 +672,13 @@ def startup():
     s.framelistener.pauseturns = False
     s.app.loadScene(sys.argv[2],True)
     
-    pass
+    return True
 def editOnStart():
     #startup()
+    
     s.app.reset()
     s.editgame = userinterface.EditGame.EditGame(sys.argv[2])
+    return True
 if __name__ == '__main__':
 #    try:
         if len(sys.argv) == 2:
@@ -686,6 +689,7 @@ if __name__ == '__main__':
             runOnStartup = editOnStart
         s.campaignname = sys.argv[1]    
         s.campaigndir = "media/campaigns/"+s.campaignname+"/"
+        s.editgame = None
         application = OgreNewtonApplication(runOnStartup)
         application.go()
 #    except Ogre.OgreException, e:

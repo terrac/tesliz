@@ -9,7 +9,7 @@ import util
 import tactics.util
 import data.util
 import shelve
-import tactics.Move
+ 
 import utilities.FollowCamera
 import tactics.Unit
 import copy
@@ -28,6 +28,7 @@ class EditGame:
         return s.campaigndir+self.name +"\\mapdata.dat"
     def __init__(self,name ):
         self.name = name
+        s.terrainmanager.loadTerrain(name)
         s.app.msnCam.setOrientation(Ogre.Quaternion(-1,0,0,0))
         #destroy and save current layout
         s.cegui.hide()

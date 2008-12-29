@@ -29,7 +29,7 @@ def addScripts(scriptmap):
      (cerc,"Hey hey, you can continue this conversation after you are dead.  Me and trent will make short work of you")
       
      ]
-    scriptmap["Script1"] = convo1
+    scriptmap["start"] = convo1
         #tmap = {0:convo1}
 
 #        fmap = {'death-Cerc':(alluvia,"Wut Wut")}

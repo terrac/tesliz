@@ -1,7 +1,7 @@
 import sys
 import copy
 from tactics.Singleton import *
-from tactics.Move import *
+
 from tactics.datautil import *
 from userinterface.HumanInterface import *
 import ogre.gui.CEGUI as CEGUI

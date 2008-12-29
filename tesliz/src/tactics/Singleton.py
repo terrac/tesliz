@@ -61,8 +61,13 @@ class Singleton:
            
         
         def removeUnit(self,unit):
-            unit.destroy()   
-            self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
+            unit.destroy()
+
+            #currently this causes problems if it is removed .  So I am not removingi it
+            if unit.node:
+                self.app.sceneManager.getRootSceneNode().removeChild(unit.node)
+            unit.node = None   
+            unit.body = None            
             del self.unitmap[unit.getName()]
             
             #units now always stay with players and can be ressurected.  But they can still be dismissed
@@ -86,7 +91,7 @@ class Singleton:
             for unit in self.unitmap.values():
                 unit.destroy()
             if s.event:
-                s.event.end()
+                s.event.endEvent()
             del self.playermap["Computer1"]
             #sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
 

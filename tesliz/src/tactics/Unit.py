@@ -151,6 +151,7 @@ class Unit(object):
         x = tesliz.runthis.Timed(turns,node,extra)
         self.timedbodies.append(x)
     def startTurn(self):
+        
         if self.getDeath():
             self.getDeath().execute(self)
             s.turn.nextUnitTurnUnpause()

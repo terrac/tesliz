@@ -235,10 +235,10 @@ def getChanceToHitAndDamage(getDamage,unit1,unit2):
     if type == "physical":
         dir1 = unit1.getDirection()
         dir2 = unit2.getDirection()
-        tohit = unit1.attributes.physical.tohit/100 
-        ce =unit1.attributes.physical.classevade / 100
-        se =unit1.attributes.physical.shieldevade / 100
-        ae =unit1.attributes.physical.accessoryevade / 100 
+        tohit = (100-unit1.attributes.physical.tohit)/100 
+        ce =(100-unit1.attributes.physical.classevade) / 100
+        se =(100-unit1.attributes.physical.shieldevade) / 100
+        ae =(100-unit1.attributes.physical.accessoryevade) / 100 
         
         chancetohit = tohit
     #    if both pointing in same direction then 100% as one is behind the other
@@ -292,9 +292,9 @@ def withinRange(vec1,vec2,range):
     moves -=1
     range = moves,jump
     
-    if utilities.physics.distance(vec1, vec2) < 2:
+    if utilities.physics.ignoreHeightDistance(vec1, vec2) < 1.3:
         return True
-    if moves < 0:
+    if moves <= 0:
         return False
     
     lowest = 999
@@ -346,6 +346,8 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
             prevfound[x] = moves
             markValid(x, range,mark,names,prevfound)
     return names
+xlist = [0,0,1,-1]
+zlist = [-1,1,0,0]
 def getAllValid(vec1,range,valid = None, prevfound=None):
     if not valid:
         valid = []
@@ -353,8 +355,7 @@ def getAllValid(vec1,range,valid = None, prevfound=None):
         prevfound = manager.util.VectorMap()
     
     moves,jump = range
-    xlist = [0,0,1,-1]
-    zlist = [-1,1,0,0]
+
     list =getValid(vec1, jump,xlist,zlist)
     for x in list:
         if prevfound.has_key(x):

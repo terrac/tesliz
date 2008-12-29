@@ -4,7 +4,7 @@ import data.traits.generictraits
 #import data.traits.Generictraits as GT
 from userinterface.traits import *
 
-import tactics.Move
+ 
 #from data.traits.GenericTrait import Move
 import copy
 from tactics.Singleton import *

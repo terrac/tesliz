@@ -3,7 +3,7 @@ import os
 import shelve
 import data.util
 import tactics.util
-import tactics.Move
+ 
 import time
 import data.overviewtrade
 from tactics.Singleton import *

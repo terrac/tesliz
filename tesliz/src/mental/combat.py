@@ -58,7 +58,20 @@ def getCloseList(unit,isWanted):
     tuplelist.sort()
     
     return tuplelist
-
+def getBestMove(position1,position2,range,moves):
+    #this stuff would probably be best incrementally done
+    shortestlist =data.util.getShortest(position1, position2, moves)
+    for pos in shortestlist:
+        if data.util.withinRange(pos, position2, range):
+            return pos
+    shortest = shortestlist.pop()
+    valid = [shortest]
+    valid =data.util.getAllValid(shortest, (3,3),valid)
+    for pos in valid:
+        if data.util.withinRange(pos, position2, range):
+            return pos
+    return shortest
+    
 class Combat(object):
     
     
@@ -130,18 +143,21 @@ class Combat(object):
 
 
     def chooseBest(self,unit1):
+        
         bestabilitieslist = getBestList(unit1, self.isValid)
    
         unitlist = getCloseList(unit1,self.isWanted)
         if not unitlist:
             return False
+        self.movepos = None
+        self.endabil = None
         for notused,ability in bestabilitieslist:
             
             getDamage = ability.getDamage
             valuelist = []
             for notused,unit2 in unitlist:
                 #test range
-                xm, ym = unit1.attributes.moves
+                
                 xa, ya = ability.range
                 
                 #might need to reverse
@@ -149,19 +165,21 @@ class Combat(object):
                 #add the x and y as the extension of the offset range
                 xo,yo,notused = ability.offset[0]
                 
-                range = xm+xa+xo,ym+ya+yo
+                attackrange =xa+xo,ya+yo
 #                tactics.util.
                 #find best offset and set
                 position2 = unit2.node.getPosition()
                 position1 = unit1.node.getPosition()
-                if data.util.withinRange(position1,position2,range):
+                if not self.movepos:
+                    self.movepos =getBestMove(position1,position2,attackrange,unit1.attributes.moves)
+                if data.util.withinRange(self.movepos,position2,attackrange):
                     for offset in ability.offset:
                         #get from position2 to the place that would be chosen
                         tohit = position2 - offset
                         #calculate damage from this hit
                         value = 0
                         for off in ability.offset:
-                            unit =data.util.getValidUnit(tohit + off, range[1])
+                            unit =data.util.getValidUnit(tohit + off, attackrange[1])
                             if unit:
                                 chance, number =data.util.getChanceToHitAndDamage(getDamage, unit1, unit2)
                                 
@@ -169,15 +187,16 @@ class Combat(object):
                                     value += chance * number
                                 else:
                                     value -= chance * number
-                        valuelist.append((value,tohit))
-         
+                        
+                        valuelist.append((value,tohit,unit))
+            
             valuelist.sort()
             if valuelist:
-                value,position = valuelist.pop()
+                value,position,unit = valuelist.pop()
                 self.endabil = ability
                 self.endvec = position
-                self.eunit = unitlist[0][1]
-                
+                self.eunit = unit
+            
                 break;
         
         return True
@@ -222,11 +241,11 @@ class Combat(object):
         if self.state == "addactions":
             for x in self.nlist:                    
                 s.app.sceneManager.getRootSceneNode().removeChild(x)
-            if self.endvec:
-                tactics.datautil.setStart(self.move,unit,None,self.endvec)
+            if self.movepos:
+                tactics.datautil.setStart(self.move,unit,None,self.movepos)
                 s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.move))
             if self.endabil:
-                tactics.datautil.setStart(self.endabil,unit,self.eunit)              
+                tactics.datautil.setStart(self.endabil,unit,self.eunit,self.endvec)              
                 s.framelistener.unitqueue.addToQueue(unit,copy.copy(self.endabil))
             self.state = "start"
             return False

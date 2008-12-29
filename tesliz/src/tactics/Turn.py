@@ -67,7 +67,8 @@ class Turn(object):
         self.pause = True
         s.framelistener.timer = 1
         unit =self.turnlist.pop()
-       
+        printlist(self.turnlist)
+        s.unitmap
 #        if unit.attributes.physical.points <1:
 #            self.pause  = False
 #            return
@@ -75,7 +76,7 @@ class Turn(object):
         s.log(unit)
         s.framelistener.setCurrentPlayer(unit.player)
         
-    
+        
         show(unit)
         unit.startTurn()
                    

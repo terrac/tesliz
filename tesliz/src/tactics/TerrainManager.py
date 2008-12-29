@@ -61,7 +61,7 @@ class TerrainManager:
         terrainMgr   = self.terrainMgr
 
         ## set position and size of the terrain
-        terrainInfo.setExtents(Ogre.AxisAlignedBox(-50, -50, 0, 100, 10, 100))
+        terrainInfo.setExtents(Ogre.AxisAlignedBox(-50, -50, 0, 1000, 10, 100))
         ## now render it
         terrainMgr.createTerrain(terrainInfo)
 

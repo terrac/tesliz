@@ -75,73 +75,89 @@ class ScriptEvent:
             z = 4       
         #saved scripts will only have strings
         if isinstance(x, str):
-            x = s.unitmap[x]                  
+            x = s.unitmap[x]
+        
+                          
         s.chatbox.add(y,x,z)
         self.time = z
         return True
 class Event:
     #do the dict param here
-    def __init__(self, positionmap = dict(), turnmap = dict(),startlist = []):
-        self.positionmap = positionmap
-        self.turnmap = turnmap
-        self.startlist = startlist
-        for x in turnmap.values():
-            for y in x.keys():
-                x[y] = ScriptEvent(x[y])
+    def __init__(self, scriptmap):
+        self.turn = None
+        self.position = None
+        self.start = None
+        self.end = None
+#        if scriptmap.has_key("position"):
+#            self.position = scriptmap["position"]
+#        if scriptmap.has_key("turn"):
+#            self.turn = scriptmap["turn"]
+#        if scriptmap.has_key("start"):
+#            self.startlist = scriptmap["start"] 
+        for x in scriptmap:
+            setattr(self, x, scriptmap[x])
+        if self.turn:
+            for x in self.turn.values():
+                for y in x.keys():
+                    x[y] = ScriptEvent(x[y])
 #        slist = []
 #        for x in self.startlist:
 #            slist.append(ScriptEvent(x))
-        self.startlist = ScriptEvent(self.startlist)
+        self.start = ScriptEvent(self.start)
         self.turncount = dict()
        
         
 
     def updateMove(self,pos):
-        for x in self.positionmap.keys():
+        for x in self.position.keys():
             #print distance(x,pos)
             if data.util.getDistance(x,pos) < 10:
-                self.positionmap[x].execute()
-                del self.positionmap[x]
+                self.position[x].execute()
+                del self.position[x]
     def turnStarted(self,unit):
-        if not self.turnmap.has_key(unit):
+        if  not self.turn or not self.turn.has_key(unit):
             return
         if self.turncount.has_key(unit):
             self.turncount[unit] += 1
         else : 
             self.turncount[unit] = 0
              
-        if self.turnmap[unit].has_key(self.turncount[unit]):
-            exe = self.turnmap[unit][self.turncount[unit]]
+        if self.turn[unit].has_key(self.turncount[unit]):
+            exe = self.turn[unit][self.turncount[unit]]
             s.framelistener.pauseturns = True
             s.framelistener.unitqueue.addToQueue(unit,exe)
             #s.framelistener.backgroundqueue.addToQueue(unit,UnpauseTurnsOnEnd())
             
-    def start(self,test = False):
+    def startEvent(self,test = False):
         oldspeed = 0
         if test:
             oldspeed = s.speed
             s.speed = 50
         
-        unit = Unit()
-        s.framelistener.pauseturns = True
-        #for exe in self.startlist:
-       
-        s.framelistener.unitqueue.addToQueue(unit,self.startlist)
-        unpause = UnpauseTurnsOnEnd(oldspeed)
-        s.framelistener.unitqueue.addToQueue(unpause,unpause)
+        if self.start:
+            unit = Unit()
+            s.framelistener.pauseturns = True
+            #for exe in self.startlist:
+             
+            s.framelistener.unitqueue.addToQueue(unit,self.start)
+            unpause = UnpauseTurnsOnEnd(oldspeed)
+            s.framelistener.unitqueue.addToQueue(unpause,unpause)
         
         
-    def end(self):
-        for unit in s.unitmap.values():            
-            if self.turnmap.has_key(unit) and self.turnmap[unit].has_key("end"):
-                exe = self.turnmap[unit]["end"]
-                
-                s.framelistener.unitqueue.addToQueue(unit,exe)
-                
+    def endEvent(self):
+        if self.end:
+            unit = Unit()
+            s.framelistener.pauseturns = True
+            #for exe in self.startlist:
+           
+            s.framelistener.unitqueue.addToQueue(unit,self.end)
+            unpause = UnpauseTurnsOnEnd()
+            s.framelistener.unitqueue.addToQueue(unpause,unpause)
+                    
     
     def death(self,unit):
         dkey = "death-"+unit.getName()
-        if self.turnmap.has_key(unit) and self.turnmap[unit].has_key(dkey):
-            exe = self.turnmap[unit][dkey]
+        if self.turn.has_key(unit) and self.turn[unit].has_key(dkey):
+            exe = self.turn[unit][dkey]
             unit, blah = exe.tlist[0]
             s.framelistener.unitqueue.addToQueue(unit,exe)

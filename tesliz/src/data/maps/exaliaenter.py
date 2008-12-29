@@ -2,7 +2,7 @@ from tactics.util import *
 
 from tactics.Event import *
 from tactics.createunits import *
-import tactics.Move
+ 
 
 
 class ChangeSides:
@@ -20,12 +20,11 @@ class Unitdata(object):
   
     
         
-    def floormap(self,unit):
-        unit.node.getAttachedObject(0).setMaterialName( "LightBlue/SOLID" )
         #unit.node.setScale(Ogre.Vector3(5,5,5))
         
         buildImmoblePhysics(unit)  
     def setupEvents(self):
+        pass
         #ulist = ["Chemist"]
         #CreateRandom(ulist,"Player1",Ogre.Vector3(9,-25,4))
         #CreateRandom(ulist,"Computer1",Ogre.Vector3(20,-25,4))
@@ -94,5 +93,6 @@ class Unitdata(object):
         s.event = Event(turnmap = {oath:tmap})
         
     def setupTestMap(self):
-        unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
-        unit =buildUnitNoNode("Oath","Player1", "Squire",2)
+        pass
+        #unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
+        #unit =buildUnitNoNode("Oath","Player1", "Squire",2)
