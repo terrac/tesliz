@@ -33,7 +33,7 @@ def setStart(ability,unit1,unit2=None,position=None):
         return False
 
     if hasattr(ability, "unittargeting"):
-        if ability.unittargeting:
+        if ability.unittargeting and len(ability.offset) == 1:
             if not( hasattr(ability, "unit2") and  ability.unit2):
                 return False
  

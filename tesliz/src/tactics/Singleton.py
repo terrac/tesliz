@@ -7,7 +7,7 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import winsound
-import pygame
+import pygame.mixer
 
 
 
@@ -38,8 +38,8 @@ class Singleton:
            self.app = None
            self.turnbased = True
            
-           #self.mixer = pygame.mixer
-           #self.mixer.init(11025)
+           
+           pygame.mixer.init(48000,16)
            #self.soundset = set()
            #self.channelset = set()
            #makes things based on timesincelast frame move faster or slower
@@ -114,8 +114,10 @@ class Singleton:
                 
                 
                 break;
-            self.overviewmap.currentVisited("Player1")
-            
+            if hasattr(self, "overviewmap"):                
+                self.overviewmap.currentVisited("Player1")
+            else:
+                raise Exception("Not sure what to do here for edit mode yet")
             #self.running = False
             
             
@@ -130,9 +132,15 @@ class Singleton:
             print text
         def screenshot(self):    
             self.app.renderWindow.writeContentsToTimestampedFile("screenshot",".jpg")
-        def playsound(self,filename="C:\sound.wav"):
+        def playsound(self,filename="C:\sound.wav",directory ="media\\sounds\\",option = None):
             
-
+            sound = pygame.mixer.Sound(directory+filename)
+            sound.set_volume(s.settings.effectvolume)
+            if option == "loop":
+                sound.play(-1)
+            else:
+                sound.play()
+            return sound
             #choose a desired audio format
              #raises exception on fail
             
@@ -144,7 +152,12 @@ class Singleton:
             #I can't figure this out and I really don't care
             winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
-            winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
+            #
+            pygame.mixer.music.load("media\\sounds\\"+filename)
+            pygame.mixer.music.set_volume(s.settings.musicvolume)
+            pygame.mixer.music.play()
+            
+            #winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
     
     # storage for the instance reference
     __instance = None

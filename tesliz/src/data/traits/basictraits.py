@@ -54,14 +54,14 @@ class FFTMove(Trait):
         self.cur = 0
         self.speed = speed
         self.affect = None
-
+        self.sound = None
     
     animationState = None
 
         
 
     def execute(self,timer):
-        #s.playsound("walk.wav")
+        
         if not self.unit1 or not self.unit1.body or not self.unit1.node:
             return
         entity = self.unit1.node.getAttachedObject(0)
@@ -101,6 +101,7 @@ class FFTMove(Trait):
                 self.animationState = entity.getAnimationState("LOOP")
                 self.animationState.setLoop(True)
                 self.animationState.setEnabled(True)
+            self.sound =s.playsound("walk.ogg",option="loop")
             return True
             
 
@@ -137,6 +138,8 @@ class FFTMove(Trait):
             self.cur += 1
             if len(self.list) == self.cur:
                 self.unit1.body.setPositionOrientation(vec2,xzsrc.getRotationTo(xzdirection))
+                if self.sound:
+                    self.sound.stop()
                # s.gridmap[vec2] = self.unit1
                 
             predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
@@ -160,7 +163,7 @@ class Attack(Trait):
     range=1,10
     animation = "LOOP"
     type = "bludgeon"
-    sound = "sword.wav"
+    sound = "sword.ogg"
 
 
     
@@ -206,7 +209,7 @@ class GridTargeting(Trait):
         
         self.timeleft = 3
         
-        self.sound = "fireball.wav"
+        self.sound = None
         self.todo = todo
         for action in todo:
             if hasattr(action, "getDamage"):

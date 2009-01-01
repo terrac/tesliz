@@ -8,6 +8,7 @@ import ogre.gui.CEGUI as CEGUI
 from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import data.util
+import manager.util
 import ogre.physics.OgreNewt as OgreNewt
 import tactics.Unit
 import util
@@ -52,7 +53,7 @@ class ShowSelected():
                             self.lastlist.append(obj)
                     else:
                         
-                        vec = data.util.cleanup(data.util.getValidPos(vec))
+                        vec = manager.util.cleanup(data.util.getValidPos(vec))
                         if vec:
                             vec.y += 2
                             self.currentPosShow= data.util.show(vec,"RedMage/SOLID",self.currentPosShow)

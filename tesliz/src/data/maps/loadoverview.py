@@ -22,7 +22,7 @@ class Unitdata(object):
         
 #        buildImmoblePhysics(unit)  
     def setupEvents(self):
-        
+        s.playmusic("aveverum.mid")
         s.app.msnCam.setPosition(Ogre.Vector3(11, 22, -10))
         #s.app.camera.lookAt(Ogre.Vector3(0, 5, 0))
         s.app.msnCam.setOrientation(Ogre.Quaternion(0.305629, -0.144145, 0.851248, 0.401475))

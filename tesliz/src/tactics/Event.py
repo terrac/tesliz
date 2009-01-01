@@ -6,6 +6,7 @@ from tactics.util import *
 from ogre.renderer.OGRE import Vector3
 import random
 import utilities.FollowCamera
+import data.executables.pause
 
 s = Singleton()
 
@@ -28,9 +29,12 @@ class UnpauseTurnsOnEnd:
             s.speed = self.oldspeed
         s.framelistener.pauseturns = False
         
-        
+
 class ScriptEvent:
-    def __init__(self,text,unit = None):
+    def __init__(self,text,name=None,unit = None):
+        self.name = name
+        if name:
+            self.count = 0
         if isinstance(text, list):
             self.tlist = text
         elif isinstance(text, str):
@@ -48,10 +52,15 @@ class ScriptEvent:
 
             
             return
-
+        if self.name:
+            self.count +=1
+            #import os
+            #os.path.exists(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg")
+            s.playsound(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg","")
         tuple = self.tlist.pop(0)
         
         #if not a tuple
+        print tuple
         
         if not hasattr(tuple,'__len__'):
             if hasattr(tuple,'unit1') and tuple.unit1:
@@ -60,11 +69,14 @@ class ScriptEvent:
                 if isinstance(tuple.unit1, str):
                     tuple.unit1 = s.unitmap[tuple.unit1]
                 if hasattr(tuple,'unit2') and tuple.unit1 and isinstance(tuple.unit1, str):
-                    tuple.unit1 = s.unitmap[tuple.unit1]
+                    tuple.unit2 = s.unitmap[tuple.unit2]
                 if hasattr(tuple, 'endPos') and isinstance(tuple.endPos, str): 
                     tuple.endPos = eval(tuple.endPos)
                     
                 s.framelistener.unitqueue.addToQueue(tuple.unit1,tuple)
+                if hasattr(tuple,"time"):
+                    self.time = getattr(tuple, "time")
+                return True
             else:
                 tuple.execute(0)
             return True
@@ -76,7 +88,7 @@ class ScriptEvent:
         #saved scripts will only have strings
         if isinstance(x, str):
             x = s.unitmap[x]
-        
+        x = s.unitmap[x.name]
                           
         s.chatbox.add(y,x,z)
         self.time = z
@@ -103,7 +115,10 @@ class Event:
 #        slist = []
 #        for x in self.startlist:
 #            slist.append(ScriptEvent(x))
-        self.start = ScriptEvent(self.start)
+
+        #self.start.insert(0,data.executables.pause.Pause(5.5))
+        if isinstance(self.start,list):
+            self.start = ScriptEvent(self.start)
         self.turncount = dict()
        
         
@@ -157,7 +172,7 @@ class Event:
     
     def death(self,unit):
         dkey = "death-"+unit.getName()
-        if self.turn.has_key(unit) and self.turn[unit].has_key(dkey):
+        if self.turn and self.turn.has_key(unit) and self.turn[unit].has_key(dkey):
             exe = self.turn[unit][dkey]
             unit, blah = exe.tlist[0]
             s.framelistener.unitqueue.addToQueue(unit,exe)

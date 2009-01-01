@@ -81,9 +81,9 @@ class Wizard(data.jobs.Job):
     def setupStats(self,unit):        
         set(unit,27,3,25,6,9,5,(3,3))
     def getAbilities(self):
-        fireball = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch"),DamageMagic(damage.basicMagical,"fire")],"Fireburst","fire",(5,5),20)
+        fireball = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch",sound="fireball.ogg"),DamageMagic(damage.basicMagical,"fire")],"Fireburst","fire",(5,5),20)
         
-        
+        #fireball.unittargeting = False
         trait1 = NumberedTraits([fireball],[50])
         fireball.learned = True
         return trait1

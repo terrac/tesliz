@@ -21,13 +21,14 @@ class Settings(object):
         
         s.app.setTurnbased(True)
         s.AIon = True
-        #.AIon = False
-        
+        #s.AIon = False
+        self.musicvolume = .1
+        self.effectvolume = 1
         s.fog = False
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 2
+        s.speed = 10
         #.damagemultiplier = 50
         s.damagemultiplier = 1
         
@@ -45,7 +46,8 @@ class Settings(object):
         btn.setPosition(CEGUI.UVector2(cegui_reldim(0.8), cegui_reldim( 0.0)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
         btn.subscribeEvent(CEGUI.Window.EventTextChanged,self, "textChangedHandler")
-        
+        self.scriptsetsunitdata = True
+        self.scriptsetsunitpositions = False
 #        s.eventpausing = True    
     def textChangedHandler(self, e):
         try:

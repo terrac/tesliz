@@ -22,7 +22,7 @@ class Unitdata(object):
         
         #unit.node.setScale(Ogre.Vector3(5,5,5))
         
-        buildImmoblePhysics(unit)  
+        #buildImmoblePhysics(unit)  
     def setupEvents(self):
         pass
         #ulist = ["Chemist"]

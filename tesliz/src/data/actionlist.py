@@ -10,9 +10,10 @@ s = Singleton()
 import copy
 import data.Affects
 class Particle:
-    def __init__(self, name,time = 5,turns = False):
+    def __init__(self, name,time = 5,turns = False,sound=None):
         self.particlename = name
         self.time = time
+        self.sound = sound
     def execute(self,unit1,unit,endpos):
     
         name = s.app.getUniqueName()
@@ -24,7 +25,8 @@ class Particle:
         particleSystem2 = s.app.sceneManager.createParticleSystem('fountain'+s.app.getUniqueName(), self.particlename)        
         node.attachObject(particleSystem2)
         s.framelistener.addTimed(self.time,node,None)
-
+        if self.sound:
+            s.playsound(self.sound)
 
 class Throw():
     def __init__(self, item = None,getDamage = None):
