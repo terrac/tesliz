@@ -6,7 +6,6 @@ from tactics.util import *
 from ogre.renderer.OGRE import Vector3
 import random
 import utilities.FollowCamera
-import data.executables.pause
 
 s = Singleton()
 

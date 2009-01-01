@@ -5,7 +5,7 @@ from tactics.createunits import *
  
 import utilities.FollowCamera
 import ogre.renderer.OGRE as Ogre
-import data.executables.playsound
+import data.executables
 
 class EndGame:
     def execute(self,timer):
@@ -39,7 +39,7 @@ def addScripts(scriptmap,current= None):
     
                             data.traits.basictraits.FFTMove(girl1,Ogre.Vector3(13,0,3),.5),
              data.traits.basictraits.FFTMove(girl2,Ogre.Vector3(13,0,4),.5),
-    data.executables.playsound.PlaySound(s.currentdirectory+"linderenterconvo1.ogg"),         
+    data.executables.PlaySound(s.currentdirectory+"linderenterconvo1.ogg"),         
              (girl1,"Did you see that Belouve boy fighting?  Hes a cutie",3.1),
      (girl2,"Personally I don't know how you can talk about the Belouves like that.  They have ruined this town.",4.6),
      (girl1,"Aww, youre no fun",1.5),
@@ -51,7 +51,7 @@ def addScripts(scriptmap,current= None):
      utilities.FollowCamera.FollowCamera(cerc),
      data.traits.basictraits.FFTMove(cerc,Ogre.Vector3(0,0,2)),
      (cerc,""),
-     data.executables.playsound.PlaySound(s.currentdirectory+"linderenterconvo2.ogg"),
+     data.executables.PlaySound(s.currentdirectory+"linderenterconvo2.ogg"),
      (cerc,"Whats this, a transaction going on in broad daylight without my approval? What do you think i am? A chump?",6.2),
      
      (cerc,"To do business here you have to pay the toll.",2.4),

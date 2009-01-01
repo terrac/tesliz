@@ -12,7 +12,8 @@ import utilities.physics
 import tactics.dotscenea 
 import tactics.Turn 
 import tactics.Player 
-  
+import sys  
+import os
 import data.settings 
 import data.aisettings 
 from utilities.BasicFrameListener import *     # a simple frame listener that updates physics as required..
@@ -198,25 +199,35 @@ class OgreNewtonApplication (sf.Application):
             scriptmap = savedmap["scriptmap"]
             
             
-            mod =py_compile.compile(s.campaigndir+scenename+"/mapscript.py","mapscript"+scenename+".pyc")
+            #mod =py_compile.compile(s.campaigndir+scenename+"/mapscript.py","media/compiledmaps/mapscript"+scenename+".pyc")
             #import media.campaigns.tesliz.linderenter.mapscript
-
+            s.currentdirectory = s.campaigndir+scenename+"/"
+            sys.path.append(os.path.abspath(s.currentdirectory))
+            
             mod = __import__("mapscript"+scenename)
+            
             mod.addScripts(scriptmap)
             
             cplayerunitmap = dict()
             for x in s.unitmap.values():
                 cplayerunitmap[x.getName()] = x
             
+            
             for name in unitmap.keys():
-                position =positionmap[name]
-                if cplayerunitmap.has_key(name):
+                
+                if s.settings.scriptsetsunitpositions:
+                    position = cplayerunitmap[name].node.getPosition()
+                else:
+                    position =positionmap[name]
+                
+                if s.settings.scriptsetsunitdata and cplayerunitmap.has_key(name):
                     unit = cplayerunitmap[name]
                 else:
                     unit =unitmap[name]
+                    s.unitmap[name] = unitmap[name]
                 
                 tactics.util.showUnit(unit,position)
-                s.unitmap[name] = unitmap[name]
+                
                 
 
             
@@ -229,32 +240,7 @@ class OgreNewtonApplication (sf.Application):
         if s.event:            
             s.event.startEvent(test)
          
-#        sheet = CEGUI.System.getSingleton().getGUISheet()
-#        winMgr = CEGUI.WindowManager.getSingleton() 
-#        btn = winMgr.createWindow("TaharezLook/Button", "QuitButton")
-#        sheet.addChildWindow(btn)
-#        btn.setText("Quit!")
-#        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.035), cegui_reldim( 0.0)))
-#        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
-        
- #       btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "handleQuit")
- #       btn.setAlwaysOnTop(True)
-        
-#        btn = winMgr.createWindow("TaharezLook/Button", "EndTurn")
-#        sheet.addChildWindow(btn)
-#        btn.setText("endturn")
-#        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.835), cegui_reldim( 0.8)))
-#        btn.setSize(CEGUI.UVector2(cegui_reldim(0.1), cegui_reldim( 0.036)))
-        
-#        btn.subscribeEvent(CEGUI.PushButton.EventClicked, s.turn, "endTurn")
-#        btn.setAlwaysOnTop(True)
-        #s.playerlist = [HumanPlayer(),ComputerPlayer()]
-        
 
-        ## this will be a static object that we can throw objects at.  we'll use a simple cylinder primitive.
-        ## first I load the visual mesh that represents it.  I have some simple primitive shaped .mesh files in
-        ## the "primitives" directory to make this simple... all of them have a basic size of "1" so that they
-        ## can easily be scaled to fit any size primitive.
     def _createFrameListener(self):
         pass
     def createFrame(self):
@@ -667,7 +653,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         s.cegui.destroy("attributescurrent")
         s.framelistener.unitqueue.clearUnitQueue()
         s.framelistener.textlist = []
-import sys
+
 def startup():
     s.framelistener.pauseturns = False
     s.app.loadScene(sys.argv[2],True)
@@ -681,6 +667,9 @@ def editOnStart():
     return True
 if __name__ == '__main__':
 #    try:
+
+        
+
         if len(sys.argv) == 2:
             runOnStartup = None
         if len(sys.argv) == 3:

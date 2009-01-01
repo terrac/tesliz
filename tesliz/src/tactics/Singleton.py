@@ -8,6 +8,9 @@ from utilities.CEGUI_framework import *
 import utilities.SampleFramework as sf
 import winsound
 import pygame.mixer
+#import pygame.mixer_music
+
+
 
 
 
@@ -153,9 +156,14 @@ class Singleton:
             winsound.PlaySound("media\\sounds\\"+filename, winsound.SND_FILENAME|winsound.SND_ASYNC)
         def playmusic(self,filename="C:\sound.wav"):
             #
-            pygame.mixer.music.load("media\\sounds\\"+filename)
-            pygame.mixer.music.set_volume(s.settings.musicvolume)
-            pygame.mixer.music.play()
+            #pass
+            try:
+                pygame.mixer.music.load("media\\sounds\\"+filename)
+                pygame.mixer.music.set_volume(s.settings.musicvolume)
+                pygame.mixer.music.play()
+            except Exception,e:
+                self.log(e,self)
+                
             
             #winsound.PlaySound(filename, winsound.SND_FILENAME|winsound.SND_ASYNC|winsound.SND_LOOP)
     
