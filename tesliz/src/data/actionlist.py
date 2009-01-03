@@ -10,12 +10,16 @@ s = Singleton()
 import copy
 import data.Affects
 class Particle:
-    def __init__(self, name,time = 5,turns = False,sound=None):
+    def __init__(self, name,time = 5,turns = False,sound=None,showempty = False):
+        self.showempty = showempty
         self.particlename = name
         self.time = time
         self.sound = sound
     def execute(self,unit1,unit,endpos):
     
+        if not unit and not self.showempty:
+            return
+            
         name = s.app.getUniqueName()
         
         node = s.app.sceneManager.getRootSceneNode().createChildSceneNode( name + "Node" )
@@ -56,6 +60,7 @@ class Throw():
         return 0
     def execute(self,unit1,unit2,endpos):
         self.run = True
+        
         vector1 = unit1.body.getOgreNode().getPosition()
         
         self.unit1 = unit1
@@ -224,8 +229,9 @@ class DamagePhysical():
         self.getDamage = damage
         self.type = type
     def execute(self,unit1,unit,endpos):
-        damage = unit1.attributes.bravery * self.getDamage         
-        unit.damageHitpoints(damage,self.type,unit1)
+        if unit:
+            damage = unit1.attributes.bravery * self.getDamage         
+            unit.damageHitpoints(damage,self.type,unit1)
         
 class DamageMagic():
     def __init__(self,damage,type = None):
@@ -258,7 +264,7 @@ class AffectLand():
     def execute(self,unit1,unit,endpos):
         #build node with the name of the affect
         
-        name =data.util.show(endpos,None,self.affectname+"-"+s.app.getUniqueName())
+        name =data.util.show(endpos,"Ta/SOLID",self.affectname+"-"+s.app.getUniqueName())
         unit1.addTurned(0,s.app.sceneManager.getSceneNode(name),None)
         
         if unit:    

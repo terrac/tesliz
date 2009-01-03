@@ -28,7 +28,7 @@ from tactics.OverviewMap import *
 import tactics.Unit
 import tactics.TerrainManager
 import manager.gridmap
-
+import manager.util
 import tactics.Queue
 import userinterface.CEGUIManager
 import userinterface.EditGame
@@ -308,16 +308,7 @@ class OgreNewtonApplication (sf.Application):
             s.log("turnbased = " +str(s.turnbased))
 
        
-class Timed():
-    def __init__(self,seconds,node,body):
-        self.seconds = seconds
-        self.node = node
-        self.body = body
-    def __str__(self):
-        name = None
-        if self.node:
-            name = str(self.node.getName())
-        return str(self.seconds)+" "+name+"\n"
+
         
 class OgreNewtonFrameListener(CEGUIFrameListener):
     
@@ -351,7 +342,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 
 
     def addTimed(self, seconds,node,*extra):
-        x = Timed(seconds,node,extra)
+        x = manager.util.Timed(seconds,node,extra)
         s.app.timedbodies.append(x)
 
     #then you can have both
@@ -426,7 +417,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
 #                
         #todo somewhat inefficient add a timeexprire variable and make straightforward
     
-        tactics.Unit.incrementTimed(timesincelastframe,s.app.timedbodies)
+        manager.util.incrementTimed(timesincelastframe,s.app.timedbodies)
                 
                 
                        
@@ -555,35 +546,21 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         return True        
     def clickEntity(self,name,position,id,evt):
         
-        self.showAttributes(name)                    
+        manager.util.showAttributes(name)                    
         
         if self.cplayer:
             self.cplayer.clickEntity(name,position,id,evt)
             
 
-    def showAttributes(self, name):
-        if not s.unitmap.has_key(name):
-            return
-        unit = s.unitmap[name]
-        winMgr = CEGUI.WindowManager.getSingleton()
-        if not winMgr.isWindowPresent("attributes"):
-            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributes")
-            sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
-            sheet.addChildWindow(btn)
-        else:
-            btn = winMgr.getWindow("attributes")
-        text = "\n"+str(unit.attributes)
-        #text += "\n"+str(unit.node.getPosition())    
-        btn.setText(str(unit)+text)
-        #btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.6)))
-        btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))
+
+        
     def showAttributesCurrent(self, name):
         if not s.unitmap.has_key(name):
             return
         unit = s.unitmap[name]
         winMgr = CEGUI.WindowManager.getSingleton()
         if not winMgr.isWindowPresent("attributescurrent"):
-            btn = winMgr.createWindow("TaharezLook/MultiLineEditbox", "attributescurrent")
+            btn = winMgr.createWindow(userinterface.util.statictext, "attributescurrent")
             sheet = CEGUI.WindowManager.getSingleton().getWindow("root_wnd")
             sheet.addChildWindow(btn)
         else:
@@ -591,7 +568,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
         text = "\n"+str(unit.attributes)
         #text += "\n"+str(unit.node.getPosition())    
         btn.setText(str(unit)+text)
-        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.2)))
+        btn.setPosition(CEGUI.UVector2(cegui_reldim(0.0), cegui_reldim( 0.3)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.2), cegui_reldim( 0.2)))        
         
         #btn.setAlwaysOnTop(True)

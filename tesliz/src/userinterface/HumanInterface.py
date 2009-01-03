@@ -11,6 +11,7 @@ import data.util
 import manager.util
 import ogre.physics.OgreNewt as OgreNewt
 import tactics.Unit
+import userinterface.util
 import util
 class ShowSelected():
     def __init__(self,toexecute):
@@ -18,28 +19,39 @@ class ShowSelected():
         
         self.time = 0
         self.lastlist = []
+        self.gridlist = []
+        self.lastpos = None
 
     def cleanup(self):
         
         for last in self.lastlist:
             last.node.getAttachedObject(0).setMaterialName(last.job.material)
+        for name in self.gridlist:
+            if s.app.sceneManager.hasSceneNode(name):
+                s.app.sceneManager.destroySceneNode(name)
+        self.gridlist = []
         self.lastlist = []
         if self.currentPosShow:
             if s.app.sceneManager.hasSceneNode(self.currentPosShow):
                 s.app.sceneManager.destroySceneNode(self.currentPosShow)
     def execute(self,timer):
-     
+        name,position =data.util.fromCameraToMesh()
+        if self.lastpos == position:
+            return True
+        else:
+            self.lastpos = position
+            self.cleanup()
             
 #        if self.time > 0:
 #            self.time -= timer
 #            return True
 #        self.time = .5
                                                      
-        name,position =data.util.fromCameraToMesh()
+        
         curlist = []
         if name:
             if data.util.withinRange(self.toexecute.unit1.node.getPosition(),position,self.toexecute.range):
-            
+                position.y += .5
                 for pos in self.toexecute.offset:
                     x,y,z = pos
                     x = x + position.x            
@@ -51,12 +63,16 @@ class ShowSelected():
                         if isinstance(obj, tactics.Unit.Unit):
                             obj.node.getAttachedObject(0).setMaterialName( "Spark/SOLID")
                             self.lastlist.append(obj)
+                        else:
+                            
+                            self.gridlist.append(data.util.show(vec,"RedMage/SOLID",None))
+                            
                     else:
                         
                         vec = manager.util.cleanup(data.util.getValidPos(vec))
                         if vec:
-                            vec.y += 2
-                            self.currentPosShow= data.util.show(vec,"RedMage/SOLID",self.currentPosShow)
+                            vec.y += .5
+                            self.gridlist.append( data.util.show(vec,"RedMage/SOLID"))
                         
                     
                         
@@ -65,9 +81,9 @@ class ShowSelected():
                 #if obj:
                 #    data.util.show(vec)
         
-        if name == "terrain" or name != self.lastname:
-            self.cleanup()
-        self.lastname = name
+#        if name == "terrain" or name != self.lastname:
+#            self.cleanup()
+#        self.lastname = name
         return True
     currentPosShow = None
     lastname = None

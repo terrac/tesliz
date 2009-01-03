@@ -12,7 +12,7 @@ def weaponPhysical(unit):
     return dam,"physical" 
 def basicMagical(unit):
     fs = unit.attributes.magical 
-    dam =fs.power * (fs.power * fs.belief/100) 
+    dam =5 *fs.power * (fs.power * fs.belief/100) 
     return dam,"magical"
 
 def test(unit):

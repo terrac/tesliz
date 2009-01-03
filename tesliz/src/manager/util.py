@@ -1,3 +1,6 @@
+import ogre.renderer.OGRE as Ogre
+from tactics.Singleton import *
+import userinterface.util
 def cleanup(key):
 
     if not key:
@@ -44,3 +47,40 @@ class VectorMap(dict):
         key = str(key)
         return dict.has_key(self,key)
 
+def incrementTimed(timesincelastframe, timedbodies):
+    toremove = []
+    for x in timedbodies:
+        x.seconds -= timesincelastframe
+        if x.seconds < 0:
+            toremove.append(x)
+            if isinstance(x.node, Ogre.SceneNode):
+                s.app.sceneManager.getRootSceneNode().removeChild(x.node)
+            
+            if hasattr(x.node, "destroy"):
+                getattr(x.node, "destroy")()
+                
+    for x in toremove:
+        timedbodies.remove(x)
+class Timed():
+    def __init__(self,seconds,node,body):
+        self.seconds = seconds
+        self.node = node
+        self.body = body
+    def __str__(self):
+        name = None
+        if self.node:
+            name = str(self.node.getName())
+        return str(self.seconds)+" "+name+"\n"
+    
+def showAttributes(name):
+    if not s.unitmap.has_key(name):
+        return
+    unit = s.unitmap[name]
+
+    frame = userinterface.util.getNewWindow("attributes", userinterface.util.frame, "root_wnd",.0,.0,.4,.3)
+    
+    text = "\n"+str(unit.attributes)
+    #text += "\n"+str(unit.node.getPosition())    
+    text =str(unit)+text
+    userinterface.util.getNewWindow("regUnitStuff",userinterface.util.statictext, frame, 0,0,.5,1, text)                
+    userinterface.util.getNewWindow("extraUnitStuff",userinterface.util.statictext, frame, .5,0,.5,1, unit.attributes.extraStuff())

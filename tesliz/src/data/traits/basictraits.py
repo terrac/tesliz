@@ -3,6 +3,7 @@ import utilities.physics
 from tactics.Singleton import *
 import ogre.renderer.OGRE as Ogre
 import manager.util
+import userinterface.util
 
 def show(unit):
     pos = unit.body.getOgreNode().getPosition()
@@ -218,7 +219,10 @@ class GridTargeting(Trait):
             if hasattr(action, "getDamage"):
                 self.getDamage = action.getDamage
                 break
-        
+        self.current = 0
+        self.unitstohit = []
+        self.positionstohit = []
+        self.time = 0
     def offset1(self):
         x = 0,0,0
         return [x]
@@ -231,18 +235,43 @@ class GridTargeting(Trait):
         return [a,b,c,d,e]
     def execute(self,timer):
         print self
+        if self.time > 0:
+            self.time -=timer
+            return True
         if not self.unit1 or  not self.unit1.body or  not self.endPos:
             return
         unitlist = []
-        for pos in self.offset:
-            x,y,z = pos
-            x = x + self.endPos.x            
-            y = y + self.endPos.y
-            z = z + self.endPos.z
-            vec = Ogre.Vector3(x,y,z)
-            unit = data.util.getValidUnit(vec)
-            for to in self.todo:
-                to.execute(self.unit1,unit,vec)
+        
+        if not self.unitstohit:
+            for pos in self.offset:
+                x,y,z = pos
+                x = x + self.endPos.x            
+                y = y + self.endPos.y
+                z = z + self.endPos.z
+                vec = Ogre.Vector3(x,y,z)
+                unit = data.util.getValidUnit(vec)
+                if unit:
+                    self.unitstohit.append(unit)
+                else:
+                    self.positionstohit.append(vec)
+
+        if len(self.unitstohit) == self.current:
+            self.unitstohit = []
+            self.current = 0
+            for vec in self.positionstohit:
+                for to in self.todo:
+                    to.execute(self.unit1,None,vec)
+            self.positionstohit = []
+            return False
+        
+        unit= self.unitstohit[self.current]
+        #manager.util.showAttributes(unit.getName())
+        for to in self.todo:
+            to.execute(self.unit1,unit,unit.node.getPosition())
+        manager.util.showAttributes(unit.getName())
+        self.time = 2
+        self.current +=1
+        return True
     
     def __str__( self ):
         return "GridTargeting"+self.name

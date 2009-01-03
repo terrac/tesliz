@@ -29,7 +29,7 @@ class Settings(object):
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
         s.speed = 1
-        s.testspeed = 1
+        s.testspeed = 50
         #.damagemultiplier = 50
         s.damagemultiplier = 1
         

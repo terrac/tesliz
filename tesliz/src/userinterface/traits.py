@@ -32,7 +32,8 @@ class Traits():
 
 class NumberedTraits(Traits):
     
-    
+    def __str__(self):
+        return str(self.listclasses)+"\n"+str(self.listnumbers)
     def __init__ ( self,listclasses,listnumbers):
         self.listclasses = listclasses
         self.listnumbers = listnumbers

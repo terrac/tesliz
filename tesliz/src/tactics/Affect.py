@@ -1,6 +1,6 @@
 from tactics.Singleton import *
 #import tactics.util
-#import data.util
+import data.util
 class Affect:
     def getName(self):
         return self.name
@@ -72,7 +72,8 @@ class StatAffect:
                 setattr(obj,x,y)
             else:
                 obj = val
-            
+        
+            data.util.update(str(self.statsup)+": "+str(self.amount), unit)
 
         
     def teardown(self,unit):
@@ -100,6 +101,7 @@ class StatSet:
                 setattr(obj,x,self.amount)
             else:
                 obj = val
+        data.util.update(str(self.stat)+": "+str(self.amount), unit)
         
         #return [str(unit.name)+"'s "+ self.stat.join(" ")+" set to "+ str(self.amount)]
         

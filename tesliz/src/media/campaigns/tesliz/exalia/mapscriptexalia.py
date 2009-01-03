@@ -74,16 +74,16 @@ def addScripts(scriptmap):
      (fighter2,"Wait, what?"),
       ChangeSides(balla,s.playermap["Player1"])
      ]
-    import os
-    unitmap = {fighter1:"en\\en-sc+m3",fighter2:"en\\en-sc+m2",alluvia:"en\\en-sc+f3",oath:"en\\en-wm+f3",balla:"en\\en-n+f3"}
-    name = "convo"
-    y = 0
-    for x in convo1:
-        if isinstance(x, tuple):
-            toex = 'C:\\eclipse\\eSpeak\\espeak.exe -w C:\\eclipse\\eSpeak\\'+name+str(y)+'.wav -a 50 -v '+unitmap[x[0]]+' "'+x[1]+'"'
-            os.system(toex)
-            print toex
-            y +=1
+#    import os
+#    unitmap = {fighter1:"en\\en-sc+m3",fighter2:"en\\en-sc+m2",alluvia:"en\\en-sc+f3",oath:"en\\en-wm+f3",balla:"en\\en-n+f3"}
+#    name = "convo"
+#    y = 1
+#    for x in convo1:
+#        if isinstance(x, tuple):
+#            toex = 'C:\\eclipse\\eSpeak\\espeak.exe -w C:\\eclipse\\eSpeak\\'+name+str(y)+'.wav -a 50 -v '+unitmap[x[0]]+' "'+x[1]+'"'
+#            os.system(toex)
+#            print toex
+#            y +=1
 
     end =[
              (alluvia,"So, what was this all about?"),

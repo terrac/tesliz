@@ -125,10 +125,11 @@ def createMesh(mesh,pos,size=1,name = None):
 missed = "LOOP"
 blocked = "LOOP"
 def update(text,unit):
-    ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),text)
-    ogretext.enable(True)
-    s.framelistener.addTimed(1,ogretext)
-    unit.setText(ogretext)
+    if unit.node:
+        ogretext = utilities.OgreText.OgreText(unit.node.getAttachedObject(0),text)
+        ogretext.enable(True)
+        s.framelistener.addTimed(1,ogretext)
+        unit.setText(ogretext)
 def damageHitpoints(getDamage,unit1,unit2):
     number,type = getDamage(unit1)
 
@@ -209,7 +210,7 @@ def damageHitpoints(getDamage,unit1,unit2):
             unit2.animate(missed)
             return False    
         #high faith adds damage, but opponents lower faith reduces total damage so a faith of 0 cannot recieve magical damage or healing
-         
+        number = number * unit1.attributes.magical.belief /100  * unit2.attributes.magical.belief / 100
         
     
     #    if they are s

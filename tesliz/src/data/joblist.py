@@ -98,7 +98,7 @@ class Knight(data.jobs.Job):
     def getAbilities(self):
         
         
-        #fireball.unittargeting = False
+        #fireball.unittargeting = False 
         trait1 = NumberedTraits([],[])
         
         return trait1
@@ -108,19 +108,15 @@ class Knight(data.jobs.Job):
 class Poet(data.jobs.Job):
     def setupStats(self,unit):        
         set(unit,25,5,25,5,5,7,(5,5))
-#    def changeTo(self,unit):
-#        set(unit,27,3,25,6,5,7,(3,3))
-#
-#        deadzone = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch"),AffectLand("deadzone")],"Deadzone")
-#        deadzone.range = 50,50
-#        trait1 = NumberedTraits([deadzone],[5])
-#        return trait1
-    
+   
     def getAbilities(self):
-        trait1 = NumberedTraits([],[])
-        
+        deadzone = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch",sound="fireball.ogg"),AffectLand("deadzone")],"Deadzone")
+        deadzone.range = 5,5
+        trait1 = Traits([deadzone])
+         
         return trait1
-        
+    def getLearnedOnStart(self):
+        return ["Deadzone"]        
     required = [("Chemist",2)]
                
 alljobs =[ Squire(),Chemist(),Wizard()]

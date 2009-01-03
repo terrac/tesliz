@@ -6,23 +6,11 @@ import ogre.physics.OgreNewt as OgreNewt
 import utilities.OgreText
 import data.UnitTraits
 import data.Stats 
+import manager.util
 
 #import tesliz.runthis
 
-def incrementTimed(timesincelastframe, timedbodies):
-    toremove = []
-    for x in timedbodies:
-        x.seconds -= timesincelastframe
-        if x.seconds < 0:
-            toremove.append(x)
-            if isinstance(x.node, Ogre.SceneNode):
-                s.app.sceneManager.getRootSceneNode().removeChild(x.node)
-            
-            if hasattr(x.node, "destroy"):
-                getattr(x.node, "destroy")()
-                
-    for x in toremove:
-        timedbodies.remove(x)
+
 
 class ManageDeath():
     def __init__(self):
@@ -70,7 +58,13 @@ class Attributes(object):
                 "\nexp: "+str(self.exp)+
                 "\nmoves:"+str(self.moves)
                 )
-
+    def extraStuff(self):
+        
+        return ("       CE,SE,AE"+ 
+    "\nphys-EV:"+str(self.physical.classevade)+","+str(self.physical.shieldevade)+","+str(self.physical.accessoryevade)+","+
+    "\nmagi-EV:"+str(self.magical.classevade)+","+str(self.magical.shieldevade)+","+str(self.magical.accessoryevade)+","+
+    "\nbravery"+str(self.physical.belief)+
+    "\nfaith"+str(self.magical.belief))
     
 class Unit(object):
     height = 2
@@ -145,10 +139,10 @@ class Unit(object):
      
     def incrementTurn(self):
         #print self.timedbodies
-        incrementTimed(1,self.timedbodies)
-    
+        manager.util.incrementTimed(1,self.timedbodies)
+    #lasts a number of turns
     def addTurned(self,turns,node,*extra):                 
-        x = tesliz.runthis.Timed(turns,node,extra)
+        x = manager.util.Timed(turns,node,extra)
         self.timedbodies.append(x)
     def startTurn(self):
         
