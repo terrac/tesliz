@@ -46,7 +46,8 @@ class FFTMove(Trait):
 
             
         self.unit1 = unit
-        self.endPos = data.util.getValidPos(endPos)
+        if endPos:
+            self.endPos = data.util.getPositions(endPos)[0]
         
 #        if self.endPos:
 #            self.endPos.y +=5
@@ -88,7 +89,9 @@ class FFTMove(Trait):
             for x in self.list:
                 x.y +=1
             
+            #this pos should be the same as start
             self.list.pop(0)
+            
             size = len(self.list)
             if size and data.util.getValidUnit(self.list[len(self.list)-1], 50):
                 self.list.pop()
@@ -133,7 +136,7 @@ class FFTMove(Trait):
         self.unit1.body.setPositionOrientation(vec1,xzsrc.getRotationTo(xzdirection))
 
         
-        if utilities.physics.distance(self.unit1.node.getPosition(), vec2) < .3:
+        if utilities.physics.distance(self.unit1.node.getPosition(), vec2) < .3 or s.speed > 5:
             self.unit1.body.freeze()    
             self.cur += 1
             if len(self.list) == self.cur:

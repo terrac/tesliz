@@ -109,8 +109,11 @@ class TerrainManager:
         image = Ogre.Image()
         image.load("ETterrain.png", "ET"+name)
         info = ET.TerrainInfo()
+        
         ET.loadHeightmapFromImage(info, image)
-        info.setExtents(Ogre.AxisAlignedBox(-16, 0, -16, 16, 10, 16))
+        width = (image.getWidth()-1)/2
+        height = (image.getHeight()-1)/2
+        info.setExtents(Ogre.AxisAlignedBox(-width, 0, -height, width, 10, height))
         self.terrainMgr.createTerrain(info)
         
 
@@ -123,7 +126,7 @@ class TerrainManager:
 
         ## update lightmap
         self.updateLightmap()
-        self.generateTerrainCollision()
+        #self.generateTerrainCollision()
         
     def saveTerrain(self, name):
 
@@ -219,7 +222,7 @@ class TerrainManager:
         col.start();
         for x in range(0,self.getTerrainInfo().getWidth()-1 ):
             for z in range(0,self.getTerrainInfo().getHeight()-1 ):
-                       
+                
                 v1 = self.getTerrainVertex(x,z);
                 v2 = self.getTerrainVertex(x+1,z);
                 v3 = self.getTerrainVertex(x+1,z+1);

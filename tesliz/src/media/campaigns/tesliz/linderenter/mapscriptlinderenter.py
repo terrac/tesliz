@@ -10,7 +10,7 @@ import data.executables
 class EndGame:
     def execute(self,timer):
         s.endGame()
-        s.app.setTurnbased(True)
+ #       s.app.setTurnbased(True)
         
         
 def addScripts(scriptmap,current= None):
@@ -79,7 +79,7 @@ def addScripts(scriptmap,current= None):
      ]
     
     s.app.msnCam.setOrientation(Ogre.Quaternion(-1,0,0,0))
-    s.app.setTurnbased(False)
+#    s.app.setTurnbased(False)
     s.framelistener.pauseturns = True
     
     s.playmusic("mozk47.mid")

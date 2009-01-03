@@ -161,7 +161,10 @@ class Unittypes(object):
     def Knight(self,unit,level):
         #setupBasic(unit, level)
         
-        setupStats(unit, level, 4, 50, 10,5,5)
+        unit.job = data.joblist.Knight()
+        unit.items.add(PlateArmor())
+        unit.items.add(Helm())
+        unit.items.add(Knightsword())
     def Poet(self,unit,level):
         #setupBasic(unit, level)
         unit.job = data.joblist.Poet()

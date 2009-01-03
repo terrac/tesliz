@@ -36,6 +36,7 @@ class Job(object):
         #map of reaction, trait1, trait2, etc
         self.traits = dict()
         self.learnedabilitynames = []
+        
         if not jobabilitymap.has_key(self.getName()):
             jobabilitymap[self.getName()]=self.getAbilities()
             jobabilitymap[self.getName()].name = self.getName()

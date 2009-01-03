@@ -137,8 +137,9 @@ class OgreNewtonApplication (sf.Application):
         
 
         self.createFrame()
-        if not self.onStartup():
-            OverviewMap("Terra.player")
+        
+        OverviewMap("Terra.player")
+        self.onStartup()
         btn = CEGUI.WindowManager.getSingleton().createWindow("TaharezLook/Button", "current")
         CEGUI.System.getSingleton().getGUISheet().addChildWindow(btn)
         btn.setText("current")
@@ -167,7 +168,7 @@ class OgreNewtonApplication (sf.Application):
 #        else:
 #            RealTimeTurn()
 
-       
+#        s.framelistener.pauseturns = False
         
         s.app.camera.initialOrientation = None
         #Settings()
@@ -177,8 +178,8 @@ class OgreNewtonApplication (sf.Application):
         ## sky box.
         #self.sceneManager.setSkyBox(True, "Examples/CloudyNoonSkyBox")
         mental = data.aisettings.AIsettings()
-        if test:
-            tactics.TerrainManager.setupTest(scenename)
+#        if test:
+#            tactics.TerrainManager.setupTest(scenename)
         if os.path.exists( s.campaigndir+scenename+"/ETterrain.png"):
             s.terrainmanager.loadTerrain(scenename)
         else:
@@ -205,7 +206,8 @@ class OgreNewtonApplication (sf.Application):
             sys.path.append(os.path.abspath(s.currentdirectory))
             
             mod = __import__("mapscript"+scenename)
-            
+            if test and hasattr(mod, "setupTestMap"):
+                mod.setupTestMap()
             mod.addScripts(scriptmap)
             
             cplayerunitmap = dict()
@@ -228,11 +230,14 @@ class OgreNewtonApplication (sf.Application):
                 
                 tactics.util.showUnit(unit,position)
                 
-                
-
-            
-            s.event = tactics.Event.Event( scriptmap)
+             #else if a scene is not loaded just set the units   
         
+            s.event = tactics.Event.Event( scriptmap)
+#        else:
+#            s.framelistener.pauseturns = True
+#            for unit in s.playermap["Player1"].unitlist:
+#                s.unitmap[unit.getName()] = unit
+            
         for unit in s.unitmap.values():
             unit.attributes.physical.points = unit.attributes.physical.maxpoints
             unit.attributes.magical.points = unit.attributes.magical.maxpoints    
@@ -296,10 +301,10 @@ class OgreNewtonApplication (sf.Application):
             s.turnbased = bool
             if bool:
                 s.turn = tactics.Turn.Turn()
-                s.AIon = False
+                #s.AIon = False
             else:
                 s.turn = tactics.Turn.RealTimeTurn()
-                s.AIon = True
+                #s.AIon = True
             s.log("turnbased = " +str(s.turnbased))
 
        
@@ -452,7 +457,7 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
             sf.Application.debugText = str(s.app.msnCam.getPosition()) +"\n"+ str(s.app.msnCam.getOrientation())
            
         ##and Keyboard
-        moveamount = timesincelastframe * 20
+        moveamount = timesincelastframe * 10
         if (self.Keyboard.isKeyDown(OIS.KC_UP) or self.Keyboard.isKeyDown(OIS.KC_W)):
             
             s.app.msnCam.translate(trans * moveamount);
@@ -669,11 +674,12 @@ if __name__ == '__main__':
 #    try:
 
         
-
+        s.test = False
         if len(sys.argv) == 2:
             runOnStartup = None
         if len(sys.argv) == 3:
             runOnStartup = startup
+            s.test = True
         if len(sys.argv) == 4:
             runOnStartup = editOnStart
         s.campaignname = sys.argv[1]    

@@ -20,15 +20,16 @@ class Settings(object):
         s.settings = self
         
         s.app.setTurnbased(True)
-        s.AIon = True
-        #s.AIon = False
+        #s.AIon = True
+        s.AIon = False
         self.musicvolume = .1
         self.effectvolume = 1
         s.fog = False
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 10
+        s.speed = 1
+        s.testspeed = 1
         #.damagemultiplier = 50
         s.damagemultiplier = 1
         
@@ -71,7 +72,8 @@ class Settings(object):
         overviewmap.cpos = overviewmap.root
         
         overviewmap.placetoscene = {"Linder":"linderenter","Linder-Exit":"linderexit","Exalia":"fillerscene"}
-        tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
+        if not s.test:
+            tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
         s.playermap["Player1"].items.add("Potion")
         s.playermap["Player1"].items.add("Potion")
         s.playermap["Player1"].items.add("Potion")

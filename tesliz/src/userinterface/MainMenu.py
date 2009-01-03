@@ -121,15 +121,19 @@ class AbilityMenu:
             return
         toadd = self.typelist[e.window.getItemIndex(e.window.getFirstSelectedItem())]
         #this should be the ability map on the unit trait so it could alse be self.unit.traits.map0self.type] = toadd
-        self.map[self.type] = toadd
+        if self.type == "Secondary":
+            self.map[self.type] = toadd.getTraits(self.unit)
+        else:
+            self.map[self.type] = toadd
         #self.unit.traits.map[self.type] = toadd
         self.itemselected.setText(toadd.getName())
         tactics.util.resetAttributes(self.unit)
         self.listtype.setVisible(False)
-        
+        self.removeFromList(toadd)
         
         s.mainmenu.updateDisplay()
-        
+    def removeFromList(self,toadd):
+        pass
     def teardown(self):
         self.abilheld.setVisible(False)
         if self.listtype:
@@ -143,7 +147,9 @@ class ItemsMenu(AbilityMenu):
         self.removeitem = util.getNewWindow("removeitem", util.button, pwindow, .5, .5, .2, .1, "removeItem")
         self.removeitem.subscribeEvent(CEGUI.PushButton.EventClicked, self, "removeItem")
         self.typelist = []
-        
+    
+    def removeFromList(self,toadd):
+        self.unit.player.items.add(toadd.getName())
     def removeItem(self,e):
         if  not self.abilheld.getFirstSelectedItem():
             return
@@ -159,6 +165,7 @@ class ItemsMenu(AbilityMenu):
         self.abilheld = util.getNewWindow("abilitiesheld", util.listbox, self.pwindow, .5, .2, .2, .3)
         self.abilheld.subscribeEvent(CEGUI.Listbox.EventSelectionChanged, self, "showTraits")
         self.setupAbil()
+        self.listtype.setVisible(False)
     def getMap(self,unit):
         self.map = unit.items.getMap()
     def getList(self,type):
@@ -166,7 +173,7 @@ class ItemsMenu(AbilityMenu):
         itemmap =self.unit.player.items.getMap()
         for x in itemmap.keys():
             item =getattr(data.items, x)
-            if item.type == type:
+            if item.type == type and len(item.allowed) == 0 or self.unit.job.getName() in item.allowed:
                 valid.append(item())
         return valid
         
@@ -385,8 +392,9 @@ class MainMenu:
         if lbox.getFirstSelectedItem():
             unitName = str(lbox.getFirstSelectedItem().getText())
             s.log("Selected Party Member: "+ unitName,self)
-
-            self.unit = s.unitmap[unitName]
+            for unit in s.playermap["Player1"].unitlist:
+                if unit.getName() == unitName:
+                    self.unit = unit
             
 
         return True

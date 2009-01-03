@@ -29,7 +29,7 @@ class EditGame:
     def __init__(self,name ):
         self.name = name
         s.terrainmanager.loadTerrain(name)
-        s.app.msnCam.setOrientation(Ogre.Quaternion(-1,0,0,0))
+        s.app.msnCam.setOrientation(Ogre.Quaternion(0.305629, -0.144145, 0.851248, 0.401475))
         #destroy and save current layout
         s.cegui.hide()
         s.framelistener.unitqueue.clearUnitQueue()
@@ -158,7 +158,10 @@ class EditTerrain():
         self.deform = True
         #btn.setPosition(CEGUI.UVector2(cegui_reldim(0.7), cegui_reldim( 0.0)))
         btn.setSize(CEGUI.UVector2(cegui_reldim(0.5), cegui_reldim( .1)))
-        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "deformChange")        
+        btn.subscribeEvent(CEGUI.PushButton.EventClicked, self, "deformChange")
+        self.intensity = .5
+        self.intensitytext = util.getNewWindow("intensitytext", util.editbox, pwindow, .5, 0, .5, .1, str(self.intensity))
+                
         #image = Ogre.Image()
         #image.load("brush.png", "ET")
         name = "brush"
@@ -168,7 +171,7 @@ class EditTerrain():
         for name in brushlist:
             self.addItem(name,y,pwindow,"setBrushImage")
             y += .1
-        self.texlist =["Rock","Grass"]
+        self.texlist =["Rock","Grass","Building"]
         
         x = 0
         for name in self.texlist:
@@ -183,6 +186,7 @@ class EditTerrain():
         
         self.setBrushImage("SmallBrush")
         self.texture = "Rock"
+        
 
         
         
@@ -242,7 +246,12 @@ class EditTerrain():
         
         if ( id == OIS.MB_Left ):
             dr = 1
-        intensity = 1 * dr
+        
+        try:
+            self.intensity = int(str(self.intensitytext.getText()))
+        except:
+            pass
+        intensity = self.intensity * dr
         if self.deform:
             s.terrainmanager.terrainMgr.deform(x,z, self.mEditBrush,intensity)
             s.terrainmanager.terrainMgr.getTerrainInfo()

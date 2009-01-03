@@ -117,10 +117,11 @@ class Singleton:
                 
                 
                 break;
-            if hasattr(self, "overviewmap"):                
-                self.overviewmap.currentVisited("Player1")
-            else:
-                raise Exception("Not sure what to do here for edit mode yet")
+#            if hasattr(self, "overviewmap"):                
+            self.overviewmap.currentVisited("Player1")
+#            else:
+#                raise Exception("Not sure what to do here for edit mode yet")
+#                self.overviewmap = Overviewmap
             #self.running = False
             
             

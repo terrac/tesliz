@@ -5,7 +5,7 @@ from tactics.createunits import *
 
 def addScripts(scriptmap):
         
-    oath =buildUnitNoNode("Oath","Player1", "Squire")
+    oath =buildUnitNoNode("Oath","Player1", "Knight")
     
     SetupPlayer("Player1",[Ogre.Vector3(0,0,5),Ogre.Vector3(0,0,6)])
     cerc =tactics.util.buildUnitNoNode("cerc", "Computer1","Squire")
@@ -31,6 +31,7 @@ def addScripts(scriptmap):
      ],"convo")
     s.playmusic("k339_1.mid")
     scriptmap["start"] = convo1
+    
         #tmap = {0:convo1}
 
 #        fmap = {'death-Cerc':(alluvia,"Wut Wut")}
@@ -38,7 +39,8 @@ def addScripts(scriptmap):
         
             
         
-    def setupTestMap(self):
-        pass
+def setupTestMap():
+    tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
+    del s.overviewmap.placetoscene["Linder-Exit"]
 #        unit =buildUnitNoNode("Alluvia","Player1", "Wizard",2)
        

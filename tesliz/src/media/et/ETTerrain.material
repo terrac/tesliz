@@ -40,6 +40,10 @@ material ETTerrainMaterial
       {
         texture Grass.png
       }
+      texture_unit
+      {
+        texture Building.png
+      }
     }
     
     pass

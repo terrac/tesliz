@@ -27,6 +27,7 @@ class UnpauseTurnsOnEnd:
         if self.oldspeed:
             s.speed = self.oldspeed
         s.framelistener.pauseturns = False
+        s.app.setTurnbased(True)
         
 
 class ScriptEvent:
@@ -51,14 +52,10 @@ class ScriptEvent:
 
             
             return
-        if self.name:
-            self.count +=1
-            #import os
-            #os.path.exists(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg")
-            s.playsound(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg","")
-        tuple = self.tlist.pop(0)
+
         
         #if not a tuple
+        tuple = self.tlist.pop(0)
         print tuple
         
         if not hasattr(tuple,'__len__'):
@@ -79,6 +76,13 @@ class ScriptEvent:
             else:
                 tuple.execute(0)
             return True
+        
+        if self.name:
+            self.count +=1
+            #import os
+            #os.path.exists(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg")
+            s.playsound(s.currentdirectory+"sounds/"+self.name+str(self.count)+".ogg","")
+        
         if len(tuple) ==3:
             x,y,z = tuple
         else:
@@ -146,13 +150,13 @@ class Event:
         oldspeed = 0
         if test:
             oldspeed = s.speed
-            s.speed = 50
+            s.speed = s.testspeed 
         
         if self.start:
             unit = Unit()
             s.framelistener.pauseturns = True
             #for exe in self.startlist:
-             
+            s.app.setTurnbased(False) 
             s.framelistener.unitqueue.addToQueue(unit,self.start)
             unpause = UnpauseTurnsOnEnd(oldspeed)
             s.framelistener.unitqueue.addToQueue(unpause,unpause)

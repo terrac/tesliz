@@ -7,10 +7,13 @@ def cleanup(key):
         key.x = int(key.x)
     else:
         key.x = int(key.x) + 1
-    if int(key.y) + .50 > key.y:
-        key.y = int(key.y)
-    else:
-        key.y = int(key.y) + 1
+    try:
+        if int(key.y) + .50 > key.y:
+            key.y = int(key.y)
+        else:
+            key.y = int(key.y) + 1
+    except:#infinity
+        key.y = 0
     if int(key.z) + .50 > key.z:
         key.z = int(key.z)
     else:

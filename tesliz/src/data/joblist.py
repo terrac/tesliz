@@ -90,8 +90,24 @@ class Wizard(data.jobs.Job):
     def getLearnedOnStart(self):
         return ["Fireburst"]
     required = [("Chemist",2)]
-class Poet(data.jobs.Job):
     
+class Knight(data.jobs.Job):
+    
+    def setupStats(self,unit):        
+        set(unit,40,7,5,2,5,6,(4,4))
+    def getAbilities(self):
+        
+        
+        #fireball.unittargeting = False
+        trait1 = NumberedTraits([],[])
+        
+        return trait1
+#    def getLearnedOnStart(self):
+#        return ["Fireburst"]
+    required = [("Squire",3)]
+class Poet(data.jobs.Job):
+    def setupStats(self,unit):        
+        set(unit,25,5,25,5,5,7,(5,5))
 #    def changeTo(self,unit):
 #        set(unit,27,3,25,6,5,7,(3,3))
 #
@@ -101,7 +117,9 @@ class Poet(data.jobs.Job):
 #        return trait1
     
     def getAbilities(self):
-        pass
+        trait1 = NumberedTraits([],[])
+        
+        return trait1
         
     required = [("Chemist",2)]
                

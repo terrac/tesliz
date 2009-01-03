@@ -25,7 +25,8 @@ class Queue:
 
     def clearActions(self,unit):
         #dir([])
-        del self.unitmap[unit]
+        if self.unitmap.has_key(unit):
+            del self.unitmap[unit]
     def clearUnitQueue(self):
         self.unitmap = dict()
             
