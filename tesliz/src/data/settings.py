@@ -20,15 +20,15 @@ class Settings(object):
         s.settings = self
         
         s.app.setTurnbased(True)
-        #s.AIon = True
-        s.AIon = False
+        s.AIon = True
+        #s.AIon = False
         self.musicvolume = .1
         self.effectvolume = 1
         s.fog = False
         s.app.currentmap = 'scene01'
         s.app.World.setWorldSize(Ogre.Vector3(-100,-100,-100),Ogre.Vector3(100,100,100))
         s.eventpausing = False
-        s.speed = 1
+        s.speed = 111
         s.testspeed = 50
         #.damagemultiplier = 50
         s.damagemultiplier = 1
@@ -61,26 +61,10 @@ class Settings(object):
         e.window.setText(str(s.AIon)) 
         
         return True    
-    
-    def setupDefaultPositions(self, overviewmap):
-        overviewmap.root =pos = Position((0,7,0),"Linder",False)
-        pos1 = Position((5,7,0),"Exalia")
-        pos.next = pos1
+    def setupDefaultPositions(self,overviewmap):
+        mod =__import__("media.campaigns."+s.campaignname+".settings")
         
-        
-        pos1.next = Position((5,7,5),"scene02")
-        overviewmap.cpos = overviewmap.root
-        
-        overviewmap.placetoscene = {"Linder":"linderenter","Linder-Exit":"linderexit","Exalia":"fillerscene"}
-        if not s.test:
-            tactics.util.buildUnitNoNode("Alluvia","Player1", "Wizard",2)
-        s.playermap["Player1"].items.add("Potion")
-        s.playermap["Player1"].items.add("Potion")
-        s.playermap["Player1"].items.add("Potion")
-        s.playermap["Player1"].items.add("Potion")
-        s.playermap["Player1"].items.add("Potion")
-        
-        s.playermap["Player1"].items.add("LeatherArmor")
+        getattr(mod.campaigns,s.campaignname).settings.setupDefaultPositions(overviewmap)
         #tactics.util.buildUnitNoNode("Oath","Player1", "Squire")
 #        tactics.util.buildUnitNoNode("Bahaullah","Player1", "Squire")
 #        tactics.util.buildUnitNoNode("Boru","Player1", "Squire")

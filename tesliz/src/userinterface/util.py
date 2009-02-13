@@ -55,6 +55,7 @@ def addItem(selfc,list,name,index = None):
         list.addItem(item)
     else:
         list.insertItem(item,list.getListboxItemFromIndex(index))
+    return item
     
 def destroyWindow(text):
     winMgr = CEGUI.WindowManager.getSingleton()

@@ -11,7 +11,8 @@ import data.jobs
 import data.util
 import userinterface.traits
 import mental.mind
-import data.joblist
+import manager.util
+#import data.joblist
 s = Singleton()
 
 
@@ -35,7 +36,7 @@ def buildUnit(unit,unittype,race,level,playername):
     
     
     buildPhysics(unit,"Ellipsoid")
-    tactics.util.resetAttributes(unit)
+    manager.util.resetAttributes(unit)
     tactics.util.setupMaxPoints(unit)
 #creates a unit given a specific job
 def buildUnitNoNode(name,playername,unittype,level=1):
@@ -51,28 +52,11 @@ def buildUnitNoNode(name,playername,unittype,level=1):
         unit.player = player
     setupBasic(unit, level)
     getattr(data.unittypes.Unittypes(), unittype)(unit,level)
-    tactics.util.resetAttributes(unit)
+    manager.util.resetAttributes(unit)
     tactics.util.setupMaxPoints(unit)
     setupExtra(unit)
     return unit
-def resetAttributes(unit):
-    try:
-        hitpoints = unit.attributes.physical.points
-        magicpoints = unit.attributes.magical.points
-    except:
-        hitpoints = 0
-        magicpoints = 0
-        #if they don't exist yet then ignore
-        # the 0s should only be called in an unimportant part I think so don't worry about them
-    setupBasic(unit, unit.level)
-    if unit.job:
-        unit.job.changeTo(unit)
-    unit.items.setupAll()
-    unit.affect.setupAll()
-    unit.traits.setupAll(unit)
-    unit.attributes.physical.points = hitpoints
-    unit.attributes.magical.points = magicpoints
-    unit.traits.Move.getClassList()[0].range = unit.attributes.moves
+
 def setupMaxPoints(unit):
     unit.attributes.physical.points = unit.attributes.physical.maxpoints
     unit.attributes.magical.points = unit.attributes.magical.maxpoints 

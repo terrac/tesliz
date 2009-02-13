@@ -1,4 +1,4 @@
-import data.traits.generictraits 
+#import data.traits.generictraits 
 
 #from data.traits.generictraits import GridTargeting
 #import data.traits.Generictraits as GT
@@ -200,6 +200,6 @@ class Unittypes(object):
         unit.items.add(LeatherArmor())
         unit.items.add(ClothCap())
         unit.items.add(Broadsword())
-#       tactics.util.resetAttributes(unit)
+#       manager.util.resetAttributes(unit)
         
            

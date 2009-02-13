@@ -14,6 +14,8 @@ class Queue:
             unit.timeleft = 0
         if not self.unitmap.has_key(unit):
             self.unitmap[unit] = [] 
+        if hasattr(action, "reset"):
+            action.reset()
         self.unitmap[unit].append(action)
 #        if not unit in self.unitqueues:
 #            self.unitqueues.append(unit)

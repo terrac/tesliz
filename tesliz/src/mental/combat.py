@@ -23,7 +23,7 @@ def getBestList(unit,isValid):
     traitlist = []
     for trait in unit.traits.getUsable():        
        if trait:
-           for ability in trait.getAbilities().values():               
+           for ability in trait.getAbilities(unit).values():               
                if isValid(ability):
                    traitlist.append((ability.value,ability))
                    

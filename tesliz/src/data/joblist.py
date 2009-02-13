@@ -1,4 +1,4 @@
-import data.traits.generictraits   
+import data.traits.basictraits
 from data.actionlist import * 
 from data.items import *
 from userinterface.traits import *
@@ -11,6 +11,7 @@ import tactics.Affect
 def set(unit,hp,power,mp,mpower,ce,speed,move):
     po =unit.attributes.magical = data.Stats.Stats()
     po.power = mpower
+    po.maxpoints = mp
     po.points = mp
     po =unit.attributes.physical = data.Stats.Stats()
     
@@ -82,9 +83,9 @@ class Wizard(data.jobs.Job):
         set(unit,27,3,25,6,9,5,(3,3))
     def getAbilities(self):
         fireball = data.traits.basictraits.GridTargeting(data.traits.basictraits.GridTargeting.offset2,[Particle("RedTorch",sound="fireball.ogg"),DamageMagic(damage.basicMagical,"fire")],"Fireburst","fire",(5,5),20)
-        
+        fireball.magicpoints = 5
         #fireball.unittargeting = False
-        trait1 = NumberedTraits([fireball],[50])
+        trait1 = MagicTraits([fireball])
         fireball.learned = True
         return trait1
     def getLearnedOnStart(self):

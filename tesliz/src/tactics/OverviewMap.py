@@ -15,6 +15,20 @@ from utilities.CEGUI_framework import *
 import tactics.util
 import utilities.OgreText
 import userinterface.util 
+
+
+class AddDifferentPos:
+    def __init__(self,pos):
+        if isinstance(pos, tuple):
+            self.poslist = [pos]
+        else:
+            self.poslist = pos
+    def execute(self,timer):
+        for x in self.poslist:
+            cpos,next = x
+            AddPos(cpos,s.overviewmap,next)
+
+
 def addDots(vec1,vec2,slow = False):
 
     direction = vec2-vec1
@@ -76,34 +90,47 @@ class Position:
         self.node = None
         
 class AddPos:
-    def __init__(self,cpos,playermap):
+    def __init__(self,cpos,playermap,next = None):
         self.actionqueue=[]
         self.timeleft = 0
-        if cpos.visited and cpos.next:
+        if not next:
+            self.next = cpos.next
+        else:
+            self.next = next
+        if cpos.visited and (next or cpos.next):
             s.framelistener.unitqueue.addToQueue(self,self)
-            playermap.map[cpos.next.name] = cpos.next
-            playermap.addPos(cpos, cpos.next)
+            playermap.map[self.next.name] = self.next
+            playermap.addPos(cpos,self.next)
             self.cpos = cpos
             self.vec = self.cpos.getVec()
             self.timel = 0
             playermap.save()
+            
+        
+            
         
     def execute(self,timer):
-        if s.app.sceneManager.hasSceneNode(self.cpos.next.name):
+        if s.app.sceneManager.hasSceneNode(self.next.name):
             return False
         self.timel -= timer
         if self.timel < 0:            
-            self.vec = addDots(self.vec,self.cpos.next.getVec(), True)
+            self.vec = addDots(self.vec,self.next.getVec(), True)
             s.playsound()
-            if not self.vec and not self.cpos.next.visited:
-                self.cpos.next.show()
+            if not self.vec and not self.next.visited:
+                self.next.show()
                 return False
             self.timel = 1
         return True
 class SetVisited:
     def execute(self,timer):
-        s.overviewmap.cpos.setVisited( True) 
-        AddPos(s.overviewmap.cpos,s.overviewmap)
+        s.overviewmap.cpos.setVisited( True)
+        if s.overviewmap.cpos.next and isinstance(s.overviewmap.cpos.next, Position): 
+            AddPos(s.overviewmap.cpos,s.overviewmap)
+        elif s.overviewmap.cpos.next:
+            next =s.overviewmap.cpos.next
+            
+            next.execute(0)
+            s.overviewmap.cpos.next = None
         
 class OverviewMap:
     
@@ -260,6 +287,7 @@ class OverviewMap:
         
         self.overviewtrade.show(self.cpos.name)
         s.app.menus.setupStartMenu()
+        s.framelistener.setCurrentPlayer( self)
         
     def getMoveList(self,cpos,topos,movedlist =[],posset = None):
         if not posset:

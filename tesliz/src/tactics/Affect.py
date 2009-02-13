@@ -102,7 +102,16 @@ class StatSet:
             else:
                 obj = val
         data.util.update(str(self.stat)+": "+str(self.amount), unit)
-        
+    def teardown(self,unit):
+        obj = unit.attributes
+        for x in self.stat:
+            val = getattr(obj,x)
+            if isinstance(val, int):        
+                #y =val + self.amount                            
+                break;
+            else:
+                obj = val
+        data.util.update(str(self.stat)+": "+str(val), unit)
         #return [str(unit.name)+"'s "+ self.stat.join(" ")+" set to "+ str(self.amount)]
         
 class MoveAdder:

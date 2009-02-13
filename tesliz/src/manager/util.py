@@ -84,3 +84,22 @@ def showAttributes(name):
     text =str(unit)+text
     userinterface.util.getNewWindow("regUnitStuff",userinterface.util.statictext, frame, 0,0,.5,1, text)                
     userinterface.util.getNewWindow("extraUnitStuff",userinterface.util.statictext, frame, .5,0,.5,1, unit.attributes.extraStuff())
+    
+def resetAttributes(unit):
+    try:
+        hitpoints = unit.attributes.physical.points
+        magicpoints = unit.attributes.magical.points
+    except:
+        hitpoints = 0
+        magicpoints = 0
+        #if they don't exist yet then ignore
+        # the 0s should only be called in an unimportant part I think so don't worry about them
+    
+    if unit.job:
+        unit.job.resetAttributes(unit)
+    unit.items.setupAll()
+    unit.affect.setupAll()
+    unit.traits.setupAll(unit)
+    unit.attributes.physical.points = hitpoints
+    unit.attributes.magical.points = magicpoints
+    unit.traits.Move.getClassList()[0].range = unit.attributes.moves

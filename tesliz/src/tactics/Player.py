@@ -21,6 +21,8 @@ class PlayerItemHolder():
     def remove(self,itemname):
         if self.map.has_key(itemname):
             self.map[itemname] -= 1
+            if self.map[itemname] <= 0:
+                del self.map[itemname]
             return True
     def itemNum(self,itemname):
         if self.map.has_key(itemname):
@@ -34,6 +36,7 @@ class PlayerItemHolder():
 class HumanPlayer(object):
 
     def addToUnitlist(self,unit):
+        
         for x in self.unitlist:
             if x.name == unit.name:
                 raise Exception("unit already in list")

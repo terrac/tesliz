@@ -23,7 +23,7 @@ def show(pos, texturename = None ,name = None,size = .3):
     mesh = "box.mesh"
     if not sceneManager.hasSceneNode(name):
         scene_node = sceneManager.getRootSceneNode().createChildSceneNode(name)
-        createEntity(mesh, scene_node)
+        createEntity(mesh, scene_node,name)
         #attachMe = s.app.sceneManager.createEntity(name,mesh)            
         #scene_node.attachObject(attachMe)
         #attachMe.setNormaliseNormals(True)
@@ -81,9 +81,10 @@ def fromCameraToMesh():
         manager.util.cleanup(position)
     return name,position
 
-def createEntity(mesh,node):    
+def createEntity(mesh,node,name = None):    
     sceneManager = s.app.sceneManager
-    name = s.app.getUniqueName()
+    if not name:
+        name = s.app.getUniqueName()
 
     attachMe = s.app.sceneManager.createEntity(name,mesh)            
     node.attachObject(attachMe)
@@ -281,7 +282,7 @@ def experienceAccrued(unit1,unit2):
         unit1.expaccrued = True
         update(str(exp)+" exp "+str(jp)+" jp",unit1)
         
-def withinRange(vec1,vec2,range):
+def withinRange(vec1,vec2,range, movetest = True):
     if hasattr(range,'__iter__'):
         moves,jump = range
     else:
@@ -289,7 +290,7 @@ def withinRange(vec1,vec2,range):
         jump = 50
     if not vec1 or not vec2:
         return
-    list =getClosestValid(vec1,vec2, jump)
+    list =getClosestValid(vec1,vec2, jump,movetest)
     moves -=1
     range = moves,jump
     
@@ -309,12 +310,12 @@ def withinRange(vec1,vec2,range):
                 lowest = dist
                 lvec = x 
     
-    if withinRange(lvec, vec2, range):
+    if withinRange(lvec, vec2, range,movetest):
         return True
     return False
 
 xzlist = [(0,-1),(0,1),(1,0),(-1,0)]
-def markValid(vec1,range,mark,names = None, prevfound=None):
+def markValid(vec1,range,mark,movetest = True,names = None, prevfound=None):
     if not names:
         names = set()
     if not prevfound:
@@ -333,7 +334,10 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
     for x,z in xzlist:
         cvec = Ogre.Vector3(vec1.x+ x,vec1.y,vec1.z+z)
         if not( prevfound.has_key(cvec) and moves < prevfound[cvec]):
-            list.append(getValidPos(cvec, jump))
+            if movetest:
+                list.append(getValidPos(cvec, jump))
+            else:
+                list.append(getPos(cvec, jump))
 
     moves -=1
     
@@ -345,7 +349,7 @@ def markValid(vec1,range,mark,names = None, prevfound=None):
         if x:
             names.add(mark(x))
             prevfound[x] = moves
-            markValid(x, range,mark,names,prevfound)
+            markValid(x, range,mark,movetest,names,prevfound)
     return names
 xlist = [0,0,1,-1]
 zlist = [-1,1,0,0]
@@ -416,7 +420,7 @@ def getShortest(vec1,vec2,range, prevfound=None):
     #return False
     return [vec1]
 unitvalue = 1
-def getClosestValid(pos,pos2,height):        
+def getClosestValid(pos,pos2,height,movetest = True):        
     xlist = []
     zlist = []
     if pos.x < pos2.x:  
@@ -430,8 +434,10 @@ def getClosestValid(pos,pos2,height):
     else:
         zlist.append(-unitvalue)
     xlist.append(0)
-    
-    validpos = getValid(pos,height,xlist, zlist)
+    if movetest:
+        validpos = getValid(pos,height,xlist, zlist)
+    else:
+        validpos = getPositions(pos, height, xlist, zlist)
         
     return validpos
 
@@ -496,6 +502,12 @@ def getPositions(vec,height = 50,xlist = [0] , zlist= [0]):
         
     
     return validpos
+def getPos(vec, height = 50):
+    if not vec:
+        return 
+    vlist = getPositions(vec, height, [0], [0])
+    if vlist:
+        return vlist[0]
 def getValidPos(vec, height = 50):
     if not vec:
         return 
@@ -507,16 +519,16 @@ def getValidName(vec,predicate,height=5):
 
 
     start = Ogre.Vector3(vec.x , vec.y + height, vec.z )
-    end = Ogre.Vector3(vec.x , vec.y - height, vec.z )
-    ray = OgreNewt.BasicRaycast(s.app.World, start, end)
+    #end = Ogre.Vector3(vec.x , vec.y - height, vec.z )
+    #ray = OgreNewt.BasicRaycast(s.app.World, start, end)
     
-    for x in range(0,ray.getHitCount()):
-        info = ray.getInfoAt(x)
-        
-        if (info.mBody and info.mBody.getOgreNode()):
-            name = info.mBody.getOgreNode().getName()
-            if predicate(name):
-                return name
+    ray =Ogre.Ray(start, Ogre.Vector3(0,-1,0))
+    s.app.raySceneQuery.setRay(ray)
+    result = s.app.raySceneQuery.execute()
+    for item in result:            
+        name = item.movable.Name
+        if predicate(name):
+            return name
 def getValidUnit(vec,height = 5):
     predicate = lambda name:s.unitmap.has_key(name)
     name = getValidName(vec, predicate, height)

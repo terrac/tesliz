@@ -1,6 +1,6 @@
 from tactics.Singleton import *
 import ogre.renderer.OGRE as Ogre
-import data.traits.generictraits 
+#import data.traits.generictraits 
 #import data.traits.generictraits as GenericTraits
 import data.util
 import ogre.physics.OgreNewt as OgreNewt
@@ -263,10 +263,11 @@ class AffectLand():
         self.affectname = affectname
     def execute(self,unit1,unit,endpos):
         #build node with the name of the affect
-        
-        name =data.util.show(endpos,"Ta/SOLID",self.affectname+"-"+s.app.getUniqueName())
+        endpos = endpos * 1
+        endpos.y += 2
+        name =data.util.show(endpos,"Ta/SOLID",self.affectname+"-"+s.app.getUniqueName(),.6)
         unit1.addTurned(0,s.app.sceneManager.getSceneNode(name),None)
         
         if unit:    
             unit.affect.add( data.Affects.affectmap[self.affectname])        
-            
+            unit.traits.Move[0].affect = data.Affects.affectmap[self.affectname]

@@ -11,6 +11,8 @@ class Item():
     value = 1
     type = "none"
     allowed = []
+    def isAllowed(self,jobname):
+        return not (self.allowed and not jobname in self.allowed) 
 class Potion(Item):
     affects = Affects(StatAffect(["physical","points"],30),"       hitpoints") 
     

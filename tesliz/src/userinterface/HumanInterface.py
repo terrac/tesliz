@@ -1,5 +1,5 @@
 import sys
-import copy
+#import copy
 from tactics.Singleton import *
  
 from tactics.datautil import *
@@ -50,7 +50,7 @@ class ShowSelected():
         
         curlist = []
         if name:
-            if data.util.withinRange(self.toexecute.unit1.node.getPosition(),position,self.toexecute.range):
+            if data.util.withinRange(self.toexecute.unit1.node.getPosition(),position,self.toexecute.range,False):
                 position.y += .5
                 for pos in self.toexecute.offset:
                     x,y,z = pos
@@ -184,7 +184,7 @@ class HumanInterface:
                     toremovelist.append(item) 
             for x in toremovelist:
                 wind.removeItem(x)
-            self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
+            self.cunit.traits[self.currentTrait].useAbility(self.abilityused,self.cunit)    
             self.actionSelected = False
             s.framelistener.unitqueue.addToQueue(self.cunit,self.iexecute)
             self.iexecute = None    
@@ -230,7 +230,7 @@ class HumanInterface:
             self.endTurn()            
             return        
         self.currentTrait = text
-        self.abilmap =self.cunit.traits[text].getAbilities()
+        self.abilmap =self.cunit.traits[text].getAbilities(self.cunit)
         self.cunit.player.items
         list = self.abilmap.keys()
         print self.cunit
@@ -262,16 +262,19 @@ class HumanInterface:
         self.abilityused = self.abilmap[text]
         
         setStart(toexecute,self.cunit)
-        self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range)
+        if toexecute.getName() == "Move":
+            self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range)
+        else:
+            self.choiceStart(toexecute.unit1.node.getPosition(), toexecute.range,False)
         self.showSelected = ShowSelected(toexecute)
         s.framelistener.unitqueue.addToQueue(self,self.showSelected)
         if toexecute.needsasecondclick:
-            self.iexecute = copy.copy(toexecute)
+            self.iexecute = toexecute
         else:
             self.actionSelected.setText(self.choosing)
             self.cunit.traits[self.currentTrait].useAbility(self.abilityused)    
             self.actionSelected = False
-            s.framelistener.unitqueue.addToQueue(self.cunit,copy.copy(toexecute))
+            s.framelistener.unitqueue.addToQueue(self.cunit,toexecute)
 
         CEGUI.WindowManager.getSingleton().destroyWindow("abilitylist")
             
@@ -288,9 +291,9 @@ class HumanInterface:
         if self.cunit:
             self.cunit.player.endTurn()
             
-    def choiceStart(self,pos,range):
+    def choiceStart(self,pos,range,movetest = True):
         #create a mark that creates a small block
-        self.toremove =data.util.markValid(pos, range, data.util.show)
+        self.toremove =data.util.markValid(pos, range, data.util.show,movetest)
         
     def choiceEnd(self):
         s.framelistener.unitqueue.clearActions(self)

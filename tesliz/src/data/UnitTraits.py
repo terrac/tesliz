@@ -1,4 +1,5 @@
-import data.traits.generictraits
+#import data.traits.generictraits
+import data.traits.basictraits
  
 import userinterface.traits  
 
@@ -11,6 +12,7 @@ class UnitTraits():
         self.map["Movement"] = None
         self.map["Support"] = None        
         self.Move =   userinterface.traits.Traits([data.traits.basictraits.FFTMove(unit)])
+        self.Move.action = False
         self.Move.name = "Move"
         self.Attack = userinterface.traits.Traits([data.traits.basictraits.Attack()])
         self.Attack.name = "Attack"
@@ -46,5 +48,5 @@ class UnitTraits():
         
 #        self.__dict__ = dict
 #        self.traits = {}
-        #tactics.util.resetAttributes(self)
+        #manager.util.resetAttributes(self)
         #self.reset()        

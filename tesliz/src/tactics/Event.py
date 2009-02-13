@@ -122,6 +122,8 @@ class Event:
         #self.start.insert(0,data.executables.pause.Pause(5.5))
         if isinstance(self.start,list):
             self.start = ScriptEvent(self.start)
+        if isinstance(self.end,list):
+            self.end = ScriptEvent(self.end)
         self.turncount = dict()
        
         

@@ -5,6 +5,7 @@ import ogre.renderer.OGRE as Ogre
 import manager.util
 import userinterface.util
 
+
 def show(unit):
     pos = unit.body.getOgreNode().getPosition()
     sceneManager = s.app.sceneManager        
@@ -40,7 +41,7 @@ class Trait():
 class FFTMove(Trait):
     action = False
     type = "move"
-    name = "move"
+    name = "Move"
     
     unittargeting = False
     def __init__(self,unit = None,endPos = None,speed = 1):
@@ -116,7 +117,7 @@ class FFTMove(Trait):
             print "end"
             if self.animationState:
                 self.animationState.setTimePosition(0)
-            
+            self.list = []
             return False
         vec1 = self.unit1.node.getPosition()
         vec2 = self.list[self.cur]
@@ -148,12 +149,17 @@ class FFTMove(Trait):
                 
             predicate = lambda name: data.Affects.affectmap.has_key(name.split("-")[0])
             name =data.util.getValidName(vec2, predicate)
-            if name:                                
+            if name:                          
+
                 affect = data.Affects.affectmap[name.split("-")[0]]
-                if self.affect != affect:
+                if self.affect and self.affect != affect:
                     self.affect.teardown(self.unit1)
-                self.affect.setup(self.unit1)
+                self.affect = affect
+                self.unit1.affect.add(affect)
             elif self.affect:
+                
+                self.unit1.affect.remove(self.affect.type)
+                manager.util.resetAttributes(self.unit1)
                 self.affect.teardown(self.unit1)
                 self.affect = None
                 
@@ -219,6 +225,8 @@ class GridTargeting(Trait):
             if hasattr(action, "getDamage"):
                 self.getDamage = action.getDamage
                 break
+        self.reset()
+    def reset(self):
         self.current = 0
         self.unitstohit = []
         self.positionstohit = []
@@ -243,6 +251,7 @@ class GridTargeting(Trait):
         unitlist = []
         
         if not self.unitstohit:
+            
             for pos in self.offset:
                 x,y,z = pos
                 x = x + self.endPos.x            
@@ -256,6 +265,10 @@ class GridTargeting(Trait):
                     self.positionstohit.append(vec)
 
         if len(self.unitstohit) == self.current:
+#            while self.unitstohit:
+#                self.unitstohit.pop()
+            #del self.unitstohit[:]
+            #del self.positionstohit[:]
             self.unitstohit = []
             self.current = 0
             for vec in self.positionstohit:
@@ -268,6 +281,7 @@ class GridTargeting(Trait):
         #manager.util.showAttributes(unit.getName())
         for to in self.todo:
             to.execute(self.unit1,unit,unit.node.getPosition())
+            
         manager.util.showAttributes(unit.getName())
         self.time = 2
         self.current +=1

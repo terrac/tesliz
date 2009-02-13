@@ -2,24 +2,29 @@ import copy
 class Traits():
     def __init__ ( self,listclasses):
         self.listclasses = listclasses
-        
+    def __str__(self):
+        return str(self.listclasses)        
     def getClassList(self):
         return self.listclasses
-
-    def getAbilities(self):
+    def __getitem__(self, key):
+        return self.listclasses[key]
+        
+    def __setitem__(self, key, value):
+        self.listclasses[key] = value
+    def getAbilities(self,unit):
         cmap = dict()
         for i in self.listclasses:
-            if not self.isAvailable(i):
+            if not self.isAvailable(i,unit):
                 continue
              
-            cmap[self.getRep(i)] =i 
+            cmap[self.getRep(i,unit)] =i 
      
         return cmap
-    def isAvailable(self,abil):
+    def isAvailable(self,abil,unit):
         return True
-    def getRep(self,abil):
+    def getRep(self,abil,unit):
         return abil.name
-    def useAbility(self,abil):
+    def useAbility(self,abil,unit):
         return True
     def getLearned(self,learnednames,unit):
         learned = []
@@ -39,12 +44,12 @@ class NumberedTraits(Traits):
         self.listnumbers = listnumbers
         
                         
-    def isAvailable(self,abil):
+    def isAvailable(self,abil,unit):
         return self.listnumbers[self.listclasses.index(abil)]
-    def getRep(self,abil):
+    def getRep(self,abil,unit):
         i = self.listnumbers[self.listclasses.index(abil)]
         return abil.name + str(i)    
-    def useAbility(self,abil):
+    def useAbility(self,abil,unit):
         i = self.listclasses.index(abil)
         self.listnumbers[i] = self.listnumbers[i] -1
         if self.listnumbers[i] > -1:
@@ -60,9 +65,9 @@ class ItemTraits(Traits):
         self.player = player
         
                
-    def isAvailable(self,abil):
+    def isAvailable(self,abil,unit):
         return self.player.items.itemNum(abil.name)
-    def getRep(self,abil):
+    def getRep(self,abil,unit):
         i = self.player.items.itemNum(abil.name)
         return abil.name + str(i)   
     
@@ -79,20 +84,20 @@ class ItemTraits(Traits):
 class MagicTraits(Traits):
     
     
-    def __init__ ( self,listclasses,unit):
+    def __init__ ( self,listclasses):
         self.listclasses = listclasses
-        self.unit = unit
+        
         
                
-    def isAvailable(self,abil):
-        return self.unit.attributes.magical.points > abil.magicpoints
-    def getRep(self,abil):
+    def isAvailable(self,abil,unit):
+        return unit.attributes.magical.points >= abil.magicpoints
+    def getRep(self,abil,unit):
         i = abil.magicpoints
         return abil.name + str(i)   
     
-    def useAbility(self,abil):
-        if self.unit.attributes.magical.points > abil.magicpoints:
-            self.unit.attributes.magical.points -= abil.magicpoints
+    def useAbility(self,abil,unit):
+        if unit.attributes.magical.points >= abil.magicpoints:
+            unit.attributes.magical.points -= abil.magicpoints
             return True
         
            

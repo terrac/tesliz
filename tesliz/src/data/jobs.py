@@ -8,6 +8,7 @@ import mental.mind
 import mental.action
 import copy
 import data.Stats
+import data.items
 
 
 
@@ -63,15 +64,24 @@ class Job(object):
 #    def getTraits(self):
 #        pass
     def changeTo(self,unit):
+        for x in unit.items.getMap().values():
+            unit.player.items.add(x.getName())
+        unit.items.removeAll()
+
+        for itemname in unit.player.items.getMap().keys():
+            item =getattr(data.items, itemname)()
+            if (not unit.items.has(item.type) or unit.items[item.type].value < item.value ) and item.value <= unit.level and item.isAllowed(self.getName()):
+               unit.player.items.remove(itemname)
+               unit.items.add(item)
+        self.resetAttributes(unit)
+        
+        
+        #else:
+    def resetAttributes(self,unit):        
         self.setupStats(unit)        
         unit.traits.Primary = self.getTraits(unit)
         unit.mental = self.getMental(unit)
         unit.job = self
-        #else:
-            
-        #unit.traits[self.getName()] =traits
-    
-    
         
     
     def getTraits(self,unit):

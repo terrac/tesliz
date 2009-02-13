@@ -112,4 +112,25 @@ class RealTimeTurn(object):
         
     def nextUnitTurnUnpause(self):
         #self.pause = False
-        self.nextUnitTurn()                        
+        self.nextUnitTurn()            
+        
+
+class OverviewmapTurn(object):
+    def __init__(self):
+        s.turn = self
+        
+        
+    def doTurn(self):
+        
+        #get current unit
+        
+        #display moves for unit
+        
+        #make sure heights are checked properly
+        
+        #overviewmap should be a terrain and
+        
+        #adding positions should deform it
+        pass
+
+                     

@@ -9,7 +9,7 @@ import ogre.renderer.OGRE as Ogre
 import ogre.physics.OgreNewt as OgreNewt
 import ogre.io.OIS as OIS
 import utilities.physics 
-import tactics.dotscenea 
+#import tactics.dotscenea 
 import tactics.Turn 
 import tactics.Player 
 import sys  
@@ -38,7 +38,7 @@ class OgreNewtonApplication (sf.Application):
     
     currentmap=None
     def reset(self):
-        
+        s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
         self.timedbodies = []
         self.animations = []
         self.bodies=[]
@@ -152,7 +152,7 @@ class OgreNewtonApplication (sf.Application):
         #scenename = "media\\scenes\\" + scenename
         self.reset()
         #data.util.clearMeshes()
-        s.playermap["Computer1"] = tactics.Player.ComputerPlayer("Computer1")
+        
 #        s.unitmap = dict()
 
             
@@ -203,6 +203,7 @@ class OgreNewtonApplication (sf.Application):
             #mod =py_compile.compile(s.campaigndir+scenename+"/mapscript.py","media/compiledmaps/mapscript"+scenename+".pyc")
             #import media.campaigns.tesliz.linderenter.mapscript
             s.currentdirectory = s.campaigndir+scenename+"/"
+            s.scenename = scenename
             sys.path.append(os.path.abspath(s.currentdirectory))
             
             mod = __import__("mapscript"+scenename)
@@ -238,12 +239,12 @@ class OgreNewtonApplication (sf.Application):
 #            for unit in s.playermap["Player1"].unitlist:
 #                s.unitmap[unit.getName()] = unit
             
-        for unit in s.unitmap.values():
-            unit.attributes.physical.points = unit.attributes.physical.maxpoints
-            unit.attributes.magical.points = unit.attributes.magical.maxpoints    
-        
-        if s.event:            
-            s.event.startEvent(test)
+            for unit in s.unitmap.values():
+                unit.attributes.physical.points = unit.attributes.physical.maxpoints
+                unit.attributes.magical.points = unit.attributes.magical.maxpoints    
+            
+            if s.event:            
+                s.event.startEvent(test)
          
 
     def _createFrameListener(self):
@@ -618,7 +619,9 @@ class OgreNewtonFrameListener(CEGUIFrameListener):
                unit.setText(unit.getName())
        if OIS.KC_H == evt.key:
            for unit in s.unitmap.values():
-               unit.setText(str(unit.player))               
+               unit.setText(str(unit.player))
+       if OIS.KC_J == evt.key:
+           editOnStart(s.scenename)               
        if OIS.KC_NUMPAD5 == evt.key:
            s.screenshot()
        if OIS.KC_NUMPAD6 == evt.key:
@@ -641,11 +644,11 @@ def startup():
     s.app.loadScene(sys.argv[2],True)
     
     return True
-def editOnStart():
+def editOnStart(name):
     #startup()
-    
+    s.settings.setupPlayerMap()
     s.app.reset()
-    s.editgame = userinterface.EditGame.EditGame(sys.argv[2])
+    s.editgame = userinterface.EditGame.EditGame(name)
     return True
 if __name__ == '__main__':
 #    try:
@@ -658,7 +661,7 @@ if __name__ == '__main__':
             runOnStartup = startup
             s.test = True
         if len(sys.argv) == 4:
-            runOnStartup = editOnStart
+            runOnStartup = editOnStart(sys.argv[2])
         s.campaignname = sys.argv[1]    
         s.campaigndir = "media/campaigns/"+s.campaignname+"/"
         s.editgame = None

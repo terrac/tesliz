@@ -11,7 +11,7 @@ s = Singleton()
 import data.jobs
 import tactics.util
 import data.items 
-    
+import manager.util
 
 class JobsMenu:
     def setup(self,unit,pwindow):
@@ -127,7 +127,7 @@ class AbilityMenu:
             self.map[self.type] = toadd
         #self.unit.traits.map[self.type] = toadd
         self.itemselected.setText(toadd.getName())
-        tactics.util.resetAttributes(self.unit)
+        manager.util.resetAttributes(self.unit)
         self.listtype.setVisible(False)
         self.removeFromList(toadd)
         
@@ -138,7 +138,7 @@ class AbilityMenu:
         self.abilheld.setVisible(False)
         if self.listtype:
             self.listtype.setVisible(False)
-        pass
+        
 class ItemsMenu(AbilityMenu):
     list = ["head","body","weapon"]
     def setupMenu(self, pwindow):
@@ -149,7 +149,7 @@ class ItemsMenu(AbilityMenu):
         self.typelist = []
     
     def removeFromList(self,toadd):
-        self.unit.player.items.add(toadd.getName())
+        self.unit.player.items.remove(toadd.getName())
     def removeItem(self,e):
         if  not self.abilheld.getFirstSelectedItem():
             return
@@ -172,11 +172,13 @@ class ItemsMenu(AbilityMenu):
         valid = []
         itemmap =self.unit.player.items.getMap()
         for x in itemmap.keys():
-            item =getattr(data.items, x)
-            if item.type == type and len(item.allowed) == 0 or self.unit.job.getName() in item.allowed:
-                valid.append(item())
+            item =getattr(data.items, x)()
+            if item.type == type and item.isAllowed(self.unit.job.getName()):
+                valid.append(item)
         return valid
-        
+    def teardown(self):
+        AbilityMenu.teardown(self)
+        self.removeitem.setVisible(False)
 class LearnMenu:
     def setup(self,unit,pwindow):
         self.unit = unit
@@ -246,7 +248,55 @@ class LearnMenu:
     def teardown(self):
         
         self.abiltohold.setVisible(False)
+    
+class OrderMenu:
+    def setup(self,unit,pwindow):
+        self.unit = unit
         
+        self.orderunitlist =util.getNewWindow("orderunitlist", util.listbox, "Main/Window", .7,.1,.1,.4)
+        self.unitlist = s.playermap["Player1"].unitlist
+        self.unitmap = {}
+        for unit in self.unitlist:            
+            util.addItem(self, self.orderunitlist,unit.getName() )
+            self.unitmap[unit.getName()] = unit
+            
+        self.upbutton =util.getNewWindow("upbutton", util.button, "Main/Window", .8,.1,.1,.1,"Up")
+        self.downbutton =util.getNewWindow("downbutton", util.button, "Main/Window", .8,.2,.1,.1,"Down")
+        #util.addItem(self, self.abiltohold,"Try" )
+        
+        self.upbutton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "move")
+        self.downbutton.subscribeEvent(CEGUI.PushButton.EventClicked, self, "move")
+    def move(self,e):
+        if  not self.orderunitlist.getFirstSelectedItem():
+            return
+        item =self.orderunitlist.getFirstSelectedItem()
+        text = str(item.getText())
+        isup = False
+        if str(e.window.getText()) == "Up":
+            isup = True
+        
+        index = self.unitlist.index(self.unitmap[text])
+        if (isup and index == 0) or (not isup and index +1 == len(self.unitlist)):
+            return True
+        unit =self.unitlist.pop(index)
+        if not isup:
+            index +=1            
+        else:
+            index -=1
+            
+        self.unitlist.insert(index,unit)
+        self.orderunitlist =util.getNewWindow("orderunitlist", util.listbox, "Main/Window", .7,.1,.1,.4)
+        a = 0     
+        for unit in self.unitlist:            
+            item =util.addItem(self, self.orderunitlist,unit.getName() )
+            if index == a:
+                self.orderunitlist.setItemSelectState(item,True)
+            a += 1
+        
+        return True
+    def teardown(self):
+        
+        self.unitlist.setVisible(False)
 class MainMenu:
     
     def __init__(self, renderWindow, sceneManager):
@@ -254,7 +304,7 @@ class MainMenu:
         if s.initCEGUI != True:
             self.initCEGUIStuff(renderWindow, sceneManager)
             s.initCEGUI = True
-        self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilityMenu(),"Learn":LearnMenu()}
+        self.editmap ={"Items":ItemsMenu(),"Jobs":JobsMenu(),"Abilities":AbilityMenu(),"Learn":LearnMenu(),"Order":OrderMenu()}
         self.unit = None
         self.prevedit = None
         s.mainmenu = self

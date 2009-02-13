@@ -86,6 +86,7 @@ class Unit(object):
         self.name = name
         self.job = None
         self.joblist = []
+        self.node = None
         self.reset()
 
     def reset(self):
@@ -145,6 +146,8 @@ class Unit(object):
         x = manager.util.Timed(turns,node,extra)
         self.timedbodies.append(x)
     def startTurn(self):
+        if not self.node:
+            return
         
         if self.getDeath():
             self.getDeath().execute(self)
@@ -197,9 +200,10 @@ class Unit(object):
         return {"name":self.name,"attributes":self.attributes,"affect":self.affect,"items":self.items,"job":self.job,"level":self.level,"player":self.player,"joblist":self.joblist}
     def __setstate__(self,dict):
         self.__dict__ = dict
+        self.node = None
 #        self.traits = {}
         self.traits = data.UnitTraits.UnitTraits(self)
         
-        tactics.util.resetAttributes(self)
+        manager.util.resetAttributes(self)
         self.reset()
     
