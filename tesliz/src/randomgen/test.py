@@ -36,7 +36,10 @@ class Enum:
         return self
     def __iter__(self):
         return self.enumlist.__iter__()
-
+    def __len__(self):
+        return len(self.enumlist)
+    def __getitem__(self,x):
+        return self.enumlist.__getitem__(x)
     def vals(self, **entries):
         """Set each of var=val pairs in the enum."""
         for (var, val) in entries.items(): self.set(var, val)
@@ -64,12 +67,15 @@ class Pair:
         x = ""
         for y in self.value:
             x = x+","+str(y)
-        return str(self.key)+", "+str(x)
+        return "(@"+str(self.key)+", "+str(x) +"@)"
     def getKey(self):
         return self.key[0]
 
 
 class Area:
+    
+    def __init__(self,runOnAll = None):
+        self.runAll = runOnAll
     size = 5
     generated = None
     variables = None
@@ -80,6 +86,9 @@ class Area:
             return False
         return [self.objects]
     def execute(self,area):
+        if hasattr(area, "runAll"):
+            for x in area.runAll:
+                x.execute(self)
         vars =self.pickvars(area)
         
         self.generate(vars)
@@ -88,6 +97,8 @@ class Area:
         else:
             area.generated = self.generated 
     def type(self):
+        return self.__class__.__name__
+    def name(self):
         return self.__class__.__name__
     def pickvars(self,area):
         #pick similar vars to what has been previously passed in
@@ -105,6 +116,8 @@ class Area:
 
     def generate(self,vals):
         self.generated = []
+        
+        
         
         for x in vals:
             y = self.getRandomValid(x)
@@ -146,18 +159,13 @@ class Area:
 #    def execute(self,area):
 #        area.terrainmanager = tactics.TerrainManager.TerrainManager()
         
-class Positions(Area):
-    where = Enum("high low like")
-    x = 10
-    y = 10
-    z = 10
+class AreaRandomAddition(Area):
     def getVariables(self):
-        self.variables = []
-        for x in range(0,self.size):
-            self.variables.append((random.randint(0,self.x),random.randint(0,self.x),random.randint(0,self.x)))
-        return self.variables
-        #randomly get some numbers and assign them
+        return self.objects
     def getRandomValid(self,x):
+#        if not self.variables:
+#            self.getVariables()
+        
         return self.variables[random.randint(0,len(self.variables))-1]
     def __init__(self):
         #like just says that positions should be assigned to like units
@@ -167,7 +175,7 @@ class Positions(Area):
 
         self.templatelist = None
     def pickvars(self,area):
-        self.getVariables()
+        self.variables = self.getVariables()
         return area.generated 
     def generate(self,vals):
         self.generated = []
@@ -175,29 +183,43 @@ class Positions(Area):
         for x in vals:
             y = self.getRandomValid(x)            
             #self.generated.append(Pair(None,y))
-            x.value.append(Pair("Position",y))    
+            x.value.append(Pair(self.name(),y))    
 
-class Players(Area):
+class Position(AreaRandomAddition):
+    where = Enum("high low like")
+    x = 10
+    y = 10
+    z = 10
+    def getVariables(self):
+        variables = []
+        for x in range(0,self.size):
+            variables.append((random.randint(0,self.x),random.randint(0,self.x),random.randint(0,self.x)))
+        return variables
+        #randomly get some numbers and assign them
+
+class Player(AreaRandomAddition):
     objects = Enum("Player1 Computer1")
+
  
-    def getRandomValid(self,x):
-        li = self.objects.enumlist
-        return li[random.randint(0,len(li)-1)]
-    def generate(self,vals):
-        self.generated = []
-        
-        for x in vals:
-            y = self.getRandomValid(x)            
-            #self.generated.append(Pair(None,y))
-            if hasattr(x, "value"):
-                x.value.append(Pair("Playername",y))
 class Characters(Area):
     objects =Enum("fighter mage")
 
     def __init__(self):
         
         self.templatelist =[Pair(self.objects.fighter),Pair(self.objects.mage)]
-    
+
+class RelationHolder:
+    def __init__(self,di):
+        for x in di.keys():
+            if isinstance(di[x], dict):
+                di[x] = RelationHolder(di[x])
+        self.holdee = di
+    def values(self):
+        return self.holdee.values()
+class Ability(AreaRandomAddition):    
+    objects =Enum("Attack Fireball Iceball")
+ 
+    relations = RelationHolder( {"Characters":{"fighter":[objects.Attack],"mage":[objects.Fireball,objects.Iceball]}})
     
 class Landmarks(Area):
     objects =Enum("mountain lake plain river")
@@ -205,17 +227,42 @@ class Landmarks(Area):
     def __init__(self):
         
         self.templatelist =[Pair(self.objects.mountain,(0,0,0)),Pair(self.objects.river,(2,0,2)),Pair(self.objects.plain,(2,0,2)),Pair(self.objects.lake,(2,0,2))]
+
+class Collate():
+    def __init__(self):
+        self.previouslyRun = dict()
+    def execute(self,area):
+        self.previouslyRun[area.name()] = area
+        if hasattr(area, "relations") and area.relations:
+            for x in area.relations.values():
+                if self.previouslyRun.has_key(x):
+                    olderarea = self.previouslyRun[x]
+                    if not olderarea.relations:
+                        olderarea.relations = {area.name():{}}
+                    for y in area.relations[x].keys():                        
+                        oldervar = y
+                        youngervar = area.relations[x][y]
+                        olderarea.relations[area][oldervar] = youngervar
+                
+                
+                
+                
+                
+                    
+            
     
 
-area = Area()
+area = Area([Collate()])
 char = Characters()
 char.execute(area)
+abil = Ability()
+abil.execute(area)
 
-players = Players()
+players = Player()
 players.execute(area)
 land = Landmarks()
 land.execute(area)
-pos = Positions()
+pos = Position()
 pos.execute(area)
 
 #      in area.generated:
