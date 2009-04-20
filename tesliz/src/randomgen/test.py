@@ -181,10 +181,15 @@ class AreaRandomAddition(Area):
         self.generated = []
         
         for x in vals:
-            y = self.getRandomValid(x)            
+            y = self.getRandomValid(x)
+                     
             #self.generated.append(Pair(None,y))
             x.value.append(Pair(self.name(),y))    
-
+class AreaRelation(AreaRandomAddition):
+    def getRandomValid(self,x):
+        self.variables = self.relations.map[x.getKey()]
+        return AreaRandomAddition.getRandomValid(self, x)
+    
 class Position(AreaRandomAddition):
     where = Enum("high low like")
     x = 10
@@ -210,16 +215,26 @@ class Characters(Area):
 
 class RelationHolder:
     def __init__(self,di):
+        
+        
         for x in di.keys():
             if isinstance(di[x], dict):
                 di[x] = RelationHolder(di[x])
+            
+            
         self.holdee = di
     def values(self):
         return self.holdee.values()
-class Ability(AreaRandomAddition):    
-    objects =Enum("Attack Fireball Iceball")
+    def keys(self):
+        return self.holdee.keys()
+    def __getitem__(self,x):
+        return self.holdee.__getitem__(x)
+    def __str__(self):
+        return str(self.holdee)
+class Ability(AreaRelation):    
+    objects =Enum("Attack DoubleAttack Fireball Iceball")
  
-    relations = RelationHolder( {"Characters":{"fighter":[objects.Attack],"mage":[objects.Fireball,objects.Iceball]}})
+    relations = RelationHolder( {"Characters":{"fighter":(objects.Attack,objects.DoubleAttack),"mage":(objects.Fireball,objects.Iceball)}})
     
 class Landmarks(Area):
     objects =Enum("mountain lake plain river")
@@ -234,15 +249,23 @@ class Collate():
     def execute(self,area):
         self.previouslyRun[area.name()] = area
         if hasattr(area, "relations") and area.relations:
-            for x in area.relations.values():
+            for x in area.relations.keys():
                 if self.previouslyRun.has_key(x):
                     olderarea = self.previouslyRun[x]
-                    if not olderarea.relations:
-                        olderarea.relations = {area.name():{}}
+                    if not hasattr(olderarea, "relations") or not olderarea.relations:
+                        olderarea.relations = RelationHolder({area.name():{}})
+                        olderarea.relations.map = dict() 
+                        
                     for y in area.relations[x].keys():                        
                         oldervar = y
                         youngervar = area.relations[x][y]
-                        olderarea.relations[area][oldervar] = youngervar
+                        
+                        if not hasattr(area.relations,"map") or not area.relations.map:
+                            area.relations.map = dict() 
+                        area.relations.map[oldervar] = youngervar
+                        olderarea.relations.map[youngervar] = oldervar
+                        print area.relations.map
+                        print olderarea.relations.map
                 
                 
                 
