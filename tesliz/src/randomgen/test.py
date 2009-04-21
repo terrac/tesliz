@@ -71,6 +71,8 @@ class Pair:
         return "(@"+str(self.key)+", "+str(self.value)+":"+x +"@)"
     def getKey(self):
         return self.key
+    def getValue(self):
+        return self.value
     
 
 class Area:
@@ -292,9 +294,15 @@ pos.execute(area)
 #      in area.generated:
 #   print x
 map = shelve.open("test.map")
+import genutil
 for x in area.generated:
     
-    print x
+    #print x
+    #fun = getattr(genutil, x.getKey())
+    di = {x.getKey():x.getValue()}
+    for y in x.pairlist:
+        di[y.getKey()] = y.getValue()
+    print x.getKey()+"(**"+str(di)+"}"
 map.close()
 #Characters.execute(self, area)    
 #Positions.execute(self, area)
