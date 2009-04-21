@@ -57,20 +57,21 @@ class Enum:
 class Pair:
     def __init__(self,key,value = None):
         
-        if not hasattr(key, "__iter__"):
-            key =[key]            
-        if not isinstance(value, list):
-            value = [value]
+#        if not hasattr(key, "__iter__"):
+#            key =[key]            
+#        if not isinstance(value, list):
+#            value = [value]
         self.key = key
         self.value = value
+        self.pairlist = []
     def __str__(self):
         x = ""
-        for y in self.value:
+        for y in self.pairlist:
             x = x+","+str(y)
-        return "(@"+str(self.key)+", "+str(x) +"@)"
+        return "(@"+str(self.key)+", "+str(self.value)+":"+x +"@)"
     def getKey(self):
-        return self.key[0]
-
+        return self.key
+    
 
 class Area:
     
@@ -108,10 +109,8 @@ class Area:
             val = vars[len(vars)-1]
             vals.append(val)
                     
-        if area.generated == None:
-            return vals
-        else:
-            return area.generated + vals
+        
+        return vals
         
 
     def generate(self,vals):
@@ -127,11 +126,12 @@ class Area:
 #                if not self.templatelist:
 #                    self.generated.append(Pair(None,y))    
 #                    continue
-                for x in self.templatelist:
-                    if y == x.getKey():
-                       x.type = self.type()
-                       self.generated.append(copy.deepcopy(x))
-                       break
+        
+               y = copy.deepcopy(y)
+               
+               np = Pair(self.name(),y)
+               self.generated.append(np)
+                       #break
                       
     def getRandomValid(self,x):
     #iterate through variables in an orderly fashion and then iterate through x and return the first valid match
@@ -184,10 +184,11 @@ class AreaRandomAddition(Area):
             y = self.getRandomValid(x)
                      
             #self.generated.append(Pair(None,y))
-            x.value.append(Pair(self.name(),y))    
+            x.pairlist.append(Pair(self.name(),y))    
 class AreaRelation(AreaRandomAddition):
     def getRandomValid(self,x):
-        self.variables = self.relations.map[x.getKey()]
+        
+        self.variables = self.relations.map[x.value]
         return AreaRandomAddition.getRandomValid(self, x)
     
 class Position(AreaRandomAddition):
@@ -210,8 +211,8 @@ class Characters(Area):
     objects =Enum("fighter mage")
 
     def __init__(self):
-        
-        self.templatelist =[Pair(self.objects.fighter),Pair(self.objects.mage)]
+        pass
+        #self.templatelist =[self.objects.fighter,self.objects.mage]
 
 class RelationHolder:
     def __init__(self,di):
@@ -240,8 +241,8 @@ class Landmarks(Area):
     objects =Enum("mountain lake plain river")
 
     def __init__(self):
-        
-        self.templatelist =[Pair(self.objects.mountain,(0,0,0)),Pair(self.objects.river,(2,0,2)),Pair(self.objects.plain,(2,0,2)),Pair(self.objects.lake,(2,0,2))]
+        pass
+        #self.templatelist =[self.objects.mountain,self.objects.river,self.objects.plain,self.objects.lake]
 
 class Collate():
     def __init__(self):
@@ -264,8 +265,8 @@ class Collate():
                             area.relations.map = dict() 
                         area.relations.map[oldervar] = youngervar
                         olderarea.relations.map[youngervar] = oldervar
-                        print area.relations.map
-                        print olderarea.relations.map
+                        
+                        
                 
                 
                 
